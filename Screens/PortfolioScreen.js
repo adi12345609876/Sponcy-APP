@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,11 +10,11 @@ import {
   ToastAndroid,
   Platform,
   AlertIOS,
-  LogBox
+  LogBox,
 } from "react-native";
 import Constants from "expo-constants";
 import { Ionicons, Entypo, SimpleLineIcons } from "@expo/vector-icons";
-import {useauth} from "../BACKEND/firebase"
+import { useauth } from "../BACKEND/firebase";
 import image from "../assets/Photos/Dummyphotos/netfliximage.png";
 import checkcircle from "../assets/Photos/icons/CheckCircle.png";
 
@@ -26,9 +26,12 @@ import ThreeDots from "../Components2/3dotComp";
 
 export default function App({ navigation }) {
   const currentuser = useauth();
-  console.log("USER:",currentuser);
+  console.log("USER:", currentuser);
   const [threedotvisible, setthreevisible] = useState(false);
-  const [toastvisible, settoastvisible] = useState(true);
+
+  const [PhotoURL, setPhotoURL] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/sponcy-7003f.appspot.com/o/Person.png?alt=media&token=79018f26-8263-4230-8713-97c68a845570.png"
+  );
   function showtoast(msg) {
     if (Platform.OS === "android") {
       ToastAndroid.show(msg, ToastAndroid.SHORT);
@@ -36,12 +39,15 @@ export default function App({ navigation }) {
       console.log("AlertIOS.alert(msg)");
     }
   }
-
+  useEffect(() => {
+    if (currentuser?.photoURL) {
+      setPhotoURL(currentuser?.photoURL);
+    }
+  }, [currentuser]);
   const data2 = {
     name: "Logout",
     icon: "log-out-outline",
     id: "2",
-    
   };
   const data1 = {
     name: "Settings",
@@ -67,7 +73,7 @@ export default function App({ navigation }) {
         barStyle={"light-content"}
       />
       <ImageBackground
-        source={image}
+        source={{ uri: PhotoURL }}
         resizeMode="cover"
         style={{
           flex: 0.4,

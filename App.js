@@ -171,7 +171,7 @@ function MyStack() {
         </>
       ) : (
         [
-          !SplashScreenvisible ? (
+          !SplashScreenvisible && !logedin ? (
             <>
               <Stack.Screen
                 name="SignIn"

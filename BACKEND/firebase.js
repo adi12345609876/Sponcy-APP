@@ -47,14 +47,13 @@ export function useauth() {
 //STORAGE
 export async function upload(file, currentUser) {
   //location
-  const fileRef = ref(storage, currentUser.uid + ".png");
-  //update currentuser.photoURL
-  const userphotoURL = await getDownloadURL(fileRef);
-  updateProfile(currentUser, { photoURL: userphotoURL });
+  const fileRef = ref(storage, "ProfilePIC/"+currentUser.uid + ".png");
   //upload
   const snapshot = await uploadBytes(fileRef, file);
+  //update currentuser.photoURL with download url
+  const userphotoURL = await getDownloadURL(fileRef);
+  updateProfile(currentUser, { photoURL: userphotoURL });
   alert("Uploaded");
 
   
-  //download
 }
