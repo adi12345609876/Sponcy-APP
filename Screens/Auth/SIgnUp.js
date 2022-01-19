@@ -13,10 +13,19 @@ import Constants from 'expo-constants';
 let deviceWidth = Dimensions.get('screen').width;
 let deviceHeight = Dimensions.get('screen').height;
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { signup, login, logout, useauth } from "../../BACKEND/firebase";
+import { useNavigation } from "@react-navigation/native";
 export default function Signin() {
-
-
+  const navigation = useNavigation();
+  const emailref = useRef();
+  const passwordref = useRef();
+  async function handleSignin() {
+    try {
+      await signup(emailref.current.value, passwordref.current.value);
+    } catch (e) {
+      alert(e);
+    }
+  }
   return (
     <View>
       <LinearGradient

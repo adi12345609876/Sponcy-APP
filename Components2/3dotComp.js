@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,37 +7,52 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Divider } from 'react-native-elements';
-import { Card } from 'react-native-paper';
-
-const DummyData = [
-  {
-    name: 'Settings',
-    icon: 'settings-sharp',
-    id: '1',
-  },
-  {
-    name: 'Invite',
-    icon: 'mail',
-    id: '2',
-  },
-];
-
-
-export default function AssetExample({ visibility,height,width }) {
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Divider } from "react-native-elements";
+import { Card } from "react-native-paper";
+import {logout,useauth} from "../BACKEND/firebase"
+import { useNavigation } from "@react-navigation/native";
+export default function AssetExample({ visibility, height, width,data1,data2,data3,data4,}) {
+ const navigation = useNavigation();
   
+  const DummyData = [
+    {
+      ...data1?data1:null,
+    },
+    {
+      ...data2?data2:null,
+    },
+    {
+      ...data3?data3:null,
+    },
+    {
+      ...data4?data4:null,
+    },
+  ];
   const [selectedId, setSelectedId] = useState(null);
   const [pressfunc, setpressfunc] = useState();
+
   const renderSeparator = () => (
     <View style={{ marginVertical: 3 }}>
       <Divider style={{ width: 1000 }} />
     </View>
   );
   const OnPressFunc = () => {
-    selectedId == '1' ? setpressfunc(console.log('1pressed')) : null;
-    selectedId == '2' ? setpressfunc(console.log('2pressed')) : null;
+    //id should be unique fo reach screen
+    //portfolio screeen
+    selectedId == "1" ? setpressfunc(console.log("navigate to settings")) : null;
+    selectedId == "2" ? setpressfunc(()=>logout()) : null;
+    selectedId == "3" ? setpressfunc(()=>navigation.navigate("Edit")) : null;
+    //home
+    selectedId == "4" ? setpressfunc(console.log("2")) : null;
+    selectedId == "5" ? setpressfunc(console.log("2")) : null;
+    selectedId == "6" ? setpressfunc(console.log("2")) : null;
+    selectedId == "7" ? setpressfunc(console.log("2")) : null;
+    selectedId == "8" ? setpressfunc(console.log("2")) : null;
+    selectedId == "9" ? setpressfunc(console.log("2")) : null;
+  
+
   };
   useEffect(() => {
     OnPressFunc();
@@ -46,8 +61,9 @@ export default function AssetExample({ visibility,height,width }) {
     return (
       <>
         <TouchableOpacity
-          style={{ flexDirection: 'row' }}
-          onPress={() => setSelectedId(item.id)}>
+          style={{ flexDirection: "row" }}
+          onPress={() => setSelectedId(item.id)}
+        >
           <Ionicons name={item.icon} size={24} color="black" />
           <View style={{ marginLeft: 10 }}>
             <Text>{item.name}</Text>
@@ -59,7 +75,7 @@ export default function AssetExample({ visibility,height,width }) {
   return (
     <>
       {visibility && (
-        <Card style={[styles.Card,{height:height, width: width,}]}>
+        <Card style={[styles.Card, { height: height, width: width }]}>
           <View style={styles.container}>
             <FlatList
               data={DummyData}
@@ -75,15 +91,12 @@ export default function AssetExample({ visibility,height,width }) {
 
 const styles = StyleSheet.create({
   Card: {
-   
-   
-    backgroundColor: '#e5e5e5',
-    alignSelf: 'flex-start',
+    backgroundColor: "#e5e5e5",
+    alignSelf: "flex-start",
   },
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
-  
   },
 });
