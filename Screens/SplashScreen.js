@@ -1,12 +1,12 @@
-import React from 'react';
-import { StyleSheet, Image, Text, View } from 'react-native';
-import Constants from 'expo-constants';
-import { useFonts } from 'expo-font';
-import { Colors } from '../Features/Features';
+import React from "react";
+import { StyleSheet, Image, Text, View } from "react-native";
+import Constants from "expo-constants";
+import { useFonts } from "expo-font";
+import { Colors } from "../Features/Features";
 
 export default function SplashScreen() {
   const font = useFonts({
-    Pacifico: require('../assets/Fonts/Pacifico-Regular.ttf'),
+    Pacifico: require("../assets/Fonts/Pacifico-Regular.ttf"),
   });
   return (
     <View style={styles.container2}>
@@ -20,23 +20,23 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container2: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: Colors.logo,
+    backgroundColor: Colors.primary,
     padding: 8,
   },
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 24,
   },
   logo: {
-    fontFamily: 'Pacifico',
+    fontFamily: "Pacifico",
     fontSize: Constants.statusBarHeight * 2,
-    color: '#FFFFFF',
-    fontStyle: 'normal',
-    fontWeight: '400',
-    textAlign: 'center',
+    color: Colors.white,
+    fontStyle: "normal",
+    fontWeight: "400",
+    textAlign: "center",
     marginTop: 0,
   },
 });

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { useFonts } from "expo-font";
 import { LogBox } from "react-native";
-
+//BACKEND
+import { UserData } from "./BACKEND/firebase";
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -27,6 +28,7 @@ import SearchScreen from "./Screens/SearchScreen";
 import CommentsScreen from "./Screens/CommentsScreen";
 import PostScreen from "./Screens/PostScreen";
 import EditScreen from "./Screens/EditScreen";
+import UserDetailsEditScreen from "./Screens/Auth/UserDetails";
 //icons
 const Homeicon = require("./assets/Icon/Homeadvisor.png");
 const Announceicon = require("./assets/Icon/Annnounce.png");
@@ -35,7 +37,6 @@ const Peopleicon = require("./assets/Icon/Person.png");
 //features
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -69,6 +70,7 @@ function MyTabs() {
   );
 }
 function MyStack() {
+  const currentUserData = UserData();
   const [logedin, setlogedin] = useState();
   //chaneg to true
   const [SplashScreenvisible, setSplashScreenvisible] = useState(false);
@@ -89,7 +91,6 @@ function MyStack() {
       const increase = count + 1;
       setcount(increase);
     }
-    console.log(count);
   }, 1000);
   useEffect(() => {
     if (count < 3) {
@@ -110,7 +111,7 @@ function MyStack() {
           />
         </>
       ) : null}
-      {logedin && !SplashScreenvisible ? (
+      {logedin && !SplashScreenvisible && currentUserData?.array?.UserName ? (
         <>
           <Stack.Screen
             name="Tabs"
@@ -179,6 +180,12 @@ function MyStack() {
                 options={{ headerShown: false }}
               />
             </>
+          ) : !SplashScreenvisible && !currentUserData?.array?.UserName ? (
+            <Stack.Screen
+              name="UserDetails"
+              component={UserDetailsEditScreen}
+              options={{ headerShown: false }}
+            />
           ) : null,
         ]
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -7,21 +7,18 @@ import {
   TouchableOpacity,
   Animated,
   Image,
-} from 'react-native';
-import { useTabBar } from '../Hooks/TabBarprovider';
-import {
-  Entypo,
-  Ionicons,
-  EvilIcons,
-} from '@expo/vector-icons';
-import ThreeDots from '../Components2/3dotComp';
-import { Colors } from '../Features/Features';
-import Constants from 'expo-constants';
-import { useNavigation } from '@react-navigation/native';
-import {useauth} from "../BACKEND/firebase"
+} from "react-native";
+import { useTabBar } from "../Hooks/TabBarprovider";
+import { Entypo, Ionicons, EvilIcons } from "@expo/vector-icons";
+import ThreeDots from "../Components2/3dotComp";
+import { Colors } from "../Features/Features";
+import Constants from "expo-constants";
+import { useNavigation } from "@react-navigation/native";
+import { useauth, UserData } from "../BACKEND/firebase";
 export default function Header() {
-  const currentuser = useauth()
+  const currentUserData = UserData();
   const navigation = useNavigation();
+
   const animation = useRef(new Animated.Value(0)).current;
   const { showTabBar } = useTabBar();
   const [threedotvisible, setthreevisible] = useState(false);
@@ -40,17 +37,9 @@ export default function Header() {
         useNativeDriver: true,
       }).start();
       setthreevisible(false);
-
     }
   };
-  const [PhotoURL, setPhotoURL] = useState(
-    "https://firebasestorage.googleapis.com/v0/b/sponcy-7003f.appspot.com/o/Person.png?alt=media&token=79018f26-8263-4230-8713-97c68a845570.png"
-  );
-  useEffect(() => {
-    if (currentuser?.photoURL) {
-      setPhotoURL(currentuser?.photoURL);
-    }
-  }, [currentuser]);
+
   useEffect(() => {
     toggleTabBarAnimation();
   }, [showTabBar]);
@@ -61,17 +50,22 @@ export default function Header() {
       <TouchableOpacity
         style={{
           top: 10,
-          backgroundColor: "#a1a1a1",
           borderRadius: 200,
           borderWidth: 2,
+          backgroundColor: Colors.grey,
         }}
         onPress={() => navigation.navigate("Portfolio")}
       >
-        <Image source={{ uri: PhotoURL }} style={{ width: 50, height: 50 }} />
+        <Image
+          source={{
+            uri: currentUserData?.array?.PhotoURL,
+          }}
+          style={{ width: 50, height: 50, borderRadius: 200 }}
+        />
       </TouchableOpacity>
       <TouchableOpacity
         style={{ maxHeight: 120, height: 120 }}
-        onPress={() => navigation.navigate("Announce")}
+        onPress={() => navigation.navigate("Tabs")}
       >
         <Text style={styles.logo}>Sponcy</Text>
       </TouchableOpacity>
@@ -99,24 +93,24 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.orangewhite,
-    width: '100%',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: Colors.white,
+    width: "100%",
     height: 90,
     elevation: 2,
     borderRadius: 10,
   },
   logo: {
-    fontFamily: 'Pacifico',
+    fontFamily: "Pacifico",
     fontSize: Constants.statusBarHeight + 5,
-    color: '#FC8800',
+    color: Colors.primary,
     // fontStyle: 'normal',
-    fontWeight: '400',
-    textAlign: 'center',
+    fontWeight: "400",
+    textAlign: "center",
     margin: 15,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     // marginTop: 0,
   },
 });

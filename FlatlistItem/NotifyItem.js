@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -6,23 +6,21 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-} from 'react-native';
-import {
-  Entypo,
-} from '@expo/vector-icons';
+} from "react-native";
+import { Entypo } from "@expo/vector-icons";
 
 //componets
-import NameText from '../components/Name';
-import Nullprofile from '../Hooks/NullProfile';
-import Time from '../components/time';
+import NameText from "../components/Name";
+import Nullprofile from "../Hooks/NullProfile";
+import Time from "../components/time";
 
 //assets
 
-import CheckCircle from '../assets/Photos/icons/CheckCircle.png';
+import CheckCircle from "../assets/Photos/icons/CheckCircle.png";
 //features
-import { Colors } from '../Features/Features';
-let deviceWidth = Dimensions.get('screen').width;
-let deviceHeight = Dimensions.get('screen').height;
+import { Colors } from "../Features/Features";
+let deviceWidth = Dimensions.get("screen").width;
+let deviceHeight = Dimensions.get("screen").height;
 
 const NotifyItem = ({
   name,
@@ -38,12 +36,13 @@ const NotifyItem = ({
     <View>
       <TouchableOpacity
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           marginVertical: 1,
           padding: 20,
-          backgroundColor: notifications ? null : Colors.notify,
+          backgroundColor: notifications ? null : Colors.tertiary,
           opacity: notifications ? 0.5 : null,
-        }}>
+        }}
+      >
         <TouchableOpacity style={styles.imagecontainer}>
           <Image
             source={icon ? icon : Nullprofile({ name })}
@@ -75,7 +74,6 @@ const NotifyItem = ({
             </TouchableOpacity>
             <Time time={time} />
           </View>
-     
         </View>
       </TouchableOpacity>
     </View>
@@ -83,17 +81,17 @@ const NotifyItem = ({
 };
 
 const styles = StyleSheet.create({
-  end: { justifyContent: 'flex-end' },
-  row: { flexDirection: 'row' },
+  end: { justifyContent: "flex-end" },
+  row: { flexDirection: "row" },
   previousmessage: {
-    fontFamily: 'Red Hat Display',
+    fontFamily: "Red Hat Display",
     fontSize: 13,
-    fontWeight: '400',
-    fontStyle: 'normal',
-    color: '#0000004D',
+    fontWeight: "400",
+    fontStyle: "normal",
+    color: Colors.black,
   },
   imagecontainer: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     borderRadius: 10,
     marginRight: 10,
   },
@@ -104,17 +102,17 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginHorizontal: 1,
     borderRadius: 200,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
   },
   tripledot: {
-    color: '#2e2e2e',
+    color: Colors.grey,
     marginBottom: 10,
   },
   time: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 10,
-    color: '#737373',
+    color: Colors.grey,
   },
   logo: {
     height: 20,
@@ -122,12 +120,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   leftView: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   leftViewCenter: {
-    flexDirection: 'row',
-    position: 'absolute',
+    flexDirection: "row",
+    position: "absolute",
     right: 3,
     bottom: 5,
   },

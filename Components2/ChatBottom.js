@@ -61,7 +61,7 @@ export function ChatBottom() {
       <TouchableOpacity
         onPress={onSubmit}
         style={{
-          backgroundColor: Colors.logo,
+          backgroundColor: Colors.primary,
           borderRadius: 20,
           bottom: 10,
           position: 'absolute',
@@ -77,30 +77,29 @@ export function ChatBottom() {
 const styles = StyleSheet.create({
   textInputStyle: {
     maxHeight: 100,
-    width: '60%',
+    width: "60%",
     borderRadius: 10,
     // alignSelf: 'center',
     // justifyContent: 'center',
     fontSize: 15,
-    fontWeight: '450',
-    
+    fontWeight: "450",
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    backgroundColor: '#ffd4a1',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    flexDirection: "row",
+    backgroundColor: Colors.white,
+    alignItems: "center",
   },
   sectionStyle: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: Colors.white,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     height: 40,
     borderRadius: 10,
     margin: 10,
     maxHeight: 100,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 });

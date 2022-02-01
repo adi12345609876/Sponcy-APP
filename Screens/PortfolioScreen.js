@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -9,13 +9,15 @@ import {
   ImageBackground,
   ToastAndroid,
   Platform,
-  AlertIOS,
-  LogBox,
 } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons, Entypo, SimpleLineIcons } from "@expo/vector-icons";
-import { useauth } from "../BACKEND/firebase";
-import image from "../assets/Photos/Dummyphotos/netfliximage.png";
+import { Ionicons, Entypo } from "@expo/vector-icons";
+import {
+  useauth,
+  useprofilephoto,
+  useuser,
+  UserData,
+} from "../BACKEND/firebase";
 import checkcircle from "../assets/Photos/icons/CheckCircle.png";
 
 import { Divider } from "react-native-elements";
@@ -23,27 +25,22 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 import AnnounceScreen from "../Screens/AnnounceScreen";
 import ThreeDots from "../Components2/3dotComp";
-
+import { Colors } from "../Features/Features";
+import { query, where } from "firebase/firestore";
 export default function App({ navigation }) {
   const currentuser = useauth();
-  console.log("USER:", currentuser);
+
+  const currentUserData = UserData();
   const [threedotvisible, setthreevisible] = useState(false);
 
-  const [PhotoURL, setPhotoURL] = useState(
-    "https://firebasestorage.googleapis.com/v0/b/sponcy-7003f.appspot.com/o/Person.png?alt=media&token=79018f26-8263-4230-8713-97c68a845570.png"
-  );
   function showtoast(msg) {
     if (Platform.OS === "android") {
       ToastAndroid.show(msg, ToastAndroid.SHORT);
     } else {
-      console.log("AlertIOS.alert(msg)");
     }
   }
-  useEffect(() => {
-    if (currentuser?.photoURL) {
-      setPhotoURL(currentuser?.photoURL);
-    }
-  }, [currentuser]);
+  console.log(currentUserData?.array);
+
   const data2 = {
     name: "Logout",
     icon: "log-out-outline",
@@ -59,26 +56,36 @@ export default function App({ navigation }) {
     icon: "pencil",
     id: "3",
   };
+  function numFormatter(num) {
+    if (num > 999 && num < 1000000) {
+      return num / 1000 + "K"; // convert to K for number from > 1000 < 1 million
+    } else if (num > 1000000) {
+      return num / 1000000 + "M"; // convert to M for number from > 1 million
+    } else if (num < 900) {
+      return num; // if value < 1000, nothing to do
+    }
+  }
   return (
     <View
       style={{
         flex: 1,
         paddingTop: Constants.statusBarHeight,
-        backgroundColor: "#fff",
+        backgroundColor: Colors.white,
       }}
     >
       <StatusBar
         animated={true}
-        backgroundColor="#000"
+        backgroundColor={Colors.black}
         barStyle={"light-content"}
       />
       <ImageBackground
-        source={{ uri: PhotoURL }}
+        source={{ uri: currentUserData?.array?.PhotoURL }}
         resizeMode="cover"
         style={{
           flex: 0.4,
           borderBottomEndRadius: 15,
           borderBottomStartRadius: 15,
+          backgroundColor: Colors.white,
         }}
       >
         <View style={{ backgroundColor: "", flexDirection: "row" }}>
@@ -86,13 +93,13 @@ export default function App({ navigation }) {
             style={{ marginLeft: 10 }}
             onPress={() => navigation.goBack()}
           >
-            <Ionicons name="arrow-back-outline" size={24} color="#909090" />
+            <Ionicons name="arrow-back-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ position: "absolute", right: 10 }}
             onPress={() => setthreevisible(!threedotvisible)}
           >
-            <Entypo name="dots-three-vertical" size={24} color="#909090" />
+            <Entypo name="dots-three-vertical" size={24} color={Colors.grey} />
           </TouchableOpacity>
           <View style={{ top: 30, position: "absolute", right: 18 }}>
             <ThreeDots
@@ -117,17 +124,19 @@ export default function App({ navigation }) {
                 fontWeight: "bold",
               }}
             >
-              Netflix
+              {currentUserData?.array?.UserName}
             </Text>
-            <Image
-              style={{
-                marginLeft: 10,
-                height: 20,
-                width: 20,
-                marginBottom: 10,
-              }}
-              source={checkcircle}
-            />
+            {currentUserData?.array?.checked ? (
+              <Image
+                style={{
+                  marginLeft: 10,
+                  height: 20,
+                  width: 20,
+                  marginBottom: 10,
+                }}
+                source={checkcircle}
+              />
+            ) : null}
             <Text
               style={{
                 position: "absolute",
@@ -135,11 +144,11 @@ export default function App({ navigation }) {
                 fontFamily: "Roboto",
                 fontSize: 15,
                 fontWeight: "700",
-                color: "#3262FF",
+                color: Colors.secondary,
                 marginBottom: 15,
               }}
             >
-              Sponsorer
+              {currentUserData?.array?.Status}
             </Text>
           </View>
           <Text
@@ -148,10 +157,10 @@ export default function App({ navigation }) {
               fontFamily: "Roboto",
               fontSize: 15,
               fontWeight: "normal",
-              color: "#3b3b3b",
+              color: Colors.grey,
             }}
           >
-            Entertain the world
+            {currentUserData?.array?.Slogan}
           </Text>
         </View>
         <Divider style={{ width: 1000 }} />
@@ -164,12 +173,14 @@ export default function App({ navigation }) {
                 fontSize: 15,
                 fontWeight: "300",
                 fontStyle: "normal",
-                color: "#00000099",
+                color: Colors.black,
               }}
             >
               Followers
             </Text>
-            <Text style={{ marginLeft: 10, fontWeight: "bold" }}>12k</Text>
+            <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
+              {numFormatter(currentUserData?.array?.Followers)}
+            </Text>
             <View
               style={{
                 position: "absolute",
@@ -183,12 +194,14 @@ export default function App({ navigation }) {
                   fontSize: 15,
                   fontWeight: "300",
                   fontStyle: "normal",
-                  color: "#00000099",
+                  color: Colors.black,
                 }}
               >
                 Sponsoring
               </Text>
-              <Text style={{ marginLeft: 10, fontWeight: "bold" }}>12k</Text>
+              <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
+                {numFormatter(currentUserData?.array?.Sponsoring)}
+              </Text>
             </View>
           </View>
         </View>
@@ -197,7 +210,7 @@ export default function App({ navigation }) {
             <View style={{ marginLeft: 5 }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#FC8800",
+                  backgroundColor: Colors.primary,
                   height: 40,
                   width: 150,
                   borderRadius: 15,
@@ -214,7 +227,7 @@ export default function App({ navigation }) {
                     fontSize: 16,
                     fontWeight: "700",
                     fontStyle: "normal",
-                    color: "#FFFFFF",
+                    color: Colors.white,
                   }}
                 >
                   Follow
@@ -224,7 +237,7 @@ export default function App({ navigation }) {
             <View style={{ position: "absolute", right: 5 }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#327bff",
+                  backgroundColor: Colors.secondary,
                   height: 40,
                   width: 150,
                   borderRadius: 15,
@@ -242,7 +255,7 @@ export default function App({ navigation }) {
                     fontWeight: "700",
                     fontStyle: "normal",
 
-                    color: "#FFFFFF",
+                    color: Colors.white,
                   }}
                 >
                   Sponsor
@@ -252,7 +265,9 @@ export default function App({ navigation }) {
           </View>
         </View>
         <TouchableOpacity style={{ marginTop: 10 }}>
-          <Text style={{ marginLeft: 10, color: "#3262FF", fontSize: 17 }}>
+          <Text
+            style={{ marginLeft: 10, color: Colors.secondary, fontSize: 17 }}
+          >
             Talk to him?
           </Text>
         </TouchableOpacity>
@@ -261,10 +276,10 @@ export default function App({ navigation }) {
 
       <Tab.Navigator
         tabBarOptions={{
-          inactiveTintColor: "grey",
+          inactiveTintColor: Colors.grey,
 
           indicatorStyle: {
-            backgroundColor: "#FC8800",
+            backgroundColor: Colors.primary,
           },
           labelStyle: {
             fontSize: 9,

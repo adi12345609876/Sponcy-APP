@@ -4,7 +4,7 @@ import {Colors} from "../Features/Features"
 const Notificationbutton = ({ number }) => (
   <View
     style={{
-      backgroundColor:Colors.notification,
+      backgroundColor:Colors.primary,
       width: 25,
       height: 25,
       borderRadius: 50,

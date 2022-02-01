@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import ChatItem from '../FlatlistItem/ChatItem';
 import image from '../assets/Photos/BGC.png';
+import { Colors } from '../Features/Features';
 
 const DummyData = [
   {
@@ -74,39 +75,39 @@ export default function App() {
 const styles = StyleSheet.create({
   sending: {
     padding: 15,
-    backgroundColor: '#edf7ff',
-    alignSelf: 'flex-end',
+    backgroundColor: Colors.white,
+    alignSelf: "flex-end",
     borderBottomColor: 20,
     marginRight: 15,
     marginBottom: 20,
-    maxWidth: '80%',
-    position: 'relative',
+    maxWidth: "80%",
+    position: "relative",
     borderRadius: 20,
     borderTopRightRadius: 0,
     marginTop: 12,
   },
   reciving: {
     padding: 15,
-    backgroundColor: '#FFDEB7',
-    alignSelf: 'flex-start',
+    backgroundColor: Colors.tertiary,
+    alignSelf: "flex-start",
     margin: 15,
-    maxWidth: '80%',
-    position: 'relative',
+    maxWidth: "80%",
+    position: "relative",
     borderRadius: 20,
     borderTopLeftRadius: 0,
   },
   text: {
     // width: 160,
     // height: 20,
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 15,
-    fontWeight: '400',
-    fontStyle: 'normal',
-    color: '#000000',
-    textAlign: 'center',
+    fontWeight: "400",
+    fontStyle: "normal",
+    color: Colors.black,
+    textAlign: "center",
   },
   image: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });

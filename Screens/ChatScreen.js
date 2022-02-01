@@ -13,7 +13,7 @@ export default function AssetExample() {
   return (
     <View
       style={{
-        backgroundColor: Colors.bluewhite,
+        backgroundColor: Colors.white,
         height: '100%',
         width: '100%',
 

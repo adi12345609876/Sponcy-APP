@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -6,25 +6,26 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import Constants from 'expo-constants';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import button from '../assets/Icon/EmailSend.png';
+} from "react-native";
+import Constants from "expo-constants";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import button from "../assets/Icon/EmailSend.png";
+import { Colors } from "../Features/Features";
 
-
-export default function App({navigation}) {
+export default function App({ navigation }) {
   const [text, settext] = useState();
   return (
     <View style={styles.container}>
       <View
         style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
         <View style={{ marginLeft: 10 }}>
-          <Ionicons name="arrow-back-outline" size={30} color="#000" />
+          <Ionicons name="arrow-back-outline" size={30} color={Colors.Black} />
         </View>
-        <View style={{ position: 'absolute', right: 10 }}>
+        <View style={{ position: "absolute", right: 10 }}>
           <TouchableOpacity style={styles.submitbutton}>
             <Image
               source={button}
@@ -35,9 +36,10 @@ export default function App({navigation}) {
               style={{
                 marginRight: 14,
                 marginBottom: 10,
-                fontWeight: 'bold',
-                color: '#fff',
-              }}>
+                fontWeight: "bold",
+                color: "Colors.white",
+              }}
+            >
               Announce
             </Text>
           </TouchableOpacity>
@@ -61,15 +63,16 @@ export default function App({navigation}) {
           style={{
             width: 300,
             height: 200,
-            backgroundColor: '#FC8800',
+            backgroundColor: Colors.primary,
             borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <MaterialCommunityIcons
             name="camera-plus"
             size={50}
-            color="#fffdfa"
+            color="Colors.whitedfa"
           />
         </View>
       </TouchableOpacity>
@@ -82,19 +85,19 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight + 15,
   },
   submitbutton: {
-    backgroundColor: '#FC8800',
+    backgroundColor: Colors.primary,
     width: 140,
     height: 45,
     borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "flex-end",
+    flexDirection: "row",
   },
   input: {
     maxHeight: 200,
     height: 200,
-    textAlignVertical: 'top',
-    borderColor: '#c7c7c7',
+    textAlignVertical: "top",
+    borderColor: Colors.grey,
     borderWidth: 1,
     borderRadius: 10,
     padding: 12,

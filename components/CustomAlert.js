@@ -20,7 +20,7 @@ import { Divider } from 'react-native-elements';
 import { BlurView } from 'expo-blur';
 let deviceWidth = Dimensions.get('screen').width;
 let deviceHeight = Dimensions.get('screen').height;
-
+import {Colors} from "../Features/Features"
 export default function CustomBox({ visible, alerttext, height }) {
 
 
@@ -52,12 +52,12 @@ export default function CustomBox({ visible, alerttext, height }) {
                     // bottom: -60,
                   }}>
                   <TouchableOpacity>
-                    <Text style={{ color: '#F2385F' }}>Cancel</Text>
+                    <Text style={{ color: Colors.grey }}>Cancel</Text>
                   </TouchableOpacity>
 
                   <Divider orientation="vertical" />
                   <TouchableOpacity>
-                    <Text style={{ color: '#42FF00' }}>Ok</Text>
+                    <Text style={{ color: Colors.primary }}>Ok</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#000000',
+    color: Colors.black,
   },
   blurContainer: {
     height: deviceHeight,
@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
   },
   Box: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     // justifyContent: 'center',
     // alignItems:"center",
     width: deviceWidth / 1.5,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
       height: 2,

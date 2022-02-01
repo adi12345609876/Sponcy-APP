@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React from "react";
 import {
   Text,
   View,
@@ -7,25 +7,26 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 //components
-import AnimatedScroolView from '../components/AnimatedScroolTab';
-import Nullprofile from '../Hooks/NullProfile';
-import Name from '../components/Name';
-
+import AnimatedScroolView from "../components/AnimatedScroolTab";
+import Nullprofile from "../Hooks/NullProfile";
+import Name from "../components/Name";
+import {Colors} from "../Features/Features"
 //assets
-import DummynullProfile from '../assets/Photos/Dummyicon/actualnullimage.png';
-import DummyNetflixIcon from '../assets/Photos/Dummyicon/Netflix.png';
-import DummyTeslaIcon from '../assets/Photos/Dummyicon/Tesla.png';
+import DummynullProfile from "../assets/Photos/Dummyicon/actualnullimage.png";
+import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
+import DummyTeslaIcon from "../assets/Photos/Dummyicon/Tesla.png";
 //feautures
-let deviceWidth = Dimensions.get('screen').width;
-let deviceHeight = Dimensions.get('screen').height;
+let deviceWidth = Dimensions.get("screen").width;
+let deviceHeight = Dimensions.get("screen").height;
+
 
 //data
 export const Netflixdata = [
   {
     id: 1,
-    name: 'Netflix',
+    name: "Netflix",
     image: DummyNetflixIcon,
     checked: true,
   },
@@ -33,7 +34,7 @@ export const Netflixdata = [
 export const Tesladata = [
   {
     id: 2,
-    name: 'Tesla',
+    name: "Tesla",
     image: DummyTeslaIcon,
     checked: true,
   },
@@ -41,26 +42,26 @@ export const Tesladata = [
 export const Adinathdata = [
   {
     id: 3,
-    name: 'Adinath',
+    name: "Adinath",
     image: null,
     checked: false,
   },
 ];
 const DummyData = [
   {
-    title: 'Sponsorer',
+    title: "Sponsorer",
     data: [...Netflixdata, ...Tesladata],
   },
   {
-    title: 'Sponsoring',
+    title: "Sponsoring",
     data: [],
   },
   {
-    title: 'Followers',
+    title: "Followers",
     data: [...Adinathdata],
   },
   {
-    title: 'Following',
+    title: "Following",
     data: [...Tesladata, ...Adinathdata, ...Netflixdata],
   },
 ];
@@ -91,14 +92,16 @@ export default function AssetExample({ navigation }) {
               <View
                 style={{
                   padding: 10,
-                  backgroundColor: '#f1f3f4',
-                }}>
+                  backgroundColor: Colors.white,
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 15,
-                    fontWeight: 'bold',
-                    color: '#b7b7b7',
-                  }}>
+                    fontWeight: "bold",
+                    color: Colors.grey,
+                  }}
+                >
                   {item.title}
                 </Text>
               </View>
@@ -110,12 +113,13 @@ export default function AssetExample({ navigation }) {
                   <TouchableOpacity
                     style={{
                       margin: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      justifyContent: "center",
+                      alignItems: "center",
                       paddingVertical: 10,
                       marginHorizontal: 15,
                     }}
-                    onPress={() => navigation.navigate('Portfolio')}>
+                    onPress={() => navigation.navigate("Portfolio")}
+                  >
                     <Image
                       style={styles.image}
                       source={item.image ? item.image : DummynullProfile}
@@ -123,8 +127,9 @@ export default function AssetExample({ navigation }) {
                     <Text
                       style={{
                         fontSize: 18,
-                        fontWeight: 'bold',
-                      }}>
+                        fontWeight: "bold",
+                      }}
+                    >
                       {item.name}
                     </Text>
                   </TouchableOpacity>
@@ -142,25 +147,25 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginVertical: 8,
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 15,
-    fontWeight: '400',
-    fontStyle: 'normal',
+    fontWeight: "400",
+    fontStyle: "normal",
   },
   container: {
     paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#f1f1f1',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    backgroundColor: Colors.white,
   },
   image: {
     width: 70,
     height: 70,
     borderRadius: 200,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
   },
 });

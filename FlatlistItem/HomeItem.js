@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   View,
@@ -6,21 +6,26 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-} from 'react-native';
-import {
-  Octicons,
-} from '@expo/vector-icons';
+} from "react-native";
+import { Octicons } from "@expo/vector-icons";
 //componets
-import Nullprofile from '../Hooks/NullProfile';
-import Notificationbutton from '../components/NotificationButton';
-import NameText from '../components/Name';
+import Nullprofile from "../Hooks/NullProfile";
+import Notificationbutton from "../components/NotificationButton";
+import NameText from "../components/Name";
+import { Colors } from "../Features/Features";
 //assets
+import { useNavigation } from "@react-navigation/native";
 
 //features
 
-const HomeItem = ({ name, previousmessage, pinned, icon, notifications }) => (
+const HomeItem = ({ name, previousmessage, pinned, icon, notifications }) => {
+  
+  const navigation = useNavigation();
+return (
   <TouchableOpacity
-    style={styles.container}>
+    style={styles.container}
+    onPress={() => navigation.navigate("Chat")}
+  >
     <TouchableOpacity style={styles.imagecontainer}>
       <Image
         source={icon ? icon : Nullprofile({ name })}
@@ -29,8 +34,9 @@ const HomeItem = ({ name, previousmessage, pinned, icon, notifications }) => (
     </TouchableOpacity>
     <View
       style={{
-        flexDirection: 'row',
-      }}>
+        flexDirection: "row",
+      }}
+    >
       <View style={{ maxWidth: 200 }}>
         <NameText name={name} />
         <Text numberOfLines={1} style={styles.previousmessage}>
@@ -43,19 +49,19 @@ const HomeItem = ({ name, previousmessage, pinned, icon, notifications }) => (
         <Notificationbutton number={notifications} />
       </View>
       <View style={styles.end}>
-        {pinned && <Octicons name="pin" size={15} color="#737373" />}
+        {pinned && <Octicons name="pin" size={15} color={Colors.grey} />}
       </View>
     </View>
   </TouchableOpacity>
-);
+);}
 const styles = StyleSheet.create({
-  container:{
-      flexDirection: 'row',
-      marginVertical: 10,
-      marginHorizontal: 5,
-    },
+  container: {
+    flexDirection: "row",
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
   imagecontainer: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     borderRadius: 10,
     marginRight: 10,
   },
@@ -65,22 +71,22 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginHorizontal: 1,
     borderRadius: 200,
-    borderColor:"#fff",
-    borderWidth:2,
+    borderColor: Colors.white,
+    borderWidth: 2,
   },
-  end: { justifyContent: 'flex-end' },
+  end: { justifyContent: "flex-end" },
   right: {
-    flexDirection: 'row',
-    position: 'absolute',
+    flexDirection: "row",
+    position: "absolute",
     right: 3,
     bottom: 0,
   },
   previousmessage: {
-    fontFamily: 'Red Hat Display',
+    fontFamily: "Red Hat Display",
     fontSize: 13,
-    fontWeight: '400',
-    fontStyle: 'normal',
-    color: '#0000004D',
+    fontWeight: "400",
+    fontStyle: "normal",
+    color: Colors.black,
   },
 });
 export default HomeItem;

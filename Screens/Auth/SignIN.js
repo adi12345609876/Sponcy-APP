@@ -10,16 +10,28 @@ import {
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { LinearGradient } from "expo-linear-gradient";
-import { signup, login, logout, useauth } from "../../BACKEND/firebase";
+import {
+  signup,
+  login,
+  logout,
+  useauth,
+  setUser,
+} from "../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
+import { Colors } from "../../Features/Features";
 export default function Signin() {
   const navigation = useNavigation();
   const emailref = useRef();
   const passwordref = useRef();
-  const currentuser = useauth()
+  const currentuser = useauth();
   async function handleSignin() {
     try {
-      await signup(emailref.current.value, passwordref.current.value);
+      await signup(emailref.current.value, passwordref.current.value).then(
+        (user) => {
+          setUser(user.user.uid);
+          navigation.navigate("UserDetails");
+        }
+      );
     } catch (e) {
       alert(e);
     }
@@ -27,22 +39,21 @@ export default function Signin() {
   async function handleLogin() {
     try {
       await login(emailref.current.value, passwordref.current.value);
-      console.log("sucessfully logged in")
+      console.log("sucessfully logged in");
     } catch (e) {
       alert(e);
     }
   }
- 
-  
+
   return (
     <View style={{ marginVertical: 10 }}>
       <LinearGradient
         style={styles.circlestyle1}
-        colors={["#FF8A00", "#FAFF00"]}
+        colors={[Colors.primary, Colors.secondary]}
       />
       <LinearGradient
         style={styles.circlestyle2}
-        colors={["#FF8A00", "#FAFF00"]}
+        colors={[Colors.primary, Colors.secondary]}
       />
       <View style={{ position: "absolute" }}>
         <Text style={styles.signINStyle}>Sign In</Text>
@@ -66,21 +77,23 @@ export default function Signin() {
         <Text style={styles.or}>or</Text>
         <View style={{ marginVertical: 10 }}>
           <TouchableOpacity style={styles.signinbutton}>
-            <Text style={[styles.signinbuttonText, { color: "#FFFFFF" }]}>
+            <Text
+              style={[styles.signinbuttonText, { color: "Colors.whiteFFF" }]}
+            >
               Sign In with Google
             </Text>
           </TouchableOpacity>
         </View>
         <View style={{ marginVertical: 10 }}>
           <TouchableOpacity style={styles.signinbutton}>
-            <Text style={[styles.signinbuttonText, { color: "#000000" }]}>
+            <Text style={[styles.signinbuttonText, { color: Colors.black }]}>
               Sign In with Github
             </Text>
           </TouchableOpacity>
         </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TouchableOpacity style={styles.createbutton} onPress={handleSignin}>
-            <Text style={[styles.createbuttontext, { color: "#FC8800" }]}>
+            <Text style={[styles.createbuttontext, { color: Colors.primary }]}>
               Create
             </Text>
           </TouchableOpacity>
@@ -144,13 +157,13 @@ const styles = StyleSheet.create({
     //done
     textAlign: "center",
     fontFamily: "Roboto",
-    color: "#858585",
+    color: Colors.grey,
   },
   signinbutton: {
     width: deviceWidth,
     height: 50,
     borderRadius: 17,
-    backgroundColor: "#FC8800",
+    backgroundColor: Colors.primary,
   },
   signinbuttonText: {
     // width: 275,
@@ -167,7 +180,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 70,
     borderRadius: 23,
-    backgroundColor: "#000000",
+    backgroundColor: Colors.black,
   },
   createbuttontext: {
     fontFamily: "Roboto",

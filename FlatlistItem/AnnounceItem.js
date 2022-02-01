@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   View,
@@ -6,22 +6,19 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-} from 'react-native';
-import {
-  MaterialCommunityIcons,
-  Entypo,
-  AntDesign,
-} from '@expo/vector-icons';
+} from "react-native";
+import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
 //components
-import Nullprofile from '../Hooks/NullProfile';
-import NameText from '../components/Name';
-import Time from '../components/time';
+import Nullprofile from "../Hooks/NullProfile";
+import NameText from "../components/Name";
+import Time from "../components/time";
+import { Colors } from "../Features/Features";
 //assets
 
 //features
-let deviceWidth = Dimensions.get('screen').width;
-let deviceHeight = Dimensions.get('screen').height;
-import { useNavigation } from '@react-navigation/native';
+let deviceWidth = Dimensions.get("screen").width;
+let deviceHeight = Dimensions.get("screen").height;
+import { useNavigation } from "@react-navigation/native";
 
 const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
   const navigation = useNavigation();
@@ -53,7 +50,7 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
       <View style={styles.iconcontainer}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('Comments', {
+            navigation.navigate("Comments", {
               message,
               photo,
               name,
@@ -62,7 +59,8 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
               time,
               id,
             })
-          }>
+          }
+        >
           <MaterialCommunityIcons
             name="message-reply-text"
             size={15}
@@ -84,26 +82,26 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', marginVertical: 10 },
+  container: { flexDirection: "row", marginVertical: 10 },
   profileicon: {
     width: 60,
     height: 60,
     borderRadius: 200,
     marginHorizontal: 5,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
   },
   photocontainer: {
     width: deviceWidth,
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   photo: {
     width: 250,
     height: 200,
     borderRadius: 20,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
     elevation: 2,
     marginLeft: 10,
@@ -112,33 +110,33 @@ const styles = StyleSheet.create({
     maxWidth: deviceWidth - 100,
     marginLeft: 60,
     marginBottom: 10,
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
   },
   message: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 15,
-    fontWeight: '650',
-    fontStyle: 'normal',
-    color: '#0f0f0f',
+    fontWeight: "650",
+    fontStyle: "normal",
+    color: Colors.black,
     letterSpacing: 1,
   },
   iconcontainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     width: 340,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
     marginVertical: 30,
   },
   namecontainer: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
+    justifyContent: "flex-end",
+    flexDirection: "row",
 
     marginTop: 10,
   },
   timecontainer: {
     width: deviceWidth / 2,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
 });
 export default HomeItem;

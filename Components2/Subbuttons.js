@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -7,23 +7,21 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-} from 'react-native';
-import {
-  Feather,
-} from '@expo/vector-icons';
-import { Colors } from '../Features/Features';
-const { width } = Dimensions.get('screen');
-let deviceWidth = Dimensions.get('screen').width;
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { Colors } from "../Features/Features";
+const { width } = Dimensions.get("screen");
+let deviceWidth = Dimensions.get("screen").width;
 let CIRCLESIZE = 50;
 let CIRCLERADIUS = 100;
-import { useTabBar } from '../Hooks/TabBarprovider';
-import { useNavigation } from '@react-navigation/native';
-let deviceHeight = Dimensions.get('screen').height;
+import { useTabBar } from "../Hooks/TabBarprovider";
+import { useNavigation } from "@react-navigation/native";
+let deviceHeight = Dimensions.get("screen").height;
 export default function PostButton() {
   const navigation = useNavigation();
   const { showTabBar } = useTabBar();
-  const Homeicon = require('../assets/Icon/Homeadvisor.png');
-  const Announceicon = require('../assets/Icon/Annnounce.png');
+  const Homeicon = require("../assets/Icon/Homeadvisor.png");
+  const Announceicon = require("../assets/Icon/Annnounce.png");
   const RotationAnim = useState(new Animated.Value(0))[0];
   const DiagnolAnim = useState(new Animated.Value(1))[0];
   const OpacityAnim = useState(new Animated.Value(0))[0];
@@ -78,14 +76,15 @@ export default function PostButton() {
   }, [showTabBar]);
   const rotate = RotationAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '45deg'],
+    outputRange: ["0deg", "45deg"],
   });
   return (
     <View style={[styles.container]}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('HomeChat');
-        }}>
+          navigation.navigate("HomeChat");
+        }}
+      >
         <Animated.View
           style={[
             styles.shape2,
@@ -94,7 +93,8 @@ export default function PostButton() {
               opacity: OpacityAnim,
               transform: [{ translateX: DiagnolAnim }],
             },
-          ]}>
+          ]}
+        >
           <Image source={Homeicon} style={{ width: 25, height: 25 }} />
         </Animated.View>
       </TouchableOpacity>
@@ -103,7 +103,8 @@ export default function PostButton() {
         style={[
           styles.shape,
           { bottom: DiagnolAnim, opacity: OpacityAnim, right: DiagnolAnim },
-        ]}>
+        ]}
+      >
         <TouchableOpacity>
           <Image source={Announceicon} style={{ width: 25, height: 25 }} />
         </TouchableOpacity>
@@ -120,7 +121,8 @@ export default function PostButton() {
                 },
               ],
             },
-          ]}>
+          ]}
+        >
           <Feather name="plus" size={30} color="white" />
         </Animated.View>
       </TouchableOpacity>
@@ -130,49 +132,49 @@ export default function PostButton() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    justifyContent: 'center',
+    position: "absolute",
+    justifyContent: "center",
     left: deviceWidth / 2 - 18,
     bottom: 20,
   },
   blurContainer: {
     height: deviceHeight,
     width: deviceWidth,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   button: {
-    position: 'absolute',
-    backgroundColor: Colors.logo,
+    position: "absolute",
+    backgroundColor: Colors.primary,
     width: 60,
     height: 60,
     borderRadius: CIRCLERADIUS,
     elevation: 5,
     padding: 15,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 1,
   },
   shape: {
-    backgroundColor: Colors.logo,
+    backgroundColor: Colors.primary,
     width: CIRCLESIZE,
     height: CIRCLESIZE,
-    position: 'absolute',
+    position: "absolute",
     borderRadius: CIRCLERADIUS,
-    borderColor: '#525252',
+    borderColor: Colors.grey,
     borderWidth: 1,
     elevation: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   shape2: {
-    backgroundColor: Colors.logo,
+    backgroundColor: Colors.primary,
     width: CIRCLESIZE,
     height: CIRCLESIZE,
     borderRadius: CIRCLERADIUS,
-    borderColor: '#525252',
+    borderColor: Colors.grey,
     borderWidth: 1,
     elevation: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

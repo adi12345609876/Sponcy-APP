@@ -16,6 +16,7 @@ import {
   Ionicons,
   FontAwesome,
 } from '@expo/vector-icons';
+import { Colors } from '../Features/Features';
 
 export default function ChatBottom() {
   const [height, setheight] = useState(23);
@@ -61,7 +62,7 @@ export default function ChatBottom() {
       <TouchableOpacity
         onPress={onSubmit}
         style={{
-          backgroundColor: 'orange',
+          backgroundColor: Colors.primary,
           borderRadius: 20,
           bottom: 10,
           position: 'absolute',
@@ -87,11 +88,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    backgroundColor: '#ffd4a1',
+    backgroundColor: Colors.tertiary,
     width: '100%',
   },
   sectionStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

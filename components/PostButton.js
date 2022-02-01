@@ -42,13 +42,13 @@ const styles = StyleSheet.create({
 
   button: {
   
-    backgroundColor: Colors.logo,
+    backgroundColor: Colors.primary,
     width: 60,
     height: 60,
     borderRadius: CIRCLERADIUS,
     elevation: 5,
     padding: 15,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 1,
   },
   

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
-
-export default function Time({time}) {
+import {Colors} from "../Features/Features"
+export default function Time({ time }) {
   return (
     <View>
       <Text style={styles.time}>
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
    time: {
     fontFamily: 'Roboto',
     fontSize: 15,
-    color: '#737373',
+    color: Colors.grey,
     fontWeight:"600",
   }
 });

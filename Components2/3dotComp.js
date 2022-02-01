@@ -13,6 +13,7 @@ import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
 import {logout,useauth} from "../BACKEND/firebase"
 import { useNavigation } from "@react-navigation/native";
+import {Colors} from "../Features/Features"
 export default function AssetExample({ visibility, height, width,data1,data2,data3,data4,}) {
  const navigation = useNavigation();
   
@@ -91,7 +92,7 @@ export default function AssetExample({ visibility, height, width,data1,data2,dat
 
 const styles = StyleSheet.create({
   Card: {
-    backgroundColor: "#e5e5e5",
+    backgroundColor: Colors.tertiary,
     alignSelf: "flex-start",
   },
   container: {

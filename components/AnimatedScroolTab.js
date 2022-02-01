@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTabBar } from '../Hooks/TabBarprovider';
-
+import {Colors} from "../Features/Features"
 let offsetY = 0;
 const AnimatedScrollView = ({ children, ...restProps }) => {
   const { setShowTabBar } = useTabBar();
   return (
     <ScrollView
-    style={{backgroundColor:"#fff"}}
+    style={{backgroundColor:Colors.white}}
       {...restProps}
       onScroll={({ nativeEvent }) => {
         const newOffset = nativeEvent.contentOffset.y;

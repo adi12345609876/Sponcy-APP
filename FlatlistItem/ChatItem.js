@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import Time from '../components/time';
+import { Colors } from '../Features/Features';
 export default function ChatItem({ message, To, From, time }) {
   return (
     <View>
@@ -17,41 +18,41 @@ export default function ChatItem({ message, To, From, time }) {
 const styles = StyleSheet.create({
   sending: {
     padding: 18,
-    backgroundColor: '#edf7ff',
-    alignSelf: 'flex-end',
+    backgroundColor: Colors.white,
+    alignSelf: "flex-end",
     borderBottomColor: 20,
     marginRight: 15,
     marginBottom: 20,
-    maxWidth: '80%',
-    position: 'relative',
+    maxWidth: "80%",
+    position: "relative",
     borderRadius: 20,
     borderTopRightRadius: 0,
     marginTop: 12,
   },
   reciving: {
     padding: 18,
-    backgroundColor: '#FFDEB7',
-    alignSelf: 'flex-start',
+    backgroundColor: Colors.tertiary,
+    alignSelf: "flex-start",
     margin: 15,
-    maxWidth: '80%',
-    position: 'relative',
+    maxWidth: "80%",
+    position: "relative",
     borderRadius: 20,
     borderTopLeftRadius: 0,
   },
   text: {
     // width: 160,
     // height: 20,
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 15,
-    fontWeight: '400',
-    fontStyle: 'normal',
-    color: '#000000',
-    textAlign: 'center',
+    fontWeight: "400",
+    fontStyle: "normal",
+    color: Colors.black,
+    textAlign: "center",
   },
   time: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 10,
-    color: '#737373',
-    fontWeight: '600',
+    color: Colors.grey,
+    fontWeight: "600",
   },
 });

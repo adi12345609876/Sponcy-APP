@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   View,
@@ -9,37 +9,38 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-} from 'react-native';
+} from "react-native";
 //components
-import Nullprofile from '../Hooks/NullProfile';
-import NameText from '../components/Name';
-import Time from '../components/time';
-import Customtextinput from '../Components2/Textinput';
+import Nullprofile from "../Hooks/NullProfile";
+import NameText from "../components/Name";
+import Time from "../components/time";
+import Customtextinput from "../Components2/Textinput";
 //assets
-import DummyNetflixIcon from '../assets/Photos/Dummyicon/Netflix.png';
-import DummyTeslaIcon from '../assets/Photos/Dummyicon/Tesla.png';
-import CommentItem from '../FlatlistItem/CommentItem';
+import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
+import DummyTeslaIcon from "../assets/Photos/Dummyicon/Tesla.png";
+import CommentItem from "../FlatlistItem/CommentItem";
 //features
-let deviceWidth = Dimensions.get('screen').width;
-let deviceHeight = Dimensions.get('screen').height;
+let deviceWidth = Dimensions.get("screen").width;
+let deviceHeight = Dimensions.get("screen").height;
+import { Colors } from "../Features/Features";
 
 const Netflixdata = {
   id: 1,
-  name: 'Netflix CEO',
+  name: "Netflix CEO",
   image: DummyNetflixIcon,
   checked: true,
 };
 
 const Tesladata = {
   id: 2,
-  name: 'Tesla CEO',
+  name: "Tesla CEO",
   image: DummyTeslaIcon,
   checked: true,
 };
 
 const Adinathdata = {
   id: 3,
-  name: 'ADI',
+  name: "ADI",
   image: null,
   checked: false,
 };
@@ -47,22 +48,20 @@ const Adinathdata = {
 const DummyData = [
   {
     ...Tesladata,
-    message:
-      'WOW 👌',
-    time: '1:01',
+    message: "WOW 👌",
+    time: "1:01",
   },
   {
     ...Adinathdata,
-    message: 'great idea',
-    time: '1:02',
+    message: "great idea",
+    time: "1:02",
   },
   {
     ...Netflixdata,
-    message: 'we are interested to supporting you',
+    message: "we are interested to supporting you",
     photo: null,
-    time: '2 days',
+    time: "2 days",
   },
-
 ];
 const HomeItem = ({ navigation, route }) => {
   const renderItem = ({ item }) => {
@@ -111,23 +110,25 @@ const HomeItem = ({ navigation, route }) => {
           <View style={{}}>
             <Text
               style={{
-                borderTopColor: '#737373',
-                borderBottomColor: '#737373',
+                borderTopColor: Colors.grey,
+                borderBottomColor: Colors.grey,
                 borderWidth: 0.5,
-                textAlign: 'center',
+                textAlign: "center",
                 marginVertical: 10,
                 fontSize: 15,
-                fontWeight: 'bold',
-                color: '#737373',
-              }}>
+                fontWeight: "bold",
+                color: Colors.grey,
+              }}
+            >
               Comments
             </Text>
           </View>
-          <View style={{ alignItems: 'flex-start' }}>
+          <View style={{ alignItems: "flex-start" }}>
             <View
               style={{
                 marginLeft: 20,
-              }}>
+              }}
+            >
               <FlatList
                 data={DummyData}
                 renderItem={renderItem}
@@ -146,17 +147,16 @@ const HomeItem = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   topcontainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 10,
-    
   },
   bottomcontainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: deviceWidth,
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   comments: {},
   originalmessage: {},
@@ -165,20 +165,20 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 200,
     marginHorizontal: 5,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
   },
   photocontainer: {
     width: deviceWidth,
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   photo: {
     width: 250,
     height: 200,
     borderRadius: 20,
-    borderColor: '#fff',
+    borderColor: Colors.white,
     borderWidth: 2,
     elevation: 2,
     marginLeft: 10,
@@ -187,33 +187,33 @@ const styles = StyleSheet.create({
     maxWidth: deviceWidth - 100,
     marginLeft: 60,
     marginBottom: 10,
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
   },
   message: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     fontSize: 15,
-    fontWeight: '650',
-    fontStyle: 'normal',
-    color: '#0f0f0f',
+    fontWeight: "650",
+    fontStyle: "normal",
+    color: Colors.black,
     letterSpacing: 1,
   },
   iconcontainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     width: 340,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
     marginVertical: 30,
   },
   namecontainer: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
+    justifyContent: "flex-end",
+    flexDirection: "row",
 
     marginTop: 10,
   },
   timecontainer: {
     width: deviceWidth / 2,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
 });
 export default HomeItem;
