@@ -11,24 +11,32 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
-import {logout,useauth} from "../BACKEND/firebase"
+import { logout, useauth } from "../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
-import {Colors} from "../Features/Features"
-export default function AssetExample({ visibility, height, width,data1,data2,data3,data4,}) {
- const navigation = useNavigation();
-  
+import { Colors } from "../Features/Features";
+export default function AssetExample({
+  visibility,
+  height,
+  width,
+  data1,
+  data2,
+  data3,
+  data4,
+}) {
+  const navigation = useNavigation();
+
   const DummyData = [
     {
-      ...data1?data1:null,
+      ...(data1 ? data1 : null),
     },
     {
-      ...data2?data2:null,
+      ...(data2 ? data2 : null),
     },
     {
-      ...data3?data3:null,
+      ...(data3 ? data3 : null),
     },
     {
-      ...data4?data4:null,
+      ...(data4 ? data4 : null),
     },
   ];
   const [selectedId, setSelectedId] = useState(null);
@@ -42,18 +50,18 @@ export default function AssetExample({ visibility, height, width,data1,data2,dat
   const OnPressFunc = () => {
     //id should be unique fo reach screen
     //portfolio screeen
-    selectedId == "1" ? setpressfunc(console.log("navigate to settings")) : null;
-    selectedId == "2" ? setpressfunc(()=>logout()) : null;
-    selectedId == "3" ? setpressfunc(()=>navigation.navigate("Edit")) : null;
+    selectedId == "1"
+      ? setpressfunc(console.log("navigate to settings"))
+      : null;
+    selectedId == "2" ? setpressfunc(() => logout()) : null;
+    selectedId == "3" ? setpressfunc(() => navigation.navigate("Edit")) : null;
     //home
-    selectedId == "4" ? setpressfunc(console.log("2")) : null;
-    selectedId == "5" ? setpressfunc(console.log("2")) : null;
-    selectedId == "6" ? setpressfunc(console.log("2")) : null;
+    selectedId == "1chatheader" ? setpressfunc(console.log("2")) : null;
+    selectedId == "2chatheader" ? setpressfunc(console.log("2")) : null;
+    selectedId == "3chatheader" ? setpressfunc(console.log("2")) : null;
     selectedId == "7" ? setpressfunc(console.log("2")) : null;
     selectedId == "8" ? setpressfunc(console.log("2")) : null;
     selectedId == "9" ? setpressfunc(console.log("2")) : null;
-  
-
   };
   useEffect(() => {
     OnPressFunc();

@@ -2,31 +2,25 @@
 //https://aboutreact.com/image-icon-with-react-native-textinput/
 
 //import React in our code
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 //import all the components we are going to use
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import {
-  Entypo,
-  Ionicons,
-  FontAwesome,
-} from '@expo/vector-icons';
-import { Colors } from '../Features/Features';
-export function ChatBottom() {
+import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Colors } from "../Features/Features";
+import { PostPrivateChats, useauth } from "../BACKEND/firebase";
+export function ChatBottom({ roomid }) {
+  const currentUser = useauth();
   const [height, setheight] = useState(23);
   const [text, settext] = useState();
-  const [senttext, setsenttext] = useState('hello');
+  // const [senttext, setsenttext] = useState("hello");
 
-  const onSubmit = (texts) => {
-    setsenttext(text);
-    settext('');
-    setheight(23)
-  };
+  async function onSubmit() {
+    console.log(roomid, currentUser?.uid, text);
+    await PostPrivateChats(roomid, currentUser?.uid, text);
+    setheight(23);
+    settext("");
+  }
 
   // <Text>{senttext}</Text>
   return (
@@ -43,12 +37,12 @@ export function ChatBottom() {
           onChangeText={settext}
           autoComplete
           textAlign="left"
-          onSubmitEditing={(e) => onSubmit(e.nativeEvent.texts)}
+          // onSubmitEditing={(e) => onSubmit(e)}
           value={text}
           clearButtonMode="always"
         />
 
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: "row" }}>
           <TouchableOpacity style={{ marginLeft: 12 }}>
             <Entypo name="circle" size={24} color="black" />
           </TouchableOpacity>
@@ -64,10 +58,11 @@ export function ChatBottom() {
           backgroundColor: Colors.primary,
           borderRadius: 20,
           bottom: 10,
-          position: 'absolute',
-          right:10,
-          padding:10,
-        }}>
+          position: "absolute",
+          right: 10,
+          padding: 10,
+        }}
+      >
         <FontAwesome name="send-o" size={20} color="white" />
       </TouchableOpacity>
     </View>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Text,
   View,
@@ -6,59 +6,52 @@ import {
   ScrollView,
   FlatList,
   ImageBackground,
-} from 'react-native';
-import ChatItem from '../FlatlistItem/ChatItem';
-import image from '../assets/Photos/BGC.png';
-import { Colors } from '../Features/Features';
+} from "react-native";
+import ChatItem from "../FlatlistItem/ChatItem";
+import image from "../assets/Photos/BGC.png";
+import { Colors } from "../Features/Features";
 
 const DummyData = [
   {
-    From: 'Adinath',
-    To: 'Netflix',
+    From: "Adinath",
+    To: "Netflix",
     message:
-      'From Adinth,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    time: '12:01pm',
+      "From Adinth,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    time: "12:01pm",
   },
   {
-    From: 'Adinath',
-    To: 'Netflix',
+    From: "Adinath",
+    To: "Netflix",
     message:
-      'From Adinth,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    time: '12:01pm',
+      "From Adinth,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    time: "12:01pm",
   },
   {
-    From: 'Netflix',
-    To: 'Adinath',
+    From: "Netflix",
+    To: "Adinath",
     message:
-      'From Netflix,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    time: '1:00pm',
+      "From Netflix,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    time: "1:00pm",
   },
   {
-    From: 'Netflix',
-    To: 'Adinath',
+    From: "Netflix",
+    To: "Adinath",
     message:
-      'From Netflix,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    time: '1:00pm',
+      "From Netflix,It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    time: "1:00pm",
   },
 ];
 const renderItem = ({ item }) => {
-  return (
-    <ChatItem
-      message={item.message}
-      From={item.From}
-      To={item.To}
-      time={item.time}
-    />
-  );
+  return <ChatItem message={item.text} From={item.From} time={item.time} />;
 };
-export default function App() {
+export default function App({ messages }) {
   const [text, setText] = React.useState();
 
   return (
     <ScrollView style={{ marginBottom: 50 }}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <FlatList
-          data={DummyData}
+          data={messages}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />

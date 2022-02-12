@@ -1,13 +1,15 @@
-import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
-import Time from '../components/time';
-import { Colors } from '../Features/Features';
+import * as React from "react";
+import { Text, View, StyleSheet, Image } from "react-native";
+import Time from "../components/time";
+import { Colors } from "../Features/Features";
+import { useauth } from "../BACKEND/firebase";
 export default function ChatItem({ message, To, From, time }) {
+  const currentuser = useauth();
   return (
     <View>
-      <View style={From == 'Adinath' ? styles.sending : styles.reciving}>
+      <View style={From == currentuser?.uid ? styles.sending : styles.reciving}>
         <Text style={styles.text}>{message}</Text>
-        <View style={{position:"absolute",bottom:0,right:10,}}>
+        <View style={{ position: "absolute", bottom: 0, right: 10 }}>
           <Text style={styles.time}>{time}</Text>
         </View>
       </View>

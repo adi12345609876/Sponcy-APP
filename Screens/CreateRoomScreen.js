@@ -13,7 +13,7 @@ import button from "../assets/Icon/EmailSend.png";
 import { Colors } from "../Features/Features";
 import * as ImagePicker from "expo-image-picker";
 
-import { useauth, UserData, PostAnnounce } from "../BACKEND/firebase";
+import { useauth, UserData, PostAnnounce, AddRooms } from "../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 
 export default function App() {
@@ -21,10 +21,12 @@ export default function App() {
   const currentuser = useauth();
 
   const [text, settext] = useState();
+  const [Users, setUsers] = useState();
+
   const [Photo, setPhoto] = useState();
 
   const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(false);
+  //   const [done, setdone] = useState(false);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -46,8 +48,8 @@ export default function App() {
     }
   };
   async function handleClick() {
-    console.log([Photo, text, currentuser.uid, setdone]);
-    await PostAnnounce(Photo, text, currentuser.uid, setdone);
+    console.log([Photo, text, "Users:", [Users, currentuser?.uid]]);
+    await AddRooms(Photo, text, Users, currentuser?.uid);
     console.log("Updated");
     navigation.navigate("Tabs");
   }
@@ -91,13 +93,26 @@ export default function App() {
         </View>
         <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
           <TextInput
-            placeholder="Type your thoughts"
+            placeholder="Room Name"
             style={styles.input}
             underlineColorAndroid="transparent"
             onChangeText={settext}
             autoComplete
             textAlign="left"
             value={text}
+            multiline
+            maxLength={250}
+          />
+        </View>
+        <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
+          <TextInput
+            placeholder="Members"
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            onChangeText={setUsers}
+            autoComplete
+            textAlign="left"
+            value={Users}
             multiline
             maxLength={250}
           />
@@ -119,18 +134,6 @@ export default function App() {
               color="Colors.whitedfa"
             />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            height: 100,
-            width: 100,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: Colors.primary,
-          }}
-          onPress={() => navigation.navigate("CreateRooms")}
-        >
-          <Text style={{ color: Colors.white }}> create New Room?</Text>
         </TouchableOpacity>
       </>
     </View>

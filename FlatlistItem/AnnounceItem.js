@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,21 +7,45 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  Entypo,
+  AntDesign,
+  Ionicons,
+} from "@expo/vector-icons";
+// import ThreeDots from "../Components2/3dotComp";
 //components
+import { Card } from "react-native-paper";
+
 import Nullprofile from "../Hooks/NullProfile";
 import NameText from "../components/Name";
 import Time from "../components/time";
 import { Colors } from "../Features/Features";
 //assets
-
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db, useauth } from "../BACKEND/firebase";
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { useNavigation } from "@react-navigation/native";
 
-const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
+const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
   const navigation = useNavigation();
+  const currentuser = useauth();
+  const [threedotvisible, setthreevisible] = useState(false);
+
+  //Delete Message
+
+  async function DeleteMessage(id) {
+    const doclocation = doc(
+      db,
+      "Announce",
+      "LltxTedBAbKMuN07tX6j",
+      "Message",
+      id
+    );
+    await deleteDoc(doclocation);
+  }
 
   return (
     <View>
@@ -38,6 +62,48 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
         <View style={styles.timecontainer}>
           <Time time={time} />
         </View>
+        {user == currentuser?.uid && (
+          <>
+            <TouchableOpacity
+              style={{ top: 10 }}
+              onPress={() => setthreevisible(!threedotvisible)}
+            >
+              <Entypo name="dots-three-vertical" size={20} color="black" />
+            </TouchableOpacity>
+            <View style={{ top: 75, position: "absolute", right: 15 }}>
+              {threedotvisible && (
+                <Card style={[styles.Card, { height: 100, width: 100 }]}>
+                  <View style={styles.container}>
+                    <TouchableOpacity
+                      style={{ flexDirection: "row" }}
+                      onPress={() =>
+                        navigation.navigate("Editmessage", {
+                          id,
+                          message,
+                          photo,
+                        })
+                      }
+                    >
+                      <Ionicons name="pencil-outline" size={24} color="black" />
+                      <View style={{ marginLeft: 10 }}>
+                        <Text>Edit</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ flexDirection: "row" }}
+                      onPress={() => DeleteMessage(id)}
+                    >
+                      <Ionicons name="trash-outline" size={24} color="black" />
+                      <View style={{ marginLeft: 10 }}>
+                        <Text>Delete</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </Card>
+              )}
+            </View>
+          </>
+        )}
       </View>
       <View style={styles.messagecontainer}>
         {message && <Text style={styles.message}>{message}</Text>}

@@ -29,6 +29,8 @@ import CommentsScreen from "./Screens/CommentsScreen";
 import PostScreen from "./Screens/PostScreen";
 import EditScreen from "./Screens/EditScreen";
 import UserDetailsEditScreen from "./Screens/Auth/UserDetails";
+import EditMessageScreen from "./Screens/EditMessageScreen";
+import CreateRoomsScreen from "./Screens/CreateRoomScreen";
 //icons
 const Homeicon = require("./assets/Icon/Homeadvisor.png");
 const Announceicon = require("./assets/Icon/Annnounce.png");
@@ -40,7 +42,7 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Announce"
+      initialRouteName="Home"
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         header: (props) => <Header {...props} />,
@@ -101,7 +103,7 @@ function MyStack() {
   }, [count]);
 
   return (
-    <Stack.Navigator initialRouteName="">
+    <Stack.Navigator initialRouteName="Home">
       {SplashScreenvisible ? (
         <>
           <Stack.Screen
@@ -167,6 +169,16 @@ function MyStack() {
           <Stack.Screen
             name="Post"
             component={PostScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Editmessage"
+            component={EditMessageScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateRooms"
+            component={CreateRoomsScreen}
             options={{ headerShown: false }}
           />
         </>

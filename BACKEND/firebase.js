@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -16,12 +17,14 @@ import {
   getFirestore,
   onSnapshot,
   query,
+  serverTimestamp,
   setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
-
+import { generateUUID } from "../Hooks/GlobalHooks";
+import uuid from "react-native-uuid";
 const firebaseConfig = {
   apiKey: "AIzaSyAOlqVZ6K9LN0M90X2HJYd0aWZUH587xh4",
   authDomain: "sponcy-7003f.firebaseapp.com",
@@ -94,7 +97,6 @@ export function UserData() {
   }, [currentuser]);
   return { array: curUsers };
 }
-
 //SetUser
 export async function setUser(uid) {
   const doclocation = doc(db, "Users", uid);
@@ -112,7 +114,6 @@ export async function setUser(uid) {
   await setDoc(doclocation, newvalue);
   console.log("DONE");
 }
-
 //updateUser
 export async function updateUser(
   UserName,
@@ -163,4 +164,135 @@ export function Announces() {
   }, []);
   return Announce;
 }
-//getPostted User
+//Post Message
+export async function PostAnnounce(Photo, message, currentuser, setdone) {
+  const doclocation = collection(
+    db,
+    "Announce",
+    "LltxTedBAbKMuN07tX6j",
+    "Message"
+  );
+  const fileRef = ref(storage, "AnnouncePIC/" + uuid.v4() + ".png");
+  setdone(true);
+  //upload image
+  const snapshot = await uploadBytes(fileRef, Photo);
+  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+
+  const newvalue = {
+    PhotoURL,
+    message,
+    currentuser,
+    // time: serverTimestamp(),
+  };
+  //upload name
+  await addDoc(doclocation, newvalue);
+  setdone(false);
+}
+//get chat rooms
+export function ChatRooms() {
+  const currentuser = useauth();
+  const [Rooms, setRooms] = useState();
+  const Collocation = collection(db, "Private-Chat");
+
+  useEffect(() => {
+    if (currentuser) {
+      console.log(currentuser?.uid);
+      const q = query(
+        Collocation,
+        where("Participants", "array-contains", currentuser?.uid)
+      );
+      onSnapshot(q, (snapshot) => {
+        setRooms(
+          snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        );
+      });
+    }
+  }, [currentuser]);
+  return Rooms;
+}
+//get private messages
+export function PrivateChats(roomid) {
+  const [PrivateChats, setPrivateChats] = useState();
+  const Collocation = collection(db, "Private-Chat", roomid, "Messages");
+  useEffect(() => {
+    onSnapshot(Collocation, (snapshot) => {
+      setPrivateChats(
+        snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+  return PrivateChats;
+}
+//Post Private messages
+export async function PostPrivateChats(roomid, From, text) {
+  const Collocation = collection(db, "Private-Chat", roomid, "Messages");
+
+  // const fileRef = ref(storage, "AnnouncePIC/" + uuid.v4() + ".png");
+
+  // //upload image
+  // const snapshot = await uploadBytes(fileRef, Photo);
+  // const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+
+  // const newvalue = {
+  //   PhotoURL,
+  //   message,
+  //   currentuser,
+  //   // time: serverTimestamp(),
+  // };
+  const newvalue = {
+    From,
+    text,
+  };
+  await addDoc(Collocation, newvalue);
+}
+//Add Rooms
+export async function AddRooms(Photo, RoomName, Participants, useruid) {
+  const doclocation = collection(db, "Private-Chat");
+
+  const newvalue = {
+    LastMessage: "",
+    Participants: [Participants, useruid],
+    RoomName,
+    icon: "",
+    notifications: "",
+
+    // time: serverTimestamp(),
+  };
+  //upload name
+  const room = await addDoc(doclocation, newvalue);
+  const uploadPhoto = await Addroomphoto(Photo, room.id);
+}
+export async function Addroomphoto(Photo, docid) {
+  const doclocation = doc(db, "Private-Chat", docid);
+  const fileRef = ref(storage, "Roomsicon/" + uuid.v4() + ".png");
+
+  //upload image
+  const snapshot = await uploadBytes(fileRef, Photo);
+  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+  const newvalue = {
+    icon: PhotoURL,
+  };
+  await updateDoc(doclocation, newvalue);
+}
+
+// export function Usersforchat() {
+//   const [Chats, setChats] = useState();
+//   const Collocation = collection(db, "Users");
+//   useEffect(() => {
+//     onSnapshot(Collocation, (snapshot) => {
+//       setChats(
+//         snapshot.docs.map((doc) => ({
+//           ...doc.data(),
+//           id: doc.id,
+//         }))
+//       );
+//     });
+//   }, []);
+//   return Chats;
+// }

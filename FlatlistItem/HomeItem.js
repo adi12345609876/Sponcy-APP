@@ -15,45 +15,60 @@ import NameText from "../components/Name";
 import { Colors } from "../Features/Features";
 //assets
 import { useNavigation } from "@react-navigation/native";
+import { PrivateChats } from "../BACKEND/firebase";
 
 //features
 
-const HomeItem = ({ name, previousmessage, pinned, icon, notifications }) => {
-  
+const HomeItem = ({
+  name,
+  previousmessage,
+  pinned,
+  icon,
+  notifications,
+  id,
+}) => {
   const navigation = useNavigation();
-return (
-  <TouchableOpacity
-    style={styles.container}
-    onPress={() => navigation.navigate("Chat")}
-  >
-    <TouchableOpacity style={styles.imagecontainer}>
-      <Image
-        source={icon ? icon : Nullprofile({ name })}
-        style={styles.image}
-      />
+  function Handleclick() {
+    // console.log("CHAT:", messages);
+    navigation.navigate("Chat", {
+      name,
+      icon,
+      id,
+    });
+  }
+  return (
+    <TouchableOpacity style={styles.container} onPress={() => Handleclick()}>
+      <TouchableOpacity style={styles.imagecontainer}>
+        <Image
+          source={icon ? icon : Nullprofile("name")}
+          style={styles.image}
+        />
+      </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ maxWidth: 200 }}>
+          <NameText name={name} />
+          <Text numberOfLines={1} style={styles.previousmessage}>
+            {previousmessage}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.right}>
+        {notifications && (
+          <View style={[styles.end, { paddingRight: 5 }]}>
+            <Notificationbutton number={notifications} />
+          </View>
+        )}
+        <TouchableOpacity style={styles.end}>
+          {pinned && <Octicons name="pin" size={15} color={Colors.grey} />}
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
-    <View
-      style={{
-        flexDirection: "row",
-      }}
-    >
-      <View style={{ maxWidth: 200 }}>
-        <NameText name={name} />
-        <Text numberOfLines={1} style={styles.previousmessage}>
-          {previousmessage}
-        </Text>
-      </View>
-    </View>
-    <View style={styles.right}>
-      <View style={[styles.end, { paddingRight: 5 }]}>
-        <Notificationbutton number={notifications} />
-      </View>
-      <View style={styles.end}>
-        {pinned && <Octicons name="pin" size={15} color={Colors.grey} />}
-      </View>
-    </View>
-  </TouchableOpacity>
-);}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

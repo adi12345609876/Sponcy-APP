@@ -96,12 +96,13 @@ export default function AssetExample() {
       <>
         <AnnounceItem
           message={item.message}
-          photo={item.image}
+          photo={item.PhotoURL}
           name={item.name}
           icon={item.UserPhoto}
           // checked={item.checked}
-          // time={item.time}
+          time={item.time}
           id={item.id}
+          user={item.currentuser}
         />
       </>
     );
