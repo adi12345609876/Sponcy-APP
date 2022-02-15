@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import Time from "../components/time";
+import Time from "../components/SuperComp/time";
 import { Colors } from "../Features/Features";
-import { useauth } from "../BACKEND/firebase";
+import { useauth } from "../BACKEND/Auth";
 export default function ChatItem({ message, To, From, time }) {
   const currentuser = useauth();
   return (

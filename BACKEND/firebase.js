@@ -5,78 +5,30 @@ import {
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
-  updateProfile,
 } from "firebase/auth";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
   query,
-  serverTimestamp,
+  QuerySnapshot,
+  refEqual,
   setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
-import React, { useEffect, useRef, useState } from "react";
-import { generateUUID } from "../Hooks/GlobalHooks";
+import { useEffect, useState } from "react";
+import { useauth } from "./Auth";
 import uuid from "react-native-uuid";
-const firebaseConfig = {
-  apiKey: "AIzaSyAOlqVZ6K9LN0M90X2HJYd0aWZUH587xh4",
-  authDomain: "sponcy-7003f.firebaseapp.com",
-  projectId: "sponcy-7003f",
-  storageBucket: "sponcy-7003f.appspot.com",
-  messagingSenderId: "903091214185",
-  appId: "1:903091214185:web:3aff3eaff8a02388080ff8",
-  measurementId: "G-GHK76TVN8V",
-};
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
 const storage = getStorage();
 export const db = getFirestore();
-//AUTH
-export function signup(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
-}
-export function login(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
-}
-export function logout() {
-  return signOut(auth);
-}
-export function useauth() {
-  const [currentuser, setCurrentUser] = useState();
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return unsub;
-  }, []);
-  return currentuser;
-}
-//STORAGE
-// export async function upload(file, Name, currentUser, setdone) {
-//   //location
-//   const fileRef = ref(storage, "ProfilePIC/" + currentUser.uid + ".png");
-//   //upload
-//   setdone(true);
-//   const snapshot = await uploadBytes(fileRef, file);
-//   //update currentuser.photoURL with download url
-//   const userphotoURL = await getDownloadURL(fileRef);
-
-//   updateProfile(currentUser, {
-//     displayName: Name,
-//     photoURL: userphotoURL,
-//   });
-//   setdone(false);
-//   alert("Uploaded");
-// }
 
 //FIRESTORE
 
@@ -110,6 +62,7 @@ export async function setUser(uid) {
     Sponsoring: 0,
     Status: "",
     checked: false,
+    uid: uid,
   };
   await setDoc(doclocation, newvalue);
   console.log("DONE");
@@ -136,6 +89,7 @@ export async function updateUser(
     UserName,
     PhotoURL,
     Slogan,
+    uid: currentUser?.uid,
   };
   //upload name
   await updateDoc(doclocation, newvalue);
@@ -257,7 +211,8 @@ export async function AddRooms(Photo, RoomName, Participants, useruid) {
 
   const newvalue = {
     LastMessage: "",
-    Participants: [Participants, useruid],
+    // Participants: [Participants, useruid],
+    Participants: Participants,
     RoomName,
     icon: "",
     notifications: "",
@@ -270,29 +225,75 @@ export async function AddRooms(Photo, RoomName, Participants, useruid) {
 }
 export async function Addroomphoto(Photo, docid) {
   const doclocation = doc(db, "Private-Chat", docid);
-  const fileRef = ref(storage, "Roomsicon/" + uuid.v4() + ".png");
+  const fileRef = ref(storage, "Roomsicon/" + docid + ".png");
 
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+  const icon = await (Photo ? getDownloadURL(fileRef) : null);
   const newvalue = {
-    icon: PhotoURL,
+    icon,
   };
   await updateDoc(doclocation, newvalue);
 }
+//Delete Rooms
+export async function DeleteRoom(docid) {
+  const doclocation = doc(db, "Private-Chat", docid);
+  await deleteDoc(doclocation);
+  console.log("Deleted Room" + docid);
+}
+//EdiRooms
+export async function EditRoom(docid, RoomName, icon, Participants, useruid) {
+  const doclocation = doc(db, "Private-Chat", docid);
+  const newvalue = {
+    RoomName,
+    Participants: [Participants, useruid],
+    icon,
+  };
+  updateDoc(doclocation, newvalue);
+  console.log("Updated Room" + docid);
+}
+//get All Users
+export function Usersforchat() {
+  const [Users, setUsers] = useState();
+  const Collocation = collection(db, "Users");
+  // const q = query(Collocation, where("", "!=", currentuser?.uid));
+  useEffect(() => {
+    onSnapshot(Collocation, (snapshot) => {
+      setUsers(
+        snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+  return Users;
+}
+//update with useeffect
+export function updatedb() {
+  const [Chats, setChats] = useState();
+  const [id, setid] = useState();
 
-// export function Usersforchat() {
-//   const [Chats, setChats] = useState();
-//   const Collocation = collection(db, "Users");
-//   useEffect(() => {
-//     onSnapshot(Collocation, (snapshot) => {
-//       setChats(
-//         snapshot.docs.map((doc) => ({
-//           ...doc.data(),
-//           id: doc.id,
-//         }))
-//       );
-//     });
-//   }, []);
-//   return Chats;
-// }
+  const Collocation = collection(db, "Users");
+
+  useEffect(() => {
+    onSnapshot(Collocation, (snapshot) => {
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+  // useEffect(() => {
+  //   onSnapshot(Collocation, (snapshot) => {
+  //     setChats(
+  //       snapshot.forEach((doc) => ({
+  //         id: doc.id,
+  //       }))
+  //     );
+  //   });
+  // }, [Chats]);
+
+  // return Chats;
+}

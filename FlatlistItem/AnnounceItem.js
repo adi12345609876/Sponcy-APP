@@ -13,17 +13,18 @@ import {
   AntDesign,
   Ionicons,
 } from "@expo/vector-icons";
-// import ThreeDots from "../Components2/3dotComp";
+// import ThreeDots from "../components2/3dotComp";
 //components
 import { Card } from "react-native-paper";
 
 import Nullprofile from "../Hooks/NullProfile";
-import NameText from "../components/Name";
-import Time from "../components/time";
+import NameText from "../components/SuperComp/Name";
+import Time from "../components/SuperComp/time";
 import { Colors } from "../Features/Features";
 //assets
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db, useauth } from "../BACKEND/firebase";
+import { db } from "../BACKEND/firebase";
+import { useauth } from "../BACKEND/Auth";
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;

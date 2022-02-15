@@ -29,7 +29,7 @@
     "react-native": "0.64.3",
     "react-native-drop-down-item": "*",
     "react-native-elements": "*",
-    "react-native-gesture-handler": "~2.1.0",
+    "react-native-gesture-handler": "^2.1.1",
     "react-native-linear-gradient": "*",
     "react-native-pager-view": "5.4.9",
     "react-native-paper": "4.9.2",

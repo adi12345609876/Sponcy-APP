@@ -14,8 +14,9 @@ import * as ImagePicker from "expo-image-picker";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { BlurView } from "expo-blur";
 import { TextInput } from "react-native-paper";
-import { useauth, updateUser } from "../../BACKEND/firebase";
+import { updateUser } from "../../BACKEND/firebase";
 import { Colors } from "../../Features/Features";
+import { useauth } from "../../BACKEND/Auth";
 // import nullphoto from "../../assets/Photos/Dummyphotos/null.png";
 const Tab = createMaterialTopTabNavigator();
 

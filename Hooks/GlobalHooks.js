@@ -1,3 +1,4 @@
+//Generate uid
 export function generateUUID() {
   // Public Domain/MIT
   var d = new Date().getTime(); //Timestamp

@@ -11,12 +11,12 @@ import {
 import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
 //components
 import Nullprofile from "../Hooks/NullProfile";
-import NameText from "../components/Name";
-import Time from "../components/time";
+import NameText from "../components/SuperComp/Name";
+import Time from "../components/SuperComp/time";
 //assets
 
 //features
-import {Colors} from "../Features/Features"
+import { Colors } from "../Features/Features";
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { useNavigation } from "@react-navigation/native";

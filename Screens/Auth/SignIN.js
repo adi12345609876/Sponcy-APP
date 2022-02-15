@@ -10,15 +10,11 @@ import {
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  signup,
-  login,
-  logout,
-  useauth,
-  setUser,
-} from "../../BACKEND/firebase";
+import { setUser } from "../../BACKEND/firebase";
+
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../Features/Features";
+import { useauth, login, signup } from "../../BACKEND/Auth";
 export default function Signin() {
   const navigation = useNavigation();
   const emailref = useRef();

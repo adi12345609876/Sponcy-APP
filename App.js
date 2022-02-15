@@ -1,36 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Dimensions } from "react-native";
 import { useFonts } from "expo-font";
+import { initializeApp } from "firebase/app";
+
 import { LogBox } from "react-native";
 //BACKEND
 import { UserData } from "./BACKEND/firebase";
+import { firebaseConfig } from "./BACKEND/Config";
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //Hooks
 import TabBarprovider from "./Hooks/TabBarprovider";
-import { useauth } from "./BACKEND/firebase";
+import { useauth } from "./BACKEND/Auth";
 //components
-import TabBar from "./components/BottomTab";
-import Header from "./components/HeaderTab";
+import TabBar from "./components/Tabs/BottomTab";
+import Header from "./components/Tabs/HeaderTab";
+
 //screens
-import SplashScreen from "./Screens/SplashScreen";
+import SplashScreen from "./Screens/Auth/SplashScreen";
 import SignINScreen from "./Screens/Auth/SignIN";
 import SignUpScreen from "./Screens/Auth/SIgnUp";
-import HomeChatScreen from "./Screens/HomeChatScreen";
-import AnnounceScreen from "./Screens/AnnounceScreen";
-import NotifyScreen from "./Screens/NotificationScreen";
-import PeopleScreen from "./Screens/peopleScreen";
-import PortfolioScreen from "./Screens/PortfolioScreen";
-import ChatScreen from "./Screens/ChatScreen";
+import HomeChatScreen from "./Screens/Tabs/HomeChatScreen";
+import AnnounceScreen from "./Screens/Tabs/AnnounceScreen";
+import NotifyScreen from "./Screens/Tabs/NotificationScreen";
+import PeopleScreen from "./Screens/Tabs/peopleScreen";
+import PortfolioScreen from "./Screens/Tabs/Sub-Tabs/Announce/PortfolioScreen";
+import ChatScreen from "./Screens/Tabs/Sub-Tabs/Home/ChatScreen";
 import SearchScreen from "./Screens/SearchScreen";
-import CommentsScreen from "./Screens/CommentsScreen";
-import PostScreen from "./Screens/PostScreen";
-import EditScreen from "./Screens/EditScreen";
+import CommentsScreen from "./Screens/Tabs/Sub-Tabs/Announce/CommentsScreen";
+import PostScreen from "./Screens/Tabs/PostScreen";
+import EditScreen from "./Screens/Tabs/Sub-Tabs/Post/EditScreen";
 import UserDetailsEditScreen from "./Screens/Auth/UserDetails";
-import EditMessageScreen from "./Screens/EditMessageScreen";
-import CreateRoomsScreen from "./Screens/CreateRoomScreen";
+import EditMessageScreen from "./Screens/Tabs/Sub-Tabs/Announce/EditMessageScreen";
+import CreateRoomsScreen from "./Screens/Tabs/Sub-Tabs/Post/CreateRoomScreen";
+import ParticipantsScreen from "./Screens/Tabs/Sub-Tabs/Post/ParticipantsScreen";
+
 //icons
 const Homeicon = require("./assets/Icon/Homeadvisor.png");
 const Announceicon = require("./assets/Icon/Annnounce.png");
@@ -39,6 +45,7 @@ const Peopleicon = require("./assets/Icon/Person.png");
 //features
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -103,7 +110,7 @@ function MyStack() {
   }, [count]);
 
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="">
       {SplashScreenvisible ? (
         <>
           <Stack.Screen
@@ -180,6 +187,11 @@ function MyStack() {
             name="CreateRooms"
             component={CreateRoomsScreen}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Participants"
+            component={ParticipantsScreen}
+            options={{ headerShown: true }}
           />
         </>
       ) : (

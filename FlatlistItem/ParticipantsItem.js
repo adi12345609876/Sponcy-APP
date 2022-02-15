@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  CheckBox,
 } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 //componets
@@ -21,52 +22,44 @@ import { PrivateChats } from "../BACKEND/firebase";
 
 const HomeItem = ({
   name,
-  previousmessage,
-  pinned,
+
   icon,
-  notifications,
+
   id,
+  index,
+  selected,
+  onUpdateValue,
 }) => {
   const navigation = useNavigation();
-  function Handleclick() {
-    // console.log("CHAT:", messages);
-    navigation.navigate("Chat", {
-      name,
-      icon,
-      id,
-    });
-  }
+  function Handleclick() {}
   return (
-    <TouchableOpacity style={styles.container} onPress={() => Handleclick()}>
-      <TouchableOpacity style={styles.imagecontainer}>
-        <Image
-          source={icon ? icon : Nullprofile("name")}
-          style={styles.image}
-        />
-      </TouchableOpacity>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
-        <View style={{ maxWidth: 200 }}>
-          <NameText name={name} />
-          <Text numberOfLines={1} style={styles.previousmessage}>
-            {previousmessage}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.right}>
-        {notifications && (
-          <View style={[styles.end, { paddingRight: 5 }]}>
-            <Notificationbutton number={notifications} />
-          </View>
-        )}
-        <TouchableOpacity style={styles.end}>
-          {pinned && <Octicons name="pin" size={15} color={Colors.grey} />}
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.item}>
+      <Text style={styles.title}>{name}</Text>
+
+      <CheckBox
+        value={selected}
+        onValueChange={(value) => onUpdateValue(index, value)}
+        style={styles.checkbox}
+      />
+    </View>
+    // <TouchableOpacity style={styles.container} onPress={() => Handleclick()}>
+    //   <TouchableOpacity style={styles.imagecontainer}>
+    //     <Image
+    //       source={icon ? icon : Nullprofile("name")}
+    //       style={styles.image}
+    //     />
+    //   </TouchableOpacity>
+    //   <View
+    //     style={{
+    //       flexDirection: "row",
+    //     }}
+    //   >
+    //     <View style={{ maxWidth: 200 }}>
+    //       <NameText name={name} />
+    //     </View>
+    //   </View>
+    //   <View style={styles.right}></View>
+    // </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({

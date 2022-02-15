@@ -10,9 +10,9 @@ import {
 import { Entypo } from "@expo/vector-icons";
 
 //componets
-import NameText from "../components/Name";
+import NameText from "../components/SuperComp/Name";
 import Nullprofile from "../Hooks/NullProfile";
-import Time from "../components/time";
+import Time from "../components/SuperComp/time";
 
 //assets
 
