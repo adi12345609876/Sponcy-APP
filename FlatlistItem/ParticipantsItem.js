@@ -1,22 +1,9 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  CheckBox,
-} from "react-native";
-import { Octicons } from "@expo/vector-icons";
+import { Text, View, StyleSheet, CheckBox } from "react-native";
 //componets
-import Nullprofile from "../Hooks/NullProfile";
-import Notificationbutton from "../components/SuperComp/NotificationButton";
-import NameText from "../components/SuperComp/Name";
 import { Colors } from "../Features/Features";
 //assets
 import { useNavigation } from "@react-navigation/native";
-import { PrivateChats } from "../BACKEND/firebase";
 
 //features
 
@@ -38,7 +25,7 @@ const HomeItem = ({
 
       <CheckBox
         value={selected}
-        onValueChange={(value) => onUpdateValue(index, value)}
+        onValueChange={(value) => onUpdateValue(index, value, id)}
         style={styles.checkbox}
       />
     </View>

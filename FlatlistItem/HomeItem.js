@@ -15,7 +15,9 @@ import NameText from "../components/SuperComp/Name";
 import { Colors } from "../Features/Features";
 //assets
 import { useNavigation } from "@react-navigation/native";
-import { PrivateChats } from "../BACKEND/firebase";
+
+import { useauth } from "../BACKEND/Auth";
+import { DeleteUnreadUser, OneOneChats } from "../BACKEND/firebase";
 
 //features
 
@@ -24,17 +26,52 @@ const HomeItem = ({
   previousmessage,
   pinned,
   icon,
-  notifications,
   id,
+  participants,
+  UnreadUsers,
+  Type,
+  Seen,
+  Mess,
+  Forwarded,
+  Invite,
+  InvitationData,
 }) => {
+  const curerntuser = useauth();
   const navigation = useNavigation();
+  // const messages = OneOneChats(id);
+
+  const notify =
+    Type == "OneToOne" ? !Seen : UnreadUsers?.includes(curerntuser?.uid);
+
+  console.log("UnreadUsers", UnreadUsers, "Notify", notify);
+  console.log("SEEN", Seen);
   function Handleclick() {
-    // console.log("CHAT:", messages);
-    navigation.navigate("Chat", {
-      name,
-      icon,
-      id,
-    });
+    if (Type == "OneToOne") {
+      navigation.navigate("Chat", {
+        name,
+        icon,
+        id,
+        onechat: true,
+        Type,
+        Mess,
+        Forwarded,
+        Invite,
+        InvitationData,
+      });
+    } else {
+      // console.log("CHAT:", messages);
+      navigation.navigate("Chat", {
+        name,
+        icon,
+        id,
+        participants,
+        Mess,
+        Forwarded,
+        Invite,
+        InvitationData,
+      });
+    }
+    DeleteUnreadUser(id, curerntuser?.uid, Type);
   }
   return (
     <TouchableOpacity style={styles.container} onPress={() => Handleclick()}>
@@ -57,9 +94,9 @@ const HomeItem = ({
         </View>
       </View>
       <View style={styles.right}>
-        {notifications && (
+        {notify && (
           <View style={[styles.end, { paddingRight: 5 }]}>
-            <Notificationbutton number={notifications} />
+            <Notificationbutton />
           </View>
         )}
         <TouchableOpacity style={styles.end}>

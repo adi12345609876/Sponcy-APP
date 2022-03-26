@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
 //components
@@ -26,29 +27,32 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity>
-          <Image
-            source={icon ? icon : Nullprofile({ name })}
-            style={styles.profileicon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.namecontainer}>
-          <NameText name={name} />
-        </TouchableOpacity>
-        <View style={styles.timecontainer}>
-          <Time time={time} />
+      <ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity>
+            <Image
+              source={icon ? icon : Nullprofile({ name })}
+              style={styles.profileicon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.namecontainer}>
+            <NameText name={name} />
+          </TouchableOpacity>
+          <View style={styles.timecontainer}>
+            <Time time={time} />
+          </View>
         </View>
-      </View>
-      <View style={styles.messagecontainer}>
-        {message && <Text style={styles.message}>{message}</Text>}
-      </View>
-      {photo && (
-        <TouchableOpacity style={styles.photocontainer}>
-          <Image source={photo} style={styles.photo} />
-        </TouchableOpacity>
-      )}
-      <View style={styles.iconcontainer}>
+        {photo && (
+          <TouchableOpacity style={styles.photocontainer}>
+            <Image source={photo} style={styles.photo} />
+          </TouchableOpacity>
+        )}
+        {message && (
+          <View style={styles.messagecontainer}>
+            {message && <Text style={styles.message}>{message}</Text>}
+          </View>
+        )}
+        {/* <View style={styles.iconcontainer}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Comments", {
@@ -77,7 +81,8 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id }) => {
         <TouchableOpacity>
           <Entypo name="share" size={15} color="black" />
         </TouchableOpacity>
-      </View>
+      </View> */}
+      </ScrollView>
     </SafeAreaView>
   );
 };

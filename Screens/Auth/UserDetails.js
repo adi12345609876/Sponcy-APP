@@ -17,6 +17,7 @@ import { TextInput } from "react-native-paper";
 import { updateUser } from "../../BACKEND/firebase";
 import { Colors } from "../../Features/Features";
 import { useauth } from "../../BACKEND/Auth";
+import nullPhoto from "../../assets/Photos/Dummyicon/Person.png";
 // import nullphoto from "../../assets/Photos/Dummyphotos/null.png";
 const Tab = createMaterialTopTabNavigator();
 
@@ -50,7 +51,18 @@ export default function App({ navigation }) {
   };
   async function handleClick() {
     // upload(Photo, DisplayName, currentuser, setdone);UserName, Photo, Slogan, currentUser,setdone
-    await updateUser(DisplayName, Photo, Slogan, currentuser, setdone);
+    console.log(
+      DisplayName,
+      Photo ? Photo : nullPhoto,
+      Slogan,
+      currentuser?.uid
+    );
+    await updateUser(
+      DisplayName,
+      Photo ? Photo : nullPhoto,
+      Slogan,
+      currentuser?.uid
+    );
     console.log("Updated");
     navigation.navigate("Tabs");
   }

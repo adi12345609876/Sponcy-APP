@@ -26,7 +26,7 @@ export default function Signin() {
     try {
       await signup(emailref.current.value, passwordref.current.value);
     } catch (e) {
-      alert(e);
+      console.log(e);
     }
   }
   return (

@@ -5,21 +5,32 @@ import { Colors } from "../../Features/Features";
 import Name from "../SuperComp/Name";
 import { useNavigation } from "@react-navigation/native";
 import ThreeDots from "../../components/SuperComp/3dotComp";
-import { DeleteRoom, EditRoom } from "../../BACKEND/firebase";
+import { LeaveRoom, EditRoom } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 
-export default function ChatHeader({ name, icon, id }) {
+export default function ChatHeader({ name, icon, id, participants, Type }) {
   const [threedotvisible, setthreevisible] = useState(false);
   const currentUser = useauth();
   const navigation = useNavigation();
 
-  async function DeletingRoom() {
-    await DeleteRoom(id);
+  async function LeaveRoom() {
+    await LeaveRoom(id, currentUser?.uid);
     navigation.navigate("Tabs");
   }
+  async function InvitingRoom() {
+    navigation.navigate("HomeChat", {
+      Invite: true,
+      InvitationData: { id: id, RoomName: name, RoomIcon: icon },
+    });
+  }
   async function EditingRoom() {
-    await EditRoom(id, "RoomName", "", "Participants", currentUser.uid);
-    navigation.navigate("Tabs");
+    // await EditRoom(id, "RoomName", "", "Participants", currentUser.uid);
+    console.log("part:", participants);
+
+    navigation.navigate("EditRooms", { name, icon, id, participants });
+  }
+  function MoveToDetails() {
+    navigation.navigate("RoomDetails", { name, icon, id, participants });
   }
   return (
     <>
@@ -43,12 +54,13 @@ export default function ChatHeader({ name, icon, id }) {
                 justifyContent: "center",
                 flexDirection: "row",
               }}
+              onPress={() => MoveToDetails()}
             >
               <Name name={name} />
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ top: 50, position: "absolute", right: 20 }}>
+        <View style={{ top: 10, position: "absolute", right: 20 }}>
           <ThreeDots
             visibility={threedotvisible}
             height={100}
@@ -56,9 +68,14 @@ export default function ChatHeader({ name, icon, id }) {
             data={[
               { text: "Edit", icon: "pencil", func: () => EditingRoom() },
               {
-                text: "Delete",
-                icon: "trash-outline",
-                func: () => DeletingRoom(),
+                text: "Leave",
+                icon: "arrow-back-circle",
+                func: () => LeaveRoom(),
+              },
+              Type != "OneToOne" && {
+                text: "Invite",
+                icon: "arrow-forward-circle",
+                func: () => InvitingRoom(),
               },
             ]}
           />

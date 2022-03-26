@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 
 import { UserData, PostAnnounce, db } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useauth } from "../../../../BACKEND/Auth";
 
 export default function App({ route }) {
@@ -38,6 +38,7 @@ export default function App({ route }) {
     );
     const newvalue = {
       message: text,
+      time: serverTimestamp(),
     };
     await updateDoc(doclocation, newvalue);
   }

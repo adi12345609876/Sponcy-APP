@@ -9,23 +9,37 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import button from "../../assets/Icon/EmailSend.png";
-import { Colors } from "../../Features/Features";
+import button from "../../../../assets/Icon/EmailSend.png";
+import { Colors } from "../../../../Features/Features";
 import * as ImagePicker from "expo-image-picker";
 
-import { UserData, PostAnnounce } from "../../BACKEND/firebase";
+import {
+  UserData,
+  PostAnnounce,
+  AddRooms,
+  EditRoom,
+} from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
-import { useauth } from "../../BACKEND/Auth";
-export default function App() {
+import { useauth } from "../../../../BACKEND/Auth";
+
+export default function App({ route }) {
+  const { selectedIds } = route.params;
+  const { name, icon, id, participants } = route.params;
+
   const navigation = useNavigation();
   const currentuser = useauth();
-  const currentUserData = UserData();
 
-  const [text, settext] = useState();
-  const [Photo, setPhoto] = useState();
+  const [text, settext] = useState(name);
+  const [docid, setdocid] = useState(id);
+
+  const [Photo, setPhoto] = useState(icon);
+  const [SelectedId, setSelectedId] = useState(
+    selectedIds ? selectedIds : participants
+  );
 
   const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(false);
+  //   const [done, setdone] = useState(false);
+  console.log("SelecetedID:", selectedIds ? selectedIds : null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -47,15 +61,10 @@ export default function App() {
     }
   };
   async function handleClick() {
-    console.log([Photo, text, currentuser.uid, setdone]);
-    await PostAnnounce(
-      Photo,
-      text,
-      currentuser.uid,
-      currentUserData?.array?.UserName,
-      currentUserData?.array?.PhotoURL,
-      setdone
+    console.log(
+      "FINAL DATA:"[(docid, Photo, text, "Users:", [...selectedIds])]
     );
+    await EditRoom(docid, text, Photo, [...selectedIds]);
     console.log("Updated");
     navigation.navigate("Tabs");
   }
@@ -99,7 +108,7 @@ export default function App() {
         </View>
         <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
           <TextInput
-            placeholder="Type your thoughts"
+            placeholder="Room Name"
             style={styles.input}
             underlineColorAndroid="transparent"
             onChangeText={settext}
@@ -109,6 +118,22 @@ export default function App() {
             multiline
             maxLength={250}
           />
+        </View>
+        <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
+          <TouchableOpacity
+            style={{
+              height: 100,
+              backgroundColor: Colors.primary,
+
+              borderRadius: 10,
+              padding: 12,
+            }}
+            onPress={() =>
+              navigation.navigate("Editparticipants", { SelectedId })
+            }
+          >
+            <Text>Add Participants</Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={{ margin: 20 }} onPress={pickImage}>
           <View
@@ -127,18 +152,6 @@ export default function App() {
               color="Colors.whitedfa"
             />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            height: 100,
-            width: 100,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: Colors.primary,
-          }}
-          onPress={() => navigation.navigate("Participants")}
-        >
-          <Text style={{ color: Colors.white }}> create New Room?</Text>
         </TouchableOpacity>
       </>
     </View>

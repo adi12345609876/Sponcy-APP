@@ -36,7 +36,12 @@ import UserDetailsEditScreen from "./Screens/Auth/UserDetails";
 import EditMessageScreen from "./Screens/Tabs/Sub-Tabs/Announce/EditMessageScreen";
 import CreateRoomsScreen from "./Screens/Tabs/Sub-Tabs/Post/CreateRoomScreen";
 import ParticipantsScreen from "./Screens/Tabs/Sub-Tabs/Post/ParticipantsScreen";
-
+import EditRoomsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditRooms";
+import EditparticipantsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditParticipants";
+import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
+import VerifyScreen from "./Screens/Auth/VerifyScreen";
+import FollowersScreen from "./Screens/Tabs/Sub-Tabs/Announce/FollowersScreen";
+import Dummy from "./Boiler";
 //icons
 const Homeicon = require("./assets/Icon/Homeadvisor.png");
 const Announceicon = require("./assets/Icon/Annnounce.png");
@@ -127,7 +132,11 @@ function MyStack() {
             component={MyTabs}
             options={{ headerShown: false }}
           />
-
+          <Stack.Screen
+            name="Dummy"
+            component={Dummy}
+            options={{ headerShown: true }}
+          />
           <Stack.Screen
             name="Edit"
             component={EditScreen}
@@ -193,6 +202,26 @@ function MyStack() {
             component={ParticipantsScreen}
             options={{ headerShown: true }}
           />
+          <Stack.Screen
+            name="EditRooms"
+            component={EditRoomsScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Editparticipants"
+            component={EditparticipantsScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RoomDetails"
+            component={RoomDetailsScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Followers"
+            component={FollowersScreen}
+            options={{ headerShown: false }}
+          />
         </>
       ) : (
         [
@@ -205,11 +234,21 @@ function MyStack() {
               />
             </>
           ) : !SplashScreenvisible && !currentUserData?.array?.UserName ? (
-            <Stack.Screen
-              name="UserDetails"
-              component={UserDetailsEditScreen}
-              options={{ headerShown: false }}
-            />
+            [
+              currentuser?.emailVerified ? (
+                <Stack.Screen
+                  name="UserDetails"
+                  component={UserDetailsEditScreen}
+                  options={{ headerShown: false }}
+                />
+              ) : (
+                <Stack.Screen
+                  name="VerifyScreen"
+                  component={VerifyScreen}
+                  options={{ headerShown: false }}
+                />
+              ),
+            ]
           ) : null,
         ]
       )}

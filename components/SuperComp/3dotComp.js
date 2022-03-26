@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
 import { Colors } from "../../Features/Features";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 export default function AssetExample({ visibility, height, width, data }) {
   const [selectedId, setSelectedId] = useState(null);
   const [pressfunc, setpressfunc] = useState();

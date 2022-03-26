@@ -1,42 +1,51 @@
-//Image Icon in React Native TextInput
-//https://aboutreact.com/image-icon-with-react-native-textinput/
-
-//import React in our code
 import React, { useState } from "react";
 
-//import all the components we are going to use
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Features";
+import * as ImagePicker from "expo-image-picker";
 
-export default function ChatBottom() {
-  const [height, setheight] = useState(23);
-  const [text, settext] = useState();
-  const [senttext, setsenttext] = useState("hello");
+export default function ChatBottom(props) {
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  const onSubmit = (texts) => {
-    setsenttext(text);
-    settext("");
-    setheight(23);
+    if (!result.cancelled) {
+      //changing the file from long data to short readable https
+      const img = await fetch(result.uri);
+      const bytes = await img.blob();
+      //then set it as the image
+
+      props.setPhoto(bytes);
+      props.setPhotoURL(result.uri);
+    }
   };
-
-  // <Text>{senttext}</Text>
   return (
     <View style={styles.container}>
-      <View style={[styles.sectionStyle, { height: Math.max(35, height) }]}>
+      <View
+        style={[styles.sectionStyle, { height: Math.max(35, props.height) }]}
+      >
         <TextInput
-          style={[styles.textInputStyle, { height: Math.max(35, height) }]}
+          style={[
+            styles.textInputStyle,
+            { height: Math.max(35, props.height) },
+          ]}
           placeholder="Type Thoughts"
           underlineColorAndroid="transparent"
           multiline
           onContentSizeChange={(event) => {
-            setheight(event.nativeEvent.contentSize.height);
+            props.setheight(event.nativeEvent.contentSize.height);
           }}
-          onChangeText={settext}
+          onChangeText={props.settext}
           autoComplete
           textAlign="left"
-          onSubmitEditing={(e) => onSubmit(e.nativeEvent.texts)}
-          value={text}
+          // onSubmitEditing={(e) => onSubmit(e.nativeEvent.texts)}
+          value={props.text}
           clearButtonMode="always"
         />
 
@@ -44,13 +53,13 @@ export default function ChatBottom() {
           <TouchableOpacity style={{ marginLeft: 12 }}>
             <Entypo name="circle" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 12 }}>
+          <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickImage}>
             <Ionicons name="camera" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity
+      {props.children}
+      {/* <TouchableOpacity
         onPress={onSubmit}
         style={{
           backgroundColor: Colors.primary,
@@ -62,7 +71,7 @@ export default function ChatBottom() {
         }}
       >
         <FontAwesome name="send-o" size={20} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

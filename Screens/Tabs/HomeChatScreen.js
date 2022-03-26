@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Dimensions } from "react-native";
+import { View, StyleSheet, FlatList, Dimensions, Text } from "react-native";
 //expo
 //components
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
@@ -7,67 +7,58 @@ import HomeItem from "../../FlatlistItem/HomeItem";
 import renderSeparator from "../../components/SuperComp/Separator";
 //assets
 // import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
-import { ChatRooms, Usersforchat, updatedb } from "../../BACKEND/firebase";
+import {
+  ChatRooms,
+  Usersforchat,
+  updatedb,
+  OneOneMess,
+} from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import UsersItem from "../../FlatlistItem/UsersHomeItem";
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
-//data
-// const DummyData = [
-//   {
-//     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-//     person: "Adinath",
-//     profile: null,
-//     pinned: true,
-//     notifications: "1",
-//     previousmessage: "hello there",
-//   },
-//   {
-//     id: "bd7acbea-c1b1-46c2-aed5-5af53fgvb234a",
-//     person: "Netflix",
-//     profile: DummyNetflixIcon,
-//     pinned: false,
-//     notifications: "20",
-//     previousmessage: "welcome to sponcy is a long text",
-//   },
-// ];
-//render
 
-const RoomsrenderItem = ({ item }) => (
-  <HomeItem
-    name={item.RoomName}
-    // pinned={item.pinned}
-    icon={item.icon}
-    notifications={item.notifications}
-    previousmessage={item.LastMessage}
-    id={item.id}
-  />
-);
-const UsersrenderItem = ({ item }) => (
-  <UsersItem
-    name={item.UserName}
-    // pinned={item.pinned}
-    icon={item.PhotoURL}
-    // notifications={item.notifications}
-    // previousmessage={item.LastMessage}
-    // id={item.id}
-  />
-);
-export default function AssetExample() {
-  const dbupdator = updatedb();
-  // dbupdator?.map((a) => console.log(a));
+export default function AssetExample({ route }) {
+  const { message, Forwarded, Invite, InvitationData } = route.params;
   const currentuser = useauth();
-  // const ChatData = PrivateChats();
   const Rooms = ChatRooms();
-  const ChatUser = Usersforchat();
-  Rooms?.map((room) => console.log(room?.Participants));
-  // ChatUser?.map((Users) =>
-  //   console.log("UsersName:", Users?.UserName, "Photo:", Users?.PhotoURL)
-  // );
-  // const filtered = ChatUser?.filter((users) => users == currentuser?.uid);
-  // console.log("FILTERED:", filtered);
+  const OnetoOne = OneOneMess(currentuser?.uid);
+  console.log("ONENOET", OnetoOne);
+  // Rooms?.map((room) => console.log("rooms:", room));
 
+  const RoomsrenderItem = ({ item }) => (
+    <HomeItem
+      name={item.RoomName}
+      // pinned={item.pinned}
+      icon={item.icon}
+      previousmessage={item.LastMessage}
+      id={item.id}
+      participants={item.Participants}
+      UnreadUsers={item.UnreadUsers}
+      Mess={message}
+      Forwarded={Forwarded}
+      Invite={Invite}
+      InvitationData={InvitationData}
+    />
+  );
+  const UsersrenderItem = ({ item }) => (
+    <HomeItem
+      name={item.RoomName}
+      // pinned={item.pinned}
+      icon={item.icon}
+      previousmessage={item.LastMessage}
+      id={item.id}
+      Type={item.Type}
+      Seen={item.Seen}
+      Mess={message}
+      Forwarded={Forwarded}
+      Invite={Invite}
+      InvitationData={InvitationData}
+      // participants={item.Participants}
+      // UnreadUsers={item.UnreadUsers}
+    />
+  );
   return (
     <AnimatedScroolView>
       <View
@@ -75,21 +66,21 @@ export default function AssetExample() {
           marginBottom: 100,
         }}
       >
-        {/* <Text>Organisations</Text> */}
+        <Text>Organisations</Text>
         <FlatList
           data={Rooms}
           renderItem={RoomsrenderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
         />
-        {/* <Text>Peoples</Text> */}
+        <Text>Peoples</Text>
 
-        {/* <FlatList
-        data={ChatUser}
-        renderItem={UsersrenderItem}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={renderSeparator}
-      /> */}
+        <FlatList
+          data={OnetoOne}
+          renderItem={UsersrenderItem}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={renderSeparator}
+        />
       </View>
     </AnimatedScroolView>
   );

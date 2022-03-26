@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 //componets
 import Nullprofile from "../Hooks/NullProfile";
@@ -15,7 +8,6 @@ import NameText from "../components/SuperComp/Name";
 import { Colors } from "../Features/Features";
 //assets
 import { useNavigation } from "@react-navigation/native";
-import { PrivateChats } from "../BACKEND/firebase";
 
 //features
 
@@ -26,6 +18,7 @@ const HomeItem = ({
   icon,
   notifications,
   id,
+  participants,
 }) => {
   const navigation = useNavigation();
   function Handleclick() {
@@ -34,6 +27,7 @@ const HomeItem = ({
       name,
       icon,
       id,
+      participants,
     });
   }
   return (

@@ -10,18 +10,27 @@ import { Colors } from "../../../../Features/Features";
 import ChatHeader from "../../../../components/Chat/ChatHeader";
 import { ChatBottom } from "../../../../components/Chat/ChatBottom";
 import ChatCenter from "../../../../components/Chat/ChatCenter";
-import { PrivateChats } from "../../../../BACKEND/firebase";
+import { OneOneChats, PrivateChats } from "../../../../BACKEND/firebase";
+import { useauth } from "../../../../BACKEND/Auth";
 import image from "../../../../assets/Photos/BGC.png";
 import ThreeDots from "../../../../components/SuperComp/3dotComp";
 
 export default function AssetExample({ route }) {
-  const { name, icon, id } = route.params;
-  // console.log(id);
-  // messages?.map((message) => {
-  //   console.log(message.text);
-  // });
-
-  const messages = PrivateChats(id);
+  const {
+    name,
+    icon,
+    id,
+    participants,
+    onechat,
+    Type,
+    Mess,
+    Forwarded,
+    Invite,
+    InvitationData,
+  } = route.params;
+  const currentuser = useauth();
+  const messages = onechat ? OneOneChats(id) : PrivateChats(id);
+  console.log("Mess:", messages);
 
   return (
     <ImageBackground
@@ -29,14 +38,36 @@ export default function AssetExample({ route }) {
       resizeMode="cover"
       style={{ height: "100%", width: "100%" }}
     >
-      <ChatHeader name={name} icon={icon} id={id} />
+      <ChatHeader
+        name={name}
+        icon={icon}
+        id={id}
+        participants={participants}
+        Type={Type}
+      />
 
       <ScrollView style={{ marginBottom: 50 }}>
-        <ChatCenter messages={messages} />
+        <ChatCenter
+          messages={messages}
+          roomid={id}
+          Type={Type}
+          Invite={Invite}
+        />
       </ScrollView>
 
       <SafeAreaView style={styles.bottomcontainer}>
-        <ChatBottom roomid={id} />
+        <ChatBottom
+          roomid={id}
+          participants={participants}
+          name={name}
+          icon={icon}
+          onechat={onechat}
+          Type={Type}
+          Mess={Mess}
+          Forwarded={Forwarded}
+          Invite={Invite}
+          InvitationData={InvitationData}
+        />
       </SafeAreaView>
     </ImageBackground>
   );

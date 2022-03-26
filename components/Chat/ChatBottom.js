@@ -2,27 +2,86 @@
 //https://aboutreact.com/image-icon-with-react-native-textinput/
 
 //import React in our code
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //import all the components we are going to use
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Features";
-import { PostPrivateChats } from "../../BACKEND/firebase";
+import {
+  AddUnreadUser,
+  PostOnetoOnechat,
+  PostPrivateChats,
+  SpecifiedUserData,
+} from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 
-export function ChatBottom({ roomid }) {
+export function ChatBottom({
+  roomid,
+  participants,
+  name,
+  icon,
+  onechat,
+  Type,
+  Mess,
+  Forwarded,
+  Invite,
+  InvitationData,
+}) {
   const currentUser = useauth();
+
+  const userdata = SpecifiedUserData(currentUser?.uid);
   const [height, setheight] = useState(23);
   const [text, settext] = useState();
-  // const [senttext, setsenttext] = useState("hello");
+  console.log("Message", text, Mess, InvitationData, Invite);
+
+  useEffect(() => {
+    if (Invite) {
+      settext(
+        "You have been Invited by your dear friend to this Group.I request you to join",
+        InvitationData.RoomName
+      );
+      console.log("INVITIONDATA:", InvitationData?.id);
+    }
+  }, [Invite]);
+  useEffect(() => {
+    if (Mess) {
+      settext(Mess);
+    }
+  }, [Mess]);
 
   async function onSubmit() {
+    const forwarded = Forwarded ? true : false;
     if (text == "") {
       console.warn("Empty Text Is not Valid,Please Type any text");
     } else {
-      console.log(roomid, currentUser?.uid, text);
-      await PostPrivateChats(roomid, currentUser?.uid, text);
+      console.log("roomid:", roomid, "user:", currentUser?.uid, "TEXT:", text);
+      if (!onechat) {
+        await PostPrivateChats(
+          roomid,
+          currentUser?.uid,
+          text,
+          participants,
+          name,
+          icon,
+          Forwarded,
+          Invite,
+          InvitationData
+        );
+        AddUnreadUser(roomid, participants);
+      } else {
+        await PostOnetoOnechat(
+          roomid,
+          currentUser?.uid,
+          text,
+          userdata?.UserName,
+          userdata?.PhotoURL,
+          forwarded,
+          Invite,
+          InvitationData
+        );
+      }
+
       setheight(23);
       settext("");
     }

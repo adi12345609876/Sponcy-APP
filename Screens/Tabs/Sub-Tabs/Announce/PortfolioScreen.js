@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   Image,
   StatusBar,
   TouchableOpacity,
@@ -13,24 +12,41 @@ import {
 import Constants from "expo-constants";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import {
-  useprofilephoto,
-  useuser,
-  UserData,
+  SpecifiedUserData,
+  FollowUser,
+  UnFollowUser,
+  getUserDetailsCollection,
 } from "../../../../BACKEND/firebase";
 import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
 import { logout, useauth } from "../../../../BACKEND/Auth";
 import { Divider } from "react-native-elements";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-const Tab = createMaterialTopTabNavigator();
-import AnnounceScreen from "../../AnnounceScreen";
 import ThreeDots from "../../../../components/SuperComp/3dotComp";
 import { Colors } from "../../../../Features/Features";
-import { query, where } from "firebase/firestore";
-export default function App({ navigation }) {
+import PortfolioTab from "../../../../components/Tabs/PortfolioTab";
+import { useNavigation } from "@react-navigation/native";
+import { numFormatter } from "../../../../Hooks/GlobalHooks";
+export default function App({ route }) {
+  const navigation = useNavigation();
+  const { useruid } = route.params;
   const currentuser = useauth();
 
-  const currentUserData = UserData();
+  //  const FormattedLikes = numFormatter(likes);
+
   const [threedotvisible, setthreevisible] = useState(false);
+  const [alreadyfollwing, setalreadyfollwing] = useState();
+
+  const specificuserdata = SpecifiedUserData(useruid);
+  const userdetails = getUserDetailsCollection(useruid);
+  useEffect(() => {
+    if (userdetails) {
+      userdetails?.then((doc) => {
+        setalreadyfollwing(doc?.Followers.includes(currentuser?.uid));
+        console.log("DOC:", doc);
+      });
+    }
+  }, [userdetails]);
+
+  console.log("alreadyfollwing:", alreadyfollwing);
 
   function showtoast(msg) {
     if (Platform.OS === "android") {
@@ -38,31 +54,36 @@ export default function App({ navigation }) {
     } else {
     }
   }
-  console.log(currentUserData?.array);
 
-  const data2 = {
-    name: "Logout",
-    icon: "log-out-outline",
-    id: "2",
-  };
-  const data1 = {
-    name: "Settings",
-    icon: "settings-sharp",
-    id: "1",
-  };
-  const data3 = {
-    name: "Edit",
-    icon: "pencil",
-    id: "3",
-  };
-  function numFormatter(num) {
-    if (num > 999 && num < 1000000) {
-      return num / 1000 + "K"; // convert to K for number from > 1000 < 1 million
-    } else if (num > 1000000) {
-      return num / 1000000 + "M"; // convert to M for number from > 1 million
-    } else if (num < 900) {
-      return num; // if value < 1000, nothing to do
-    }
+  async function handleFollow() {
+    console.log(
+      "currentuser:",
+      currentuser?.uid,
+      "otheruser",
+      specificuserdata?.uid
+    );
+
+    FollowUser(currentuser?.uid, specificuserdata?.uid);
+  }
+  async function handleUnFollow() {
+    console.log(
+      "currentuser:",
+      currentuser?.uid,
+      "otheruser",
+      specificuserdata?.uid
+    );
+
+    UnFollowUser(currentuser?.uid, specificuserdata?.uid);
+  }
+  function TalkPrivately() {
+    // name, icon, id,onechat
+    //  currentUser, otheruser, specificuserdata?.UserName, specificuserdata?.PhotoURL;
+    navigation.navigate("Chat", {
+      name: specificuserdata?.UserName,
+      icon: specificuserdata?.PhotoURL,
+      id: useruid,
+      onechat: true,
+    });
   }
   return (
     <View
@@ -78,7 +99,7 @@ export default function App({ navigation }) {
         barStyle={"light-content"}
       />
       <ImageBackground
-        source={{ uri: currentUserData?.array?.PhotoURL }}
+        source={{ uri: specificuserdata?.PhotoURL }}
         resizeMode="cover"
         style={{
           flex: 0.4,
@@ -137,9 +158,9 @@ export default function App({ navigation }) {
                 fontWeight: "bold",
               }}
             >
-              {currentUserData?.array?.UserName}
+              {specificuserdata?.UserName}
             </Text>
-            {currentUserData?.array?.checked ? (
+            {specificuserdata?.checked ? (
               <Image
                 style={{
                   marginLeft: 10,
@@ -161,7 +182,7 @@ export default function App({ navigation }) {
                 marginBottom: 15,
               }}
             >
-              {currentUserData?.array?.Status}
+              {specificuserdata?.Status}
             </Text>
           </View>
           <Text
@@ -173,27 +194,36 @@ export default function App({ navigation }) {
               color: Colors.grey,
             }}
           >
-            {currentUserData?.array?.Slogan}
+            {specificuserdata?.Slogan}
           </Text>
         </View>
         <Divider style={{ width: 1000 }} />
         <View style={{ marginTop: 5 }}>
           <View style={{ flexDirection: "row" }}>
-            <Text
-              style={{
-                marginLeft: 10,
-                fontFamily: "Roboto",
-                fontSize: 15,
-                fontWeight: "300",
-                fontStyle: "normal",
-                color: Colors.black,
-              }}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Followers", {
+                  userdetails,
+                })
+              }
             >
-              Followers
-            </Text>
-            <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-              {numFormatter(currentUserData?.array?.Followers)}
-            </Text>
+              <Text
+                style={{
+                  marginLeft: 10,
+                  fontFamily: "Roboto",
+                  fontSize: 15,
+                  fontWeight: "300",
+                  fontStyle: "normal",
+                  color: Colors.black,
+                }}
+              >
+                Followers
+              </Text>
+              <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
+                {numFormatter(specificuserdata?.Followers)}
+              </Text>
+            </TouchableOpacity>
+
             <View
               style={{
                 position: "absolute",
@@ -213,81 +243,125 @@ export default function App({ navigation }) {
                 Sponsoring
               </Text>
               <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-                {numFormatter(currentUserData?.array?.Sponsoring)}
+                {numFormatter(specificuserdata?.Sponsoring)}
               </Text>
             </View>
           </View>
         </View>
-        <View style={{ marginTop: 15 }}>
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 5 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.primary,
-                  height: 40,
-                  width: 150,
-                  borderRadius: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  elevation: 3,
-                }}
-                onPress={() => showtoast("Following...")}
-              >
-                <Text
+        {/* {useruid != currentuser?.uid && ( */}
+        <>
+          <View style={{ marginTop: 15 }}>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ marginLeft: 5 }}>
+                {alreadyfollwing ? (
+                  <>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: Colors.grey,
+                        height: 40,
+                        width: 150,
+                        borderRadius: 15,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        alignSelf: "center",
+                        elevation: 3,
+                      }}
+                      onPress={() => handleUnFollow()}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Roboto",
+                          fontSize: 16,
+                          fontWeight: "700",
+                          fontStyle: "normal",
+                          color: Colors.white,
+                        }}
+                      >
+                        UnFollow
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: Colors.primary,
+                        height: 40,
+                        width: 150,
+                        borderRadius: 15,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        alignSelf: "center",
+                        elevation: 3,
+                      }}
+                      onPress={() => handleFollow()}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Roboto",
+                          fontSize: 16,
+                          fontWeight: "700",
+                          fontStyle: "normal",
+                          color: Colors.white,
+                        }}
+                      >
+                        Follow
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+              <View style={{ position: "absolute", right: 5 }}>
+                <TouchableOpacity
                   style={{
-                    fontFamily: "Roboto",
-                    fontSize: 16,
-                    fontWeight: "700",
-                    fontStyle: "normal",
-                    color: Colors.white,
+                    backgroundColor: Colors.secondary,
+                    height: 40,
+                    width: 150,
+                    borderRadius: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    elevation: 3,
                   }}
+                  onPress={() => showtoast("Great! Ready to Sponsor")}
                 >
-                  Follow
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ position: "absolute", right: 5 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.secondary,
-                  height: 40,
-                  width: 150,
-                  borderRadius: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  elevation: 3,
-                }}
-                onPress={() => showtoast("Great! Ready to Sponsor")}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Roboto",
-                    fontSize: 16,
-                    fontWeight: "700",
-                    fontStyle: "normal",
+                  <Text
+                    style={{
+                      fontFamily: "Roboto",
+                      fontSize: 16,
+                      fontWeight: "700",
+                      fontStyle: "normal",
 
-                    color: Colors.white,
-                  }}
-                >
-                  Sponsor
-                </Text>
-              </TouchableOpacity>
+                      color: Colors.white,
+                    }}
+                  >
+                    Sponsor
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-        <TouchableOpacity style={{ marginTop: 10 }}>
-          <Text
-            style={{ marginLeft: 10, color: Colors.secondary, fontSize: 17 }}
+          <TouchableOpacity
+            style={{ marginTop: 10 }}
+            onPress={() => TalkPrivately()}
           >
-            Talk to him?
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                marginLeft: 10,
+                color: Colors.secondary,
+                fontSize: 17,
+              }}
+            >
+              Talk to him?
+            </Text>
+          </TouchableOpacity>
+        </>
+        {/* )} */}
+
         <Divider style={{ width: 1000 }} />
       </View>
 
-      <Tab.Navigator
+      {/* <Tab.Navigator
         tabBarOptions={{
           inactiveTintColor: Colors.grey,
 
@@ -305,17 +379,8 @@ export default function App({ navigation }) {
       >
         <Tab.Screen name="Posts" component={AnnounceScreen} />
         <Tab.Screen name="Reply" component={AnnounceScreen} />
-      </Tab.Navigator>
+      </Tab.Navigator> */}
+      <PortfolioTab useruid={useruid} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});

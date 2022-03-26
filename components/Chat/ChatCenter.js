@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -10,60 +10,48 @@ import {
 import ChatItem from "../../FlatlistItem/ChatItem";
 import image from "../../assets/Photos/BGC.png";
 import { Colors } from "../../Features/Features";
+import { useauth } from "../../BACKEND/Auth";
+import { DeleteUnreadUserOnMess } from "../../BACKEND/firebase";
+import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 
-const renderItem = ({ item }) => {
-  return <ChatItem message={item.text} From={item.From} time={item.time} />;
-};
-export default function App({ messages }) {
-  const [text, setText] = React.useState();
+export default function App({ messages, roomid, Type, Invite }) {
+  const ScroolRef = useRef();
+  const currentuser = useauth();
+  const renderItem = ({ item }) => {
+    const Time = TimestamptoTime(item?.time);
+
+    return (
+      <ChatItem
+        message={item.text}
+        From={item.From}
+        Forwarded={item.Forwarded}
+        time={Time?.time}
+        id={item.id}
+        roomid={roomid}
+        Type={Type}
+        Invite={item.Invite}
+        Invitationid={item.Invitationid}
+      />
+    );
+  };
+  useEffect(() => {
+    DeleteUnreadUserOnMess(roomid, currentuser?.uid, Type);
+    setTimeout(() => {
+      ScroolRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+  }, [messages]);
 
   return (
-    <FlatList
-      data={messages}
-      keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-    />
+    <View>
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+      <View ref={ScroolRef}></View>
+    </View>
   );
 }
-//  <View style={styles.sending}>
-//         <Text style={styles.text}>{text}</Text>
-//       </View>
-//       <View style={styles.reciving}>
-//         <Text style={styles.text}>{text}</Text>
-//       </View>
-const styles = StyleSheet.create({
-  sending: {
-    padding: 15,
-    backgroundColor: Colors.white,
-    alignSelf: "flex-end",
-    borderBottomColor: 20,
-    marginRight: 15,
-    marginBottom: 20,
-    maxWidth: "80%",
-    position: "relative",
-    borderRadius: 20,
-    borderTopRightRadius: 0,
-    marginTop: 12,
-  },
-  reciving: {
-    padding: 15,
-    backgroundColor: Colors.tertiary,
-    alignSelf: "flex-start",
-    margin: 15,
-    maxWidth: "80%",
-    position: "relative",
-    borderRadius: 20,
-    borderTopLeftRadius: 0,
-  },
-  text: {
-    // width: 160,
-    // height: 20,
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "400",
-    fontStyle: "normal",
-    color: Colors.black,
-    textAlign: "center",
-  },
-  image: {},
-});

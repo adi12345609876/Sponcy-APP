@@ -13,7 +13,7 @@ import {
   AntDesign,
   Ionicons,
 } from "@expo/vector-icons";
-// import ThreeDots from "../components2/3dotComp";
+import ThreeDots from "../components/SuperComp/3dotComp";
 //components
 import { Card } from "react-native-paper";
 
@@ -23,19 +23,31 @@ import Time from "../components/SuperComp/time";
 import { Colors } from "../Features/Features";
 //assets
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../BACKEND/firebase";
+import { db, Dislikemessage, Likemessage, UserData } from "../BACKEND/firebase";
 import { useauth } from "../BACKEND/Auth";
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { useNavigation } from "@react-navigation/native";
+import { numFormatter } from "../Hooks/GlobalHooks";
 
-const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
+const AnnounceItem = ({
+  message,
+  photo,
+  name,
+  icon,
+  likes,
+  time,
+  id,
+  user,
+  LikedUsers,
+}) => {
   const navigation = useNavigation();
-  const currentuser = useauth();
   const [threedotvisible, setthreevisible] = useState(false);
+  const FormattedLikes = numFormatter(likes);
+  const currentuser = useauth();
 
-  //Delete Message
+  const currentUserData = UserData();
 
   async function DeleteMessage(id) {
     const doclocation = doc(
@@ -47,19 +59,45 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
     );
     await deleteDoc(doclocation);
   }
+  async function Editmessage(id) {
+    navigation.navigate("Editmessage", {
+      id,
+      message,
+      photo,
+    });
+  }
+  async function Likeit(id) {
+    console.log("currentuser:", currentuser?.uid, "id:", id);
 
+    Likemessage(currentuser?.uid, id);
+  }
+  async function Dislikeit(id) {
+    console.log("currentuser:", currentuser?.uid, "id:", id);
+
+    Dislikemessage(currentuser?.uid, id);
+  }
   return (
     <View>
       <View style={styles.container}>
-        <TouchableOpacity>
-          <Image
-            source={icon ? icon : Nullprofile({ name })}
-            style={styles.profileicon}
-          />
+        <TouchableOpacity
+          style={{ flexDirection: "row" }}
+          onPress={() =>
+            navigation.navigate("Portfolio", {
+              useruid: user,
+            })
+          }
+        >
+          <View>
+            <Image
+              source={icon ? icon : Nullprofile({ name })}
+              style={styles.profileicon}
+            />
+          </View>
+          <View style={styles.namecontainer}>
+            <NameText name={name} />
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.namecontainer}>
-          <NameText name={name} />
-        </TouchableOpacity>
+
         <View style={styles.timecontainer}>
           <Time time={time} />
         </View>
@@ -72,36 +110,23 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
               <Entypo name="dots-three-vertical" size={20} color="black" />
             </TouchableOpacity>
             <View style={{ top: 75, position: "absolute", right: 15 }}>
-              {threedotvisible && (
-                <Card style={[styles.Card, { height: 100, width: 100 }]}>
-                  <View style={styles.container}>
-                    <TouchableOpacity
-                      style={{ flexDirection: "row" }}
-                      onPress={() =>
-                        navigation.navigate("Editmessage", {
-                          id,
-                          message,
-                          photo,
-                        })
-                      }
-                    >
-                      <Ionicons name="pencil-outline" size={24} color="black" />
-                      <View style={{ marginLeft: 10 }}>
-                        <Text>Edit</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ flexDirection: "row" }}
-                      onPress={() => DeleteMessage(id)}
-                    >
-                      <Ionicons name="trash-outline" size={24} color="black" />
-                      <View style={{ marginLeft: 10 }}>
-                        <Text>Delete</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </Card>
-              )}
+              <ThreeDots
+                visibility={threedotvisible}
+                height={100}
+                width={200}
+                data={[
+                  {
+                    text: "Edit",
+                    icon: "pencil-outline",
+                    func: () => Editmessage(id),
+                  },
+                  {
+                    text: "Delete",
+                    icon: "trash-outline",
+                    func: () => DeleteMessage(id),
+                  },
+                ]}
+              />
             </View>
           </>
         )}
@@ -122,7 +147,7 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
               photo,
               name,
               icon,
-              checked,
+
               time,
               id,
             })
@@ -134,9 +159,22 @@ const HomeItem = ({ message, photo, name, icon, checked, time, id, user }) => {
             color="black"
           />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <AntDesign name="hearto" size={15} color="black" />
-        </TouchableOpacity>
+        {LikedUsers?.includes(currentuser?.uid) ? (
+          <>
+            <TouchableOpacity onPress={() => Dislikeit(id)}>
+              <AntDesign name="heart" size={15} color="black" />
+              <Text>{FormattedLikes}</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity onPress={() => Likeit(id)}>
+              <AntDesign name="hearto" size={15} color="black" />
+              <Text>{FormattedLikes}</Text>
+            </TouchableOpacity>
+          </>
+        )}
+
         <TouchableOpacity>
           <AntDesign name="retweet" size={15} color="black" />
         </TouchableOpacity>
@@ -206,4 +244,4 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
 });
-export default HomeItem;
+export default AnnounceItem;

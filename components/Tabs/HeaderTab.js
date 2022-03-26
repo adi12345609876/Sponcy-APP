@@ -18,6 +18,7 @@ import { UserData } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 
 export default function Header() {
+  const currentuser = useauth();
   const currentUserData = UserData();
   const navigation = useNavigation();
 
@@ -58,7 +59,11 @@ export default function Header() {
           borderWidth: 2,
           backgroundColor: Colors.grey,
         }}
-        onPress={() => navigation.navigate("Portfolio")}
+        onPress={() =>
+          navigation.navigate("Portfolio", {
+            useruid: currentuser?.uid,
+          })
+        }
       >
         <Image
           source={{

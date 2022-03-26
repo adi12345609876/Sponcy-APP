@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -23,61 +23,67 @@ import CommentItem from "../../../../FlatlistItem/CommentItem";
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { Colors } from "../../../../Features/Features";
+import {
+  getComments,
+  PostComments,
+  UserData,
+} from "../../../../BACKEND/firebase";
+import { FontAwesome } from "@expo/vector-icons";
+import { useauth } from "../../../../BACKEND/Auth";
+import { TimestamptoTime } from "../../../../Hooks/GlobalHooks";
+// import { ParticularUser } from "../../../../Hooks/GlobalHooks";
 
-const Netflixdata = {
-  id: 1,
-  name: "Netflix CEO",
-  image: DummyNetflixIcon,
-  checked: true,
-};
-
-const Tesladata = {
-  id: 2,
-  name: "Tesla CEO",
-  image: DummyTeslaIcon,
-  checked: true,
-};
-
-const Adinathdata = {
-  id: 3,
-  name: "ADI",
-  image: null,
-  checked: false,
-};
-
-const DummyData = [
-  {
-    ...Tesladata,
-    message: "WOW 👌",
-    time: "1:01",
-  },
-  {
-    ...Adinathdata,
-    message: "great idea",
-    time: "1:02",
-  },
-  {
-    ...Netflixdata,
-    message: "we are interested to supporting you",
-    photo: null,
-    time: "2 days",
-  },
-];
 const HomeItem = ({ navigation, route }) => {
+  const { message, photo, name, icon, checked, time, id } = route.params;
+  const Comments = getComments(id);
+  const currentuser = useauth();
+  const currentUserData = UserData();
+  const [text, settext] = useState();
+  const [height, setheight] = useState(23);
+  const [senttext, setsenttext] = useState("");
+  const [Photo, setPhoto] = useState();
+  const [PhotoURL, setPhotoURL] = useState();
+  console.log(Comments);
+  useEffect(() => {
+    setsenttext(text);
+    console.log(senttext);
+  }, [text]);
+  async function Submit() {
+    console.log(
+      id,
+      Photo ? Photo : "",
+      senttext ? senttext : "",
+      currentuser?.uid,
+      currentUserData?.array?.UserName,
+      currentUserData?.array?.PhotoURL
+    );
+    await PostComments(
+      id,
+      Photo ? Photo : null,
+      senttext ? senttext : null,
+      currentuser?.uid,
+      currentUserData?.array?.UserName,
+      currentUserData?.array?.PhotoURL
+    );
+    settext("");
+    setheight(23);
+    console.log("Submitted");
+  }
   const renderItem = ({ item }) => {
+    const Time = TimestamptoTime(item?.time);
+    console.log("TIME:", Time);
     return (
       <CommentItem
         message={item.message}
-        photo={item.photo}
-        name={item.name}
-        icon={item.image}
-        checked={item.checked}
-        time={item.time}
+        photo={item.PhotoURL}
+        name={item.UserName}
+        icon={item.UserPhoto}
+        // checked={item.checked}
+        time={Time.time}
         id={item.id}
       />
     );
   };
-  const { message, photo, name, icon, checked, time, id } = route.params;
 
   return (
     <>
@@ -130,7 +136,7 @@ const HomeItem = ({ navigation, route }) => {
               }}
             >
               <FlatList
-                data={DummyData}
+                data={Comments}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
               />
@@ -139,7 +145,28 @@ const HomeItem = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <SafeAreaView style={styles.bottomcontainer}>
-        <Customtextinput />
+        <Customtextinput
+          settext={settext}
+          text={text}
+          height={height}
+          setheight={setheight}
+          setPhoto={setPhoto}
+          setPhotoURL={setPhotoURL}
+        >
+          <TouchableOpacity
+            onPress={() => Submit()}
+            style={{
+              backgroundColor: Colors.primary,
+              borderRadius: 20,
+              bottom: 10,
+              position: "absolute",
+              right: 10,
+              padding: 10,
+            }}
+          >
+            <FontAwesome name="send-o" size={20} color="white" />
+          </TouchableOpacity>
+        </Customtextinput>
       </SafeAreaView>
     </>
   );

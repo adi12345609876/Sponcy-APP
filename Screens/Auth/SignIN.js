@@ -14,7 +14,8 @@ import { setUser } from "../../BACKEND/firebase";
 
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../Features/Features";
-import { useauth, login, signup } from "../../BACKEND/Auth";
+import { useauth, login, signup, Glogin, Gitlogin } from "../../BACKEND/Auth";
+import { sendEmailVerification, verifyBeforeUpdateEmail } from "firebase/auth";
 export default function Signin() {
   const navigation = useNavigation();
   const emailref = useRef();
@@ -24,23 +25,61 @@ export default function Signin() {
     try {
       await signup(emailref.current.value, passwordref.current.value).then(
         (user) => {
-          setUser(user.user.uid);
-          navigation.navigate("UserDetails");
+          sendEmailVerification(user?.user);
+          console.log("Verified", user?.user?.emailVerified);
+          console.log("DONE VERIFY", user);
+          useEffect(() => {
+            if (!user.user.emailVerified) {
+              navigation.navigate("VerifyScreen");
+            } else {
+              navigation.navigate("UserDetails");
+            }
+          }, [user.user]);
         }
       );
     } catch (e) {
-      alert(e);
+      console.log(e);
     }
   }
   async function handleLogin() {
     try {
-      await login(emailref.current.value, passwordref.current.value);
+      await login(emailref.current.value, passwordref.current.value).then(
+        (user) => {
+          sendEmailVerification(user?.user);
+          console.log("Verified", user?.user?.emailVerified);
+          console.log("DONE VERIFY", user);
+          useEffect(() => {
+            if (!user.user.emailVerified) {
+              navigation.navigate("VerifyScreen");
+            } else {
+              navigation.navigate("UserDetails");
+            }
+          }, [user.user]);
+        }
+      );
       console.log("sucessfully logged in");
     } catch (e) {
       alert(e);
     }
   }
-
+  async function GoogleLogin() {
+    await Glogin()
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function GithubLogin() {
+    await Gitlogin()
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <View style={{ marginVertical: 10 }}>
       <LinearGradient
@@ -72,7 +111,7 @@ export default function Signin() {
         </View>
         <Text style={styles.or}>or</Text>
         <View style={{ marginVertical: 10 }}>
-          <TouchableOpacity style={styles.signinbutton}>
+          <TouchableOpacity style={styles.signinbutton} onPress={GoogleLogin}>
             <Text
               style={[styles.signinbuttonText, { color: "Colors.whiteFFF" }]}
             >
@@ -81,7 +120,7 @@ export default function Signin() {
           </TouchableOpacity>
         </View>
         <View style={{ marginVertical: 10 }}>
-          <TouchableOpacity style={styles.signinbutton}>
+          <TouchableOpacity style={styles.signinbutton} onPress={GithubLogin}>
             <Text style={[styles.signinbuttonText, { color: Colors.black }]}>
               Sign In with Github
             </Text>

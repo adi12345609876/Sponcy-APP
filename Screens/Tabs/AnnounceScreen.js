@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 //components
+
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import renderSeparator from "../../components/SuperComp/Separator";
-import { Announces, db } from "../../BACKEND/firebase";
+import { Announces, SpecifiedUserData } from "../../BACKEND/firebase";
 //assets
 // import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
 // import DummyTeslaIcon from "../assets/Photos/Dummyicon/Tesla.png";
@@ -15,94 +16,34 @@ import { Colors } from "../../Features/Features";
 //screen
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { doc, onSnapshot } from "firebase/firestore";
-//data
-// const Netflixdata = {
-//   id: 1,
-//   name: "Netflix",
-//   image: DummyNetflixIcon,
-//   checked: true,
-// };
-
-// const Tesladata = {
-//   id: 2,
-//   name: "Tesla",
-//   image: DummyTeslaIcon,
-//   checked: true,
-// };
-
-// const Adinathdata = {
-//   id: 3,
-//   name: "Adinath",
-//   image: null,
-//   checked: false,
-// };
-
-// const DummyData = [
-//   {
-//     ...Tesladata,
-//     message:
-//       "Instead of buying the Apple Cloth, Musk recommends getting the Tesla Cyberwhistle!",
-//     photo: photo1,
-//     time: "1:01",
-//   },
-//   {
-//     ...Adinathdata,
-//     message: "our new app is launchin next month",
-//     photo: photo2,
-//     time: "1:02",
-//   },
-//   {
-//     ...Netflixdata,
-//     message: "we are interested to support new directors",
-//     photo: null,
-//     time: "2 days",
-//   },
-//   {
-//     ...Tesladata,
-//     message: null,
-//     photo: photo3,
-//     time: "3 days",
-//   },
-// ];
-
-//render
+import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 
 export default function AssetExample() {
   const AnnounceData = Announces();
-  // const PostedUser = PostedUserData();
-  // const [PostedUser, setPostedUser] = useState();
-
-  // function getuser(uid) {
-  //   PostedUserData(uid);
-  // }
-  // function PostedUserData(uid) {
-  //   if (uid) {
-  //     const doclocation = doc(db, "Users", uid);
-  //     onSnapshot(doclocation, (snapshot) => {
-  //       setPostedUser({
-  //         ...snapshot.data(),
-  //         id: snapshot.id,
-  //       });
-  //     });
-  //   }
-  // }
+  // const Usersdata = SpecifiedUserData("D4hiAV30QlMT46Pp1XOxwPLcj0u2");
+  // console.log("SpecificUser", Usersdata);
 
   AnnounceData?.map((announce) => {
     console.log(announce);
   });
 
   const renderItem = ({ item }) => {
+    const Time = TimestamptoTime(item?.time);
+    console.log("TIME:", Time);
+
     return (
       <>
         <AnnounceItem
           message={item.message}
           photo={item.PhotoURL}
-          name={item.name}
+          name={item.UserName}
           icon={item.UserPhoto}
           // checked={item.checked}
-          time={item.time}
+          likes={item.Like}
+          time={Time.time}
           id={item.id}
           user={item.currentuser}
+          LikedUsers={item.LikedUser}
         />
       </>
     );
