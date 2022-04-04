@@ -27,31 +27,18 @@ import {
 import { Usersforchat } from "../BACKEND/firebase";
 import { async } from "@firebase/util";
 import { useauth } from "../BACKEND/Auth";
+import { useLoading } from "../Hooks/LoadingContext";
 
-const DummyData = [
-  {
-    data: [
-      { text: "Netflix New Show", image: null },
-      { text: "Instead of Buying Aplle buy tesla cloth", image: null },
-    ],
-    type: "message",
-  },
-  {
-    data: [
-      { text: "Elon Musk", image: DummyTeslaIcon },
-      { text: "Netflix", image: DummyNetflixIcon },
-    ],
-    type: "People",
-  },
-];
 export default function App({ route }) {
   const AnnounceData = Announces();
+
   const AllUsers = Usersforchat();
   const currentuser = useauth();
   const Searchhistory = GetSearchhistory(currentuser?.uid);
 
   const navigation = useNavigation();
   const { ScreenName } = route.params;
+  const { setshowLoading, showLoading } = useLoading();
 
   const [Searchtext, setSearchtext] = useState("");
   const [History, setHistory] = useState();
@@ -60,15 +47,15 @@ export default function App({ route }) {
     setHistory(doc);
   });
 
-  // console.log("HISTORY", History?.Searchtext);
-
   async function HandleSearch() {
+    setshowLoading(true);
     await AddSearchhistory(currentuser?.uid, Searchtext);
     navigation.navigate("Tabs", {
       screen: ScreenName,
 
       params: { Searchtext: Searchtext },
     });
+    setshowLoading(false);
   }
   const renderMesages = ({ item }) => {
     const SearchFilter = item?.message
@@ -272,7 +259,9 @@ export default function App({ route }) {
           </View>
         ) : null}
         <Text>recommendation</Text>
+
         <FlatList data={AnnounceData} renderItem={renderMesages} />
+
         <Text>Peoples</Text>
         <FlatList data={AllUsers} renderItem={renderUsers} />
 

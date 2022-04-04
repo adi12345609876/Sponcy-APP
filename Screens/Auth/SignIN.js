@@ -23,18 +23,22 @@ import {
   SetUsername,
 } from "../../BACKEND/Auth";
 import { sendEmailVerification, verifyBeforeUpdateEmail } from "firebase/auth";
+import { useLoading } from "../../Hooks/LoadingContext";
 export default function Signin() {
   const navigation = useNavigation();
   const emailref = useRef();
   const passwordref = useRef();
   const UserNameref = useRef();
   const currentuser = useauth();
+  const { setshowLoading, showLoading } = useLoading();
+
   async function handleSignin() {
     try {
-      await SetUsername(UserNameref.current.value);
-      await signup(emailref.current.value, passwordref.current.value).then(
+      setshowLoading(true);
+      await SetUsername(UserNameref?.current?.value);
+      await signup(emailref?.current?.value, passwordref?.current?.value).then(
         (user) => {
-          console.log("USER", user);
+          setshowLoading(false);
           if (!user.user.emailVerified) {
             sendEmailVerification(user?.user);
             navigation.navigate("VerifyScreen");
@@ -49,13 +53,13 @@ export default function Signin() {
   }
   async function handleLogin() {
     try {
-      await login(emailref.current.value, passwordref.current.value).then(
+      setshowLoading(true);
+      await login(emailref?.current?.value, passwordref?.current?.value).then(
         (user) => {
-          sendEmailVerification(user?.user);
-          console.log("Verified", user?.user?.emailVerified);
-          console.log("DONE VERIFY", user);
+          setshowLoading(false);
           useEffect(() => {
             if (!user.user.emailVerified) {
+              sendEmailVerification(user?.user);
               navigation.navigate("VerifyScreen");
             } else {
               navigation.navigate("UserDetails");
@@ -65,93 +69,98 @@ export default function Signin() {
       );
       console.log("sucessfully logged in");
     } catch (e) {
-      alert(e);
+      console.log(e);
     }
   }
   async function GoogleLogin() {
-    await Glogin()
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setshowLoading(true);
+
+    await Glogin();
+    setshowLoading(false);
   }
   async function GithubLogin() {
-    await Gitlogin()
-      .then((user) => {
-        console.log(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setshowLoading(true);
+    await Gitlogin();
+    setshowLoading(false);
   }
   return (
-    <View style={{ marginVertical: 10 }}>
-      <LinearGradient
-        style={styles.circlestyle1}
-        colors={[Colors.primary, Colors.secondary]}
-      />
-      <LinearGradient
-        style={styles.circlestyle2}
-        colors={[Colors.primary, Colors.secondary]}
-      />
-      <View style={{ position: "absolute" }}>
-        <Text style={styles.signINStyle}>Sign In</Text>
-        <Text>{currentuser?.email}</Text>
-        <View>
-          <Text style={styles.emailtext}>Email</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="name@gmail.com"
-            ref={emailref}
-          />
-        </View>
-        <View>
-          <Text style={styles.emailtext}>Password</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="password"
-            ref={passwordref}
-          />
-        </View>
-        <View>
-          <Text style={styles.emailtext}>UserName</Text>
-          <TextInput
-            style={styles.emailInput}
-            placeholder="UserName"
-            ref={UserNameref}
-          />
-        </View>
-        <Text style={styles.or}>or</Text>
-        <View style={{ marginVertical: 10 }}>
-          <TouchableOpacity style={styles.signinbutton} onPress={GoogleLogin}>
-            <Text
-              style={[styles.signinbuttonText, { color: "Colors.whiteFFF" }]}
+    <>
+      <View style={{ marginVertical: 10 }}>
+        <LinearGradient
+          style={styles.circlestyle1}
+          colors={[Colors.primary, Colors.secondary]}
+        />
+        <LinearGradient
+          style={styles.circlestyle2}
+          colors={[Colors.primary, Colors.secondary]}
+        />
+        <View style={{ position: "absolute" }}>
+          <Text style={styles.signINStyle}>Sign In</Text>
+          <Text>{currentuser?.email}</Text>
+          <View>
+            <Text style={styles.emailtext}>Email</Text>
+            <TextInput
+              style={styles.emailInput}
+              placeholder="name@gmail.com"
+              ref={emailref}
+            />
+          </View>
+          <View>
+            <Text style={styles.emailtext}>Password</Text>
+            <TextInput
+              style={styles.emailInput}
+              placeholder="password"
+              ref={passwordref}
+            />
+          </View>
+          <View>
+            <Text style={styles.emailtext}>UserName</Text>
+            <TextInput
+              style={styles.emailInput}
+              placeholder="UserName"
+              ref={UserNameref}
+            />
+          </View>
+          <Text style={styles.or}>or</Text>
+          <View style={{ marginVertical: 10 }}>
+            <TouchableOpacity style={styles.signinbutton} onPress={GoogleLogin}>
+              <Text
+                style={[styles.signinbuttonText, { color: "Colors.whiteFFF" }]}
+              >
+                Sign In with Google
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginVertical: 10 }}>
+            <TouchableOpacity style={styles.signinbutton} onPress={GithubLogin}>
+              <Text style={[styles.signinbuttonText, { color: Colors.black }]}>
+                Sign In with Github
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.createbutton}
+              onPress={handleSignin}
             >
-              Sign In with Google
+              <Text
+                style={[styles.createbuttontext, { color: Colors.primary }]}
+              >
+                Create
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={handleLogin}
+            // disabled={emailref && passwordref}
+          >
+            <Text style={styles.alreadyhave}>
+              Already have an account? login
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ marginVertical: 10 }}>
-          <TouchableOpacity style={styles.signinbutton} onPress={GithubLogin}>
-            <Text style={[styles.signinbuttonText, { color: Colors.black }]}>
-              Sign In with Github
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <TouchableOpacity style={styles.createbutton} onPress={handleSignin}>
-            <Text style={[styles.createbuttontext, { color: Colors.primary }]}>
-              Create
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity onPress={handleLogin}>
-          <Text style={styles.alreadyhave}>Already have an account? login</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </>
   );
 }
 

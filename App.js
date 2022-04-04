@@ -42,6 +42,7 @@ import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
 import VerifyScreen from "./Screens/Auth/VerifyScreen";
 import FollowersScreen from "./Screens/Tabs/Sub-Tabs/Announce/FollowersScreen";
 import Dummy from "./Boiler";
+import LoadingProvider from "./Hooks/LoadingContext";
 //icons
 const Homeicon = require("./assets/Icon/Homeadvisor.png");
 const Announceicon = require("./assets/Icon/Annnounce.png");
@@ -258,10 +259,12 @@ function MyStack() {
 
 export default function App() {
   return (
-    <TabBarprovider>
-      <NavigationContainer>
-        <MyStack />
-      </NavigationContainer>
-    </TabBarprovider>
+    <LoadingProvider>
+      <TabBarprovider>
+        <NavigationContainer>
+          <MyStack />
+        </NavigationContainer>
+      </TabBarprovider>
+    </LoadingProvider>
   );
 }

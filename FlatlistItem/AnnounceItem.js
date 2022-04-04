@@ -31,6 +31,7 @@ let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../Hooks/GlobalHooks";
+import { useLoading } from "../Hooks/LoadingContext";
 
 const AnnounceItem = ({
   message,
@@ -47,10 +48,10 @@ const AnnounceItem = ({
   const [threedotvisible, setthreevisible] = useState(false);
   const FormattedLikes = numFormatter(likes);
   const currentuser = useauth();
-
-  const currentUserData = UserData();
+  const { setshowLoading, showLoading } = useLoading();
 
   async function DeleteMessage(id) {
+    setshowLoading(true);
     const doclocation = doc(
       db,
       "Announce",
@@ -59,6 +60,7 @@ const AnnounceItem = ({
       id
     );
     await deleteDoc(doclocation);
+    setshowLoading(false);
   }
   async function Editmessage(id) {
     navigation.navigate("Editmessage", {

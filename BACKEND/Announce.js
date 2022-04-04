@@ -137,11 +137,11 @@ export async function Likemessage(currentuser, messageid) {
     "Message",
     messageid
   );
-  const AddUserLIked = await updateDoc(Doclocation2, {
+  const AddUserLIked = updateDoc(Doclocation2, {
     LikedUser: arrayUnion(currentuser),
   });
 
-  const increseliked = await updateDoc(Doclocation2, {
+  const increseliked = updateDoc(Doclocation2, {
     Like: increment(1),
   });
 
@@ -159,14 +159,13 @@ export async function Dislikemessage(currentuser, messageid) {
     messageid
   );
 
-  const get = await getDoc(Doclocation2).then((doc) => doc.data());
   // await deleteDoc(Doclocation)
-  const RemoveUserLIked = await updateDoc(Doclocation2, {
+  const RemoveUserLIked = updateDoc(Doclocation2, {
     LikedUser: arrayRemove(currentuser),
   });
 
   // if (get.Like != 0) {
-  await updateDoc(Doclocation2, {
+  updateDoc(Doclocation2, {
     Like: increment(-1),
   });
   // }

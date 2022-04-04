@@ -7,6 +7,7 @@ import ThreeDots from "../components/SuperComp/3dotComp";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db, JoinUser, SpecifiedUserData } from "../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
+import { useLoading } from "../Hooks/LoadingContext";
 
 export default function ChatItem({
   message,
@@ -27,7 +28,11 @@ export default function ChatItem({
   const navigation = useNavigation();
   const currentuser = useauth();
   const Specificuserdata = SpecifiedUserData(From);
+  const { setshowLoading, showLoading } = useLoading();
+
   async function DeleteMessage(id) {
+    setshowLoading(true);
+
     const Doclocation = doc(
       db,
       "Users",
@@ -43,7 +48,7 @@ export default function ChatItem({
     } else {
       await deleteDoc(Doclocation2);
     }
-    console.log("Deleted", id);
+    setshowLoading(false);
   }
   function ForwardMessage() {
     console.log("Forwarded", message);
