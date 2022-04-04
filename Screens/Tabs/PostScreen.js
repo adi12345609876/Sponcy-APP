@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -13,19 +13,35 @@ import button from "../../assets/Icon/EmailSend.png";
 import { Colors } from "../../Features/Features";
 import * as ImagePicker from "expo-image-picker";
 
-import { UserData, PostAnnounce } from "../../BACKEND/firebase";
+import { UserData, PostAnnounce, AddUnreadUser } from "../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../../BACKEND/Auth";
+import {
+  AddUnseenUsers,
+  getUserDetailsCollection,
+} from "../../BACKEND/Announce";
 export default function App() {
   const navigation = useNavigation();
   const currentuser = useauth();
   const currentUserData = UserData();
+  const userdetails = getUserDetailsCollection(currentuser?.uid);
 
   const [text, settext] = useState();
   const [Photo, setPhoto] = useState();
+  const [Followers, setFollowers] = useState();
 
   const [PhotoURL, setPhotoURL] = useState();
   const [done, setdone] = useState(false);
+  useEffect(() => {
+    if (userdetails) {
+      userdetails
+        ?.then((doc) => {
+          setFollowers(doc.Followers);
+          console.log(Followers);
+        })
+        .catch((e) => console.log("ERER", e));
+    }
+  }, [userdetails]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -47,17 +63,21 @@ export default function App() {
     }
   };
   async function handleClick() {
-    console.log([Photo, text, currentuser.uid, setdone]);
+    console.log([Photo, text, currentuser.uid, setdone, Followers]);
     await PostAnnounce(
       Photo,
       text,
-      currentuser.uid,
+      currentuser?.uid,
       currentUserData?.array?.UserName,
       currentUserData?.array?.PhotoURL,
       setdone
     );
+    AddUnseenUsers(currentuser?.uid, Followers);
+
     console.log("Updated");
-    navigation.navigate("Tabs");
+    navigation.navigate("Tabs", {
+      initialRoute: "Announce",
+    });
   }
   return (
     <View style={styles.container}>

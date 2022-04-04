@@ -4,11 +4,9 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 // import Postedmessages from "../../Screens/Tabs/Sub-Tabs/Announce/Postedmess";
 import { Colors } from "../../Features/Features";
 import { useauth } from "../../BACKEND/Auth";
-import {
-  getUserDetailsCollection,
-  currentuserReplies,
-  Announces,
-} from "../../BACKEND/firebase";
+
+import { Announces, currentuserReplies } from "../../BACKEND/Announce";
+
 const Tab = createMaterialTopTabNavigator();
 import CommentItem from "../../FlatlistItem/CommentItem";
 import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";

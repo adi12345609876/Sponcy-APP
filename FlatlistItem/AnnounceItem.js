@@ -23,7 +23,8 @@ import Time from "../components/SuperComp/time";
 import { Colors } from "../Features/Features";
 //assets
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db, Dislikemessage, Likemessage, UserData } from "../BACKEND/firebase";
+import { db, UserData } from "../BACKEND/firebase";
+import { Dislikemessage, Likemessage } from "../BACKEND/Announce";
 import { useauth } from "../BACKEND/Auth";
 //features
 let deviceWidth = Dimensions.get("screen").width;

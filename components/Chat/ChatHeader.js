@@ -8,12 +8,20 @@ import ThreeDots from "../../components/SuperComp/3dotComp";
 import { LeaveRoom, EditRoom } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 
-export default function ChatHeader({ name, icon, id, participants, Type }) {
+export default function ChatHeader({
+  name,
+  icon,
+  id,
+  participants,
+  Type,
+  owner,
+  Leaders,
+}) {
   const [threedotvisible, setthreevisible] = useState(false);
   const currentUser = useauth();
   const navigation = useNavigation();
 
-  async function LeaveRoom() {
+  async function LeaveRooms() {
     await LeaveRoom(id, currentUser?.uid);
     navigation.navigate("Tabs");
   }
@@ -30,7 +38,14 @@ export default function ChatHeader({ name, icon, id, participants, Type }) {
     navigation.navigate("EditRooms", { name, icon, id, participants });
   }
   function MoveToDetails() {
-    navigation.navigate("RoomDetails", { name, icon, id, participants });
+    navigation.navigate("RoomDetails", {
+      name,
+      icon,
+      id,
+      participants,
+      owner,
+      Leaders,
+    });
   }
   return (
     <>
@@ -70,7 +85,7 @@ export default function ChatHeader({ name, icon, id, participants, Type }) {
               {
                 text: "Leave",
                 icon: "arrow-back-circle",
-                func: () => LeaveRoom(),
+                func: () => LeaveRooms(),
               },
               Type != "OneToOne" && {
                 text: "Invite",

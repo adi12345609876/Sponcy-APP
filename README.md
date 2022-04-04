@@ -3,7 +3,7 @@
 ---
 
 1)<Promise>{Pending}:
-because you use direct "CONST or LET or VAR" instead use "USESTATE"
+because you use direct "CONST or "LET" or VAR" instead use "USESTATE"
 and ".THEN"
 
 # EXAMPLE

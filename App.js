@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import { LogBox } from "react-native";
 //BACKEND
 import { UserData } from "./BACKEND/firebase";
-import { firebaseConfig } from "./BACKEND/Config";
+import { firebaseConfig } from "./BACKEND/1.Config";
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -235,19 +235,19 @@ function MyStack() {
             </>
           ) : !SplashScreenvisible && !currentUserData?.array?.UserName ? (
             [
-              currentuser?.emailVerified ? (
+              <>
                 <Stack.Screen
                   name="UserDetails"
                   component={UserDetailsEditScreen}
                   options={{ headerShown: false }}
                 />
-              ) : (
+
                 <Stack.Screen
                   name="VerifyScreen"
                   component={VerifyScreen}
                   options={{ headerShown: false }}
                 />
-              ),
+              </>,
             ]
           ) : null,
         ]

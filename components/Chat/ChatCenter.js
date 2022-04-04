@@ -14,7 +14,7 @@ import { useauth } from "../../BACKEND/Auth";
 import { DeleteUnreadUserOnMess } from "../../BACKEND/firebase";
 import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 
-export default function App({ messages, roomid, Type, Invite }) {
+export default function App({ messages, roomid, Type, Invite, owner }) {
   const ScroolRef = useRef();
   const currentuser = useauth();
   const renderItem = ({ item }) => {
@@ -31,6 +31,11 @@ export default function App({ messages, roomid, Type, Invite }) {
         Type={Type}
         Invite={item.Invite}
         Invitationid={item.Invitationid}
+        DocType={item.Type}
+        PhotoURL={item.PhotoURL}
+        Name={item.Name}
+        Size={item.Size}
+        owner={owner}
       />
     );
   };

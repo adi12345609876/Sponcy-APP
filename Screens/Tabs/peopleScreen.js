@@ -17,7 +17,8 @@ import { Colors } from "../../Features/Features";
 import DummynullProfile from "../../assets/Photos/Dummyicon/actualnullimage.png";
 import DummyNetflixIcon from "../../assets/Photos/Dummyicon/Netflix.png";
 import DummyTeslaIcon from "../../assets/Photos/Dummyicon/Tesla.png";
-import { getUserDetailsCollection, Usersforchat } from "../../BACKEND/firebase";
+import { Usersforchat } from "../../BACKEND/firebase";
+import { getUserDetailsCollection } from "../../BACKEND/Announce";
 import { useauth } from "../../BACKEND/Auth";
 import { compare2arrays } from "../../Hooks/GlobalHooks";
 //feautures
@@ -225,3 +226,72 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 });
+// const PeoplerenderItem = ({ item }) => {
+//   const SearchFilter = item?.UserName?.toLowerCase()?.includes(
+//     route?.params?.Searchtext?.toLowerCase()
+//   );
+
+//   return (
+//     <>
+//       {SearchFilter ? (
+//         <TouchableOpacity
+//           style={{
+//             margin: 10,
+//             justifyContent: "center",
+//             alignItems: "center",
+//             paddingVertical: 10,
+//             marginHorizontal: 15,
+//           }}
+//           onPress={() =>
+//             navigation.navigate("Portfolio", {
+//               useruid: item?.id,
+//             })
+//           }
+//         >
+//           <Image
+//             style={styles.image}
+//             source={item?.PhotoURL ? item?.PhotoURL : DummynullProfile}
+//           />
+//           <Text
+//             style={{
+//               fontSize: 18,
+//               fontWeight: "bold",
+//             }}
+//           >
+//             {item?.UserName}
+//           </Text>
+//         </TouchableOpacity>
+//       ) : route?.params?.Searchtext == undefined ? (
+//         <TouchableOpacity
+//           style={{
+//             margin: 10,
+//             justifyContent: "center",
+//             alignItems: "center",
+//             paddingVertical: 10,
+//             marginHorizontal: 15,
+//           }}
+//           onPress={() =>
+//             navigation.navigate("Portfolio", {
+//               useruid: item?.id,
+//             })
+//           }
+//         >
+//           <Image
+//             style={styles.image}
+//             source={item?.PhotoURL ? item?.PhotoURL : DummynullProfile}
+//           />
+//           <Text
+//             style={{
+//               fontSize: 18,
+//               fontWeight: "bold",
+//             }}
+//           >
+//             {item?.UserName}
+//           </Text>
+//         </TouchableOpacity>
+//       ) : (
+//         <Text>nothing</Text>
+//       )}
+//     </>
+//   );
+// };

@@ -35,6 +35,8 @@ const HomeItem = ({
   Forwarded,
   Invite,
   InvitationData,
+  owner,
+  Leaders,
 }) => {
   const curerntuser = useauth();
   const navigation = useNavigation();
@@ -44,7 +46,7 @@ const HomeItem = ({
     Type == "OneToOne" ? !Seen : UnreadUsers?.includes(curerntuser?.uid);
 
   console.log("UnreadUsers", UnreadUsers, "Notify", notify);
-  console.log("SEEN", Seen);
+  console.log("SEEN", owner);
   function Handleclick() {
     if (Type == "OneToOne") {
       navigation.navigate("Chat", {
@@ -69,6 +71,8 @@ const HomeItem = ({
         Forwarded,
         Invite,
         InvitationData,
+        owner,
+        Leaders,
       });
     }
     DeleteUnreadUser(id, curerntuser?.uid, Type);

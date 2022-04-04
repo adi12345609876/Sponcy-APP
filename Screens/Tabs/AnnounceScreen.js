@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 //components
 
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import renderSeparator from "../../components/SuperComp/Separator";
-import { Announces, SpecifiedUserData } from "../../BACKEND/firebase";
-//assets
-// import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
-// import DummyTeslaIcon from "../assets/Photos/Dummyicon/Tesla.png";
-// import photo1 from "../assets/Photos/Dummyphotos/photo1.png";
-// import photo2 from "../assets/Photos/Dummyphotos/photo2.png";
-// import photo3 from "../assets/Photos/Dummyphotos/Drone.png";
+
+import { Announces } from "../../BACKEND/Announce";
+
 import { Colors } from "../../Features/Features";
 
 //screen
@@ -18,33 +14,49 @@ import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { doc, onSnapshot } from "firebase/firestore";
 import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 
-export default function AssetExample() {
+export default function AnnounceScreen({ route, Searchtext }) {
   const AnnounceData = Announces();
-  // const Usersdata = SpecifiedUserData("D4hiAV30QlMT46Pp1XOxwPLcj0u2");
-  // console.log("SpecificUser", Usersdata);
-
-  AnnounceData?.map((announce) => {
-    console.log(announce);
-  });
-
+  console.log("Searchtext", Searchtext);
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
-    console.log("TIME:", Time);
+
+    const SearchFilter =
+      item?.message
+        ?.toLowerCase()
+        ?.includes(route?.params?.Searchtext?.toLowerCase()) ||
+      item?.UserName?.toLowerCase()?.includes(
+        route?.params?.Searchtext?.toLowerCase()
+      );
 
     return (
       <>
-        <AnnounceItem
-          message={item.message}
-          photo={item.PhotoURL}
-          name={item.UserName}
-          icon={item.UserPhoto}
-          // checked={item.checked}
-          likes={item.Like}
-          time={Time.time}
-          id={item.id}
-          user={item.currentuser}
-          LikedUsers={item.LikedUser}
-        />
+        {SearchFilter ? (
+          <AnnounceItem
+            message={item.message}
+            photo={item.PhotoURL}
+            name={item.UserName}
+            icon={item.UserPhoto}
+            // checked={item.checked}
+            likes={item.Like}
+            time={Time.time}
+            id={item.id}
+            user={item.currentuser}
+            LikedUsers={item.LikedUser}
+          />
+        ) : route?.params?.Searchtext == undefined ? (
+          <AnnounceItem
+            message={item.message}
+            photo={item.PhotoURL}
+            name={item.UserName}
+            icon={item.UserPhoto}
+            // checked={item.checked}
+            likes={item.Like}
+            time={Time.time}
+            id={item.id}
+            user={item.currentuser}
+            LikedUsers={item.LikedUser}
+          />
+        ) : null}
       </>
     );
   };

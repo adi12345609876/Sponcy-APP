@@ -24,6 +24,7 @@ let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { DeleteUnreadUser } from "../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
+import { RemoveUnseenUsers } from "../BACKEND/Announce";
 
 const NotifyItem = ({
   name,
@@ -32,32 +33,44 @@ const NotifyItem = ({
   UnreadUsers,
   id,
   participants,
+  UnreadSeenUsers,
+  Seen,
+  Type,
 }) => {
   const navigation = useNavigation();
   const [threedotvisible, setthreevisible] = useState(false);
   const currentuser = useauth();
+  const notify =
+    Type == "OneToOne" ? !Seen : UnreadUsers?.includes(currentuser?.uid);
+
   function Handleclick() {
-    DeleteUnreadUser(id, currentuser?.uid);
+    const onechat = Type == "OneToOne";
+    DeleteUnreadUser(id, currentuser?.uid, Type);
     // console.log("CHAT:", messages);
     navigation.navigate("Chat", {
       name,
       icon,
       id,
       participants,
+      onechat,
+    });
+  }
+  function HandleclickAnnounce() {
+    RemoveUnseenUsers(currentuser?.uid, id);
+    navigation.navigate("Portfolio", {
+      useruid: id,
     });
   }
   return (
     <View>
-      {UnreadUsers?.includes(currentuser?.uid) && (
+      {notify && (
         <TouchableOpacity
           style={{
             flexDirection: "row",
             marginVertical: 1,
             padding: 20,
-            backgroundColor: UnreadUsers?.includes(currentuser?.uid)
-              ? Colors.tertiary
-              : null,
-            opacity: UnreadUsers?.includes(currentuser?.uid) ? null : 0.5,
+            backgroundColor: notify ? Colors.tertiary : null,
+            opacity: notify ? null : 0.5,
           }}
           onPress={() => Handleclick()}
         >
@@ -93,6 +106,52 @@ const NotifyItem = ({
                 />
               </TouchableOpacity>
               {/* <Time time={time} /> */}
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {UnreadSeenUsers?.includes(currentuser?.uid) && (
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            marginVertical: 1,
+            padding: 20,
+            backgroundColor: UnreadSeenUsers?.includes(currentuser?.uid)
+              ? Colors.tertiary
+              : null,
+            opacity: UnreadSeenUsers?.includes(currentuser?.uid) ? null : 0.5,
+          }}
+          onPress={() => HandleclickAnnounce()}
+        >
+          <TouchableOpacity style={styles.imagecontainer}>
+            <Image
+              source={icon ? icon : Nullprofile({ name })}
+              style={styles.image}
+            />
+          </TouchableOpacity>
+          <View style={styles.row}>
+            <View style={{ maxWidth: 200 }}>
+              <View style={styles.row}>
+                <NameText name={name} />
+                <Text style={styles.previousmessage}>
+                  {name} Announced something new
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.leftViewCenter}>
+            <View style={styles.leftView}>
+              <TouchableOpacity
+                onPress={() => setthreevisible(!threedotvisible)}
+              >
+                <Entypo
+                  name="dots-three-vertical"
+                  size={20}
+                  color="black"
+                  style={styles.tripledot}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </TouchableOpacity>

@@ -13,8 +13,10 @@ import {
   PostOnetoOnechat,
   PostPrivateChats,
   SpecifiedUserData,
+  UserData,
 } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
+import Customtextinput from "../../components/SuperComp/Textinput";
 
 export function ChatBottom({
   roomid,
@@ -27,23 +29,30 @@ export function ChatBottom({
   Forwarded,
   Invite,
   InvitationData,
+  Sponsor,
 }) {
   const currentUser = useauth();
 
   const userdata = SpecifiedUserData(currentUser?.uid);
+  const otheruserdata = SpecifiedUserData(roomid);
   const [height, setheight] = useState(23);
   const [text, settext] = useState();
+
+  const [Photo, setPhoto] = useState();
+  const [PhotoDetails, setPhotoDetails] = useState();
+
   console.log("Message", text, Mess, InvitationData, Invite);
 
   useEffect(() => {
     if (Invite) {
       settext(
-        "You have been Invited by your dear friend to this Group.I request you to join",
-        InvitationData.RoomName
+        `You have been Invited by your dear friend to this group.I request you to join`,
+        name
       );
-      console.log("INVITIONDATA:", InvitationData?.id);
+    } else if (Sponsor) {
+      settext(`I am is willing to sponsor you.what do you say?`);
     }
-  }, [Invite]);
+  }, [Invite, Sponsor]);
   useEffect(() => {
     if (Mess) {
       settext(Mess);
@@ -66,7 +75,9 @@ export function ChatBottom({
           icon,
           Forwarded,
           Invite,
-          InvitationData
+          InvitationData,
+          Photo,
+          PhotoDetails
         );
         AddUnreadUser(roomid, participants);
       } else {
@@ -78,7 +89,11 @@ export function ChatBottom({
           userdata?.PhotoURL,
           forwarded,
           Invite,
-          InvitationData
+          InvitationData,
+          Photo,
+          PhotoDetails,
+          Sponsor,
+          otheruserdata
         );
       }
 
@@ -91,7 +106,7 @@ export function ChatBottom({
   return (
     <View style={styles.container}>
       <View style={[styles.sectionStyle, { height: Math.max(35, height) }]}>
-        <TextInput
+        {/* <TextInput
           style={[styles.textInputStyle, { height: Math.max(35, height) }]}
           placeholder="Type Thoughts"
           underlineColorAndroid="transparent"
@@ -105,16 +120,23 @@ export function ChatBottom({
           // onSubmitEditing={(e) => onSubmit(e)}
           value={text}
           clearButtonMode="always"
+        /> */}
+        <Customtextinput
+          settext={settext}
+          text={text}
+          height={height}
+          setheight={setheight}
+          setPhoto={setPhoto}
+          setPhotoDetails={setPhotoDetails}
         />
-
-        <View style={{ flexDirection: "row" }}>
+        {/* <View style={{ flexDirection: "row" }}>
           <TouchableOpacity style={{ marginLeft: 12 }}>
             <Entypo name="circle" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity style={{ marginLeft: 12 }}>
             <Ionicons name="camera" size={24} color="black" />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
 
       <TouchableOpacity

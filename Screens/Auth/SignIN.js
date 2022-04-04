@@ -14,27 +14,33 @@ import { setUser } from "../../BACKEND/firebase";
 
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../Features/Features";
-import { useauth, login, signup, Glogin, Gitlogin } from "../../BACKEND/Auth";
+import {
+  useauth,
+  login,
+  signup,
+  Glogin,
+  Gitlogin,
+  SetUsername,
+} from "../../BACKEND/Auth";
 import { sendEmailVerification, verifyBeforeUpdateEmail } from "firebase/auth";
 export default function Signin() {
   const navigation = useNavigation();
   const emailref = useRef();
   const passwordref = useRef();
+  const UserNameref = useRef();
   const currentuser = useauth();
   async function handleSignin() {
     try {
+      await SetUsername(UserNameref.current.value);
       await signup(emailref.current.value, passwordref.current.value).then(
         (user) => {
-          sendEmailVerification(user?.user);
-          console.log("Verified", user?.user?.emailVerified);
-          console.log("DONE VERIFY", user);
-          useEffect(() => {
-            if (!user.user.emailVerified) {
-              navigation.navigate("VerifyScreen");
-            } else {
-              navigation.navigate("UserDetails");
-            }
-          }, [user.user]);
+          console.log("USER", user);
+          if (!user.user.emailVerified) {
+            sendEmailVerification(user?.user);
+            navigation.navigate("VerifyScreen");
+          } else {
+            navigation.navigate("UserDetails");
+          }
         }
       );
     } catch (e) {
@@ -107,6 +113,14 @@ export default function Signin() {
             style={styles.emailInput}
             placeholder="password"
             ref={passwordref}
+          />
+        </View>
+        <View>
+          <Text style={styles.emailtext}>UserName</Text>
+          <TextInput
+            style={styles.emailInput}
+            placeholder="UserName"
+            ref={UserNameref}
           />
         </View>
         <Text style={styles.or}>or</Text>

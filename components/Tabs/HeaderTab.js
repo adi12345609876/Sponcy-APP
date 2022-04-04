@@ -16,8 +16,14 @@ import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
 import { UserData } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
-
+import { useRoute } from "@react-navigation/native";
+import { Searchbar } from "react-native-paper";
 export default function Header() {
+  const [searchText, setsearchText] = useState();
+  const [ShowSearch, setShowSearch] = useState(false);
+
+  const route = useRoute();
+  console.log("CURRENT SCREEN", route.name);
   const currentuser = useauth();
   const currentUserData = UserData();
   const navigation = useNavigation();
@@ -42,8 +48,13 @@ export default function Header() {
       setthreevisible(false);
     }
   };
-  function dummy() {
-    console.log("Never gone give u up");
+  function HandleSearch() {
+    console.log("searchText", searchText);
+    setShowSearch(false);
+  }
+  function HandleChangeText(text) {
+    console.log("searchText", text);
+    setsearchText(text);
   }
   useEffect(() => {
     toggleTabBarAnimation();
@@ -80,10 +91,24 @@ export default function Header() {
       </TouchableOpacity>
       <TouchableOpacity
         style={{ top: 10 }}
-        onPress={() => navigation.navigate("SearchScreen")}
+        onPress={() =>
+          navigation.navigate("SearchScreen", {
+            ScreenName: route.name,
+          })
+        }
       >
         <EvilIcons name="search" size={35} color="black" />
       </TouchableOpacity>
+      {/* {ShowSearch && (
+        <View>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={(text) => HandleChangeText(text)}
+            value={searchText}
+            onIconPress={() => HandleSearch()}
+          />
+        </View>
+      )} */}
 
       <TouchableOpacity
         style={{ top: 10 }}

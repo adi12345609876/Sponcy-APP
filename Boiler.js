@@ -27,18 +27,6 @@ export default function AssetExample({ route }) {
         textAlign="left"
         value={text}
       />
-      <Button
-        title="Post"
-        onPress={() =>
-          CreateOnetoOnechat(
-            currentUser,
-            otheruser,
-            text,
-            specificuserdata?.UserName,
-            specificuserdata?.PhotoURL
-          )
-        }
-      />
     </View>
   );
 }

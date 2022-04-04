@@ -18,6 +18,11 @@ export default function ChatItem({
   Type,
   Invite,
   Invitationid,
+  owner,
+  DocType,
+  PhotoURL,
+  Name,
+  Size,
 }) {
   const navigation = useNavigation();
   const currentuser = useauth();
@@ -114,11 +119,17 @@ export default function ChatItem({
               icon: "md-return-up-forward-outline",
               func: () => ForwardMessage(),
             },
-            currentuser?.uid == From && {
-              text: "Delete",
-              icon: "trash-outline",
-              func: () => DeleteMessage(id),
-            },
+            currentuser?.uid == owner
+              ? {
+                  text: "Delete",
+                  icon: "trash-outline",
+                  func: () => DeleteMessage(id),
+                }
+              : currentuser?.uid == From && {
+                  text: "Delete",
+                  icon: "trash-outline",
+                  func: () => DeleteMessage(id),
+                },
           ]}
         />
       </View>

@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { BlurView } from "expo-blur";
 import { TextInput } from "react-native-paper";
-import { updateUser } from "../../BACKEND/firebase";
+import { updateUser } from "../../BACKEND/Auth";
 import { Colors } from "../../Features/Features";
 import { useauth } from "../../BACKEND/Auth";
 import nullPhoto from "../../assets/Photos/Dummyicon/Person.png";

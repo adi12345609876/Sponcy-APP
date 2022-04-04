@@ -23,11 +23,8 @@ import CommentItem from "../../../../FlatlistItem/CommentItem";
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
 import { Colors } from "../../../../Features/Features";
-import {
-  getComments,
-  PostComments,
-  UserData,
-} from "../../../../BACKEND/firebase";
+import { UserData } from "../../../../BACKEND/firebase";
+import { getComments, PostComments } from "../../../../BACKEND/Announce";
 import { FontAwesome } from "@expo/vector-icons";
 import { useauth } from "../../../../BACKEND/Auth";
 import { TimestamptoTime } from "../../../../Hooks/GlobalHooks";

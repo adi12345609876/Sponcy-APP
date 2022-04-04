@@ -9,7 +9,12 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "./1.Config";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "./firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+initializeApp(firebaseConfig);
 const auth = getAuth();
 
 export async function signup(email, password) {
@@ -41,4 +46,37 @@ export function Glogin() {
 export function Gitlogin() {
   const provider = new GithubAuthProvider();
   return signInWithPopup(auth, provider);
+}
+//DisplayName,Slogan,icon
+export async function updateUser(UserName, Photo, Slogan, currentuser) {
+  console.log("currentuser", currentuser);
+
+  const doclocation = doc(db, "Users", currentuser);
+  const fileRef = ref(storage, "ProfilePIC/" + currentuser + ".png");
+
+  //upload image
+  const snapshot = await uploadBytes(fileRef, Photo);
+  const PhotoURL = await getDownloadURL(fileRef);
+
+  const newvalue = {
+    UserName,
+    PhotoURL,
+    Slogan,
+    uid: currentuser,
+  };
+  //upload name
+  await updateDoc(doclocation, newvalue);
+}
+//Set Username
+export async function SetUsername(UserName) {
+  const doclocation = doc(db, "Users", UserName);
+
+  const newvalue = {
+    UserName: "",
+    PhotoURL: "",
+    Slogan: "",
+    uid: UserName,
+  };
+  //upload name
+  await setDoc(doclocation, newvalue);
 }

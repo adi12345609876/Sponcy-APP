@@ -181,7 +181,8 @@ import * as ImagePicker from "expo-image-picker";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { BlurView } from "expo-blur";
 import { TextInput } from "react-native-paper";
-import { updateUser, UserData } from "../../../../BACKEND/firebase";
+import { UserData } from "../../../../BACKEND/firebase";
+import { updateUser } from "../../../../BACKEND/Auth";
 import { useauth } from "../../../../BACKEND/Auth";
 import { Colors } from "../../../../Features/Features";
 

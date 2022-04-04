@@ -27,10 +27,13 @@ export default function AssetExample({ route }) {
     Forwarded,
     Invite,
     InvitationData,
+    owner,
+    Leaders,
+    Sponsor,
   } = route.params;
   const currentuser = useauth();
   const messages = onechat ? OneOneChats(id) : PrivateChats(id);
-  console.log("Mess:", messages);
+  console.log("Mess:", owner);
 
   return (
     <ImageBackground
@@ -44,6 +47,8 @@ export default function AssetExample({ route }) {
         id={id}
         participants={participants}
         Type={Type}
+        owner={owner}
+        Leaders={Leaders}
       />
 
       <ScrollView style={{ marginBottom: 50 }}>
@@ -52,6 +57,7 @@ export default function AssetExample({ route }) {
           roomid={id}
           Type={Type}
           Invite={Invite}
+          owner={owner}
         />
       </ScrollView>
 
@@ -67,6 +73,7 @@ export default function AssetExample({ route }) {
           Forwarded={Forwarded}
           Invite={Invite}
           InvitationData={InvitationData}
+          Sponsor={Sponsor}
         />
       </SafeAreaView>
     </ImageBackground>

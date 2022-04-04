@@ -7,11 +7,7 @@ import AnimatedScroolView from "../../../../components/Animation/AnimatedScroolT
 import renderSeparator from "../../../../components/SuperComp/Separator";
 //assets
 // import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
-import {
-  ChatRooms,
-  Usersforchat,
-  updatedb,
-} from "../../../../BACKEND/firebase";
+import { ChatRooms, Usersforchat } from "../../../../BACKEND/firebase";
 import { useauth } from "../../../../BACKEND/Auth";
 import ParticipantsItem from "../../../../FlatlistItem/ParticipantsItem";
 import { useEffect } from "react";

@@ -4,12 +4,9 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
-  collectionGroup,
-  deleteDoc,
   doc,
   getDoc,
   getFirestore,
-  increment,
   onSnapshot,
   orderBy,
   query,
@@ -22,7 +19,7 @@ import { useEffect, useState } from "react";
 import { useauth } from "./Auth";
 import uuid from "react-native-uuid";
 
-const storage = getStorage();
+export const storage = getStorage();
 export const db = getFirestore();
 
 //GET
@@ -43,33 +40,7 @@ export function UserData() {
   }, [currentuser]);
   return { array: curUsers };
 }
-//getAnnnounce
-export function Announces() {
-  const [Announce, setAnnounce] = useState();
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message"
-  );
-  const q = query(Collocation, orderBy("time"));
-  useEffect(() => {
-    onSnapshot(Collocation, (snapshot) => {
-      if (!snapshot.empty) {
-        setAnnounce(
-          snapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      } else {
-        console.log("NO ANNOUNCES😲😮");
-      }
-    });
-  }, []);
 
-  return Announce;
-}
 //get chat rooms
 export function ChatRooms() {
   const currentuser = useauth();
@@ -98,9 +69,8 @@ export function ChatRooms() {
 
   return Rooms;
 }
-//here
+
 export function OneOneMess(currentUser) {
-  const currentuser = useauth();
   const [Messages, setMessages] = useState();
 
   useEffect(() => {
@@ -185,198 +155,7 @@ export function Usersforchat() {
   }, []);
   return Users;
 }
-//get Comments
-export function getComments(docid) {
-  const [Comments, setComments] = useState();
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    docid,
-    "Comments"
-  );
-  const q = query(Collocation, orderBy("time"));
-  useEffect(() => {
-    onSnapshot(q, (snapshot) => {
-      setComments(
-        snapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-  }, []);
-  return Comments;
-}
-//get users Comments
-export function currentuserReplies(useruid) {
-  const currentuser = useauth();
-  const [CurrentUserComments, setCurrentUserComments] = useState();
 
-  useEffect(() => {
-    if (useruid) {
-      console.log("user:", useruid);
-
-      const q = query(
-        collectionGroup(db, "Comments"),
-        where("user", "==", useruid),
-        orderBy("time")
-      );
-
-      onSnapshot(q, (snapshot) => {
-        setCurrentUserComments(
-          snapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      });
-    } else {
-      console.error("OOPS !DEFINE AN USERUID");
-    }
-  }, [currentuser]);
-
-  return CurrentUserComments;
-  //O6tp6cfSWtOJfNaW3CINq4lWnc43
-}
-
-//Likes
-export async function Likemessage(currentuser, messageid) {
-  //const [Comments, setComments] = useState();
-
-  const Doclocation2 = doc(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    messageid
-  );
-  const AddUserLIked = await updateDoc(Doclocation2, {
-    LikedUser: arrayUnion(currentuser),
-  });
-
-  const increseliked = await updateDoc(Doclocation2, {
-    Like: increment(1),
-  });
-
-  console.log("Liked");
-}
-export async function Dislikemessage(currentuser, messageid) {
-  // const [AnnounceData, setAnnounceData] = useState();
-
-  const Doclocation2 = doc(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    messageid
-  );
-
-  const get = await getDoc(Doclocation2).then((doc) => doc.data());
-  // await deleteDoc(Doclocation)
-  const RemoveUserLIked = await updateDoc(Doclocation2, {
-    LikedUser: arrayRemove(currentuser),
-  });
-
-  // if (get.Like != 0) {
-  await updateDoc(Doclocation2, {
-    Like: increment(-1),
-  });
-  // }
-
-  console.log("DisLiked", get);
-}
-//Followers
-export async function FollowUser(currentuser, otheruser) {
-  //const [Comments, setComments] = useState();
-
-  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
-  const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(
-    db,
-    "Users",
-    currentuser,
-    "Details",
-    "EventsDoc"
-  );
-  const Doccurrentuser_num = doc(db, "Users", currentuser);
-  //for otheruser
-  const AddUserFollow = await updateDoc(Doclocation_array, {
-    Followers: arrayUnion(currentuser),
-  });
-  const increseFollow = await updateDoc(Doclocation_num, {
-    Followers: increment(1),
-  });
-  //for currentuser
-  await updateDoc(Doccurrentuser_array, {
-    Following: arrayUnion(otheruser),
-  });
-  await updateDoc(Doccurrentuser_num, {
-    Following: increment(1),
-  });
-  console.log("Followering", otheruser, "by", currentuser);
-}
-export async function UnFollowUser(currentuser, otheruser) {
-  // const [AnnounceData, setAnnounceData] = useState();
-
-  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
-  const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(
-    db,
-    "Users",
-    currentuser,
-    "Details",
-    "EventsDoc"
-  );
-  const Doccurrentuser_num = doc(db, "Users", currentuser);
-  const get = await getDoc(Doclocation_num).then((doc) => doc.data());
-  //for otheruser
-  const RemoveUserFollow = await updateDoc(Doclocation_array, {
-    Followers: arrayRemove(currentuser),
-  });
-  // if (get.Like != 0) {
-  await updateDoc(Doclocation_num, {
-    Followers: increment(-1),
-  });
-  // }
-  //for currentuserReplies
-  await updateDoc(Doccurrentuser_array, {
-    Following: arrayRemove(otheruser),
-  });
-  // if (get.Like != 0) {
-  await updateDoc(Doccurrentuser_num, {
-    Following: increment(-1),
-  });
-  // }
-
-  console.log("DisLiked", get);
-}
-//get users Details Collection
-export async function getUserDetailsCollection(otheruser) {
-  const [Comments, setComments] = useState();
-
-  useEffect(() => {
-    if (otheruser) {
-      const Doclocation_array = doc(
-        db,
-        "Users",
-        otheruser,
-        "Details",
-        "EventsDoc"
-      );
-      onSnapshot(Doclocation_array, (snap) => {
-        setComments(snap.data());
-      });
-    } else {
-      console.error("OOPS !NO USER IS DEFINED BY DEFAULT");
-    }
-  }, [otheruser]);
-
-  // console.log("Details", Comments);
-  return Comments;
-  // return await getDoc(Doclocation_array).then((doc) => doc.data());
-}
 //Get specific user
 
 export function SpecifiedUserData(useruid) {
@@ -427,29 +206,6 @@ export async function setUser(uid) {
   console.log("DONE");
 }
 
-//UPDATE
-//updateUser
-export async function updateUser(UserName, Photo, Slogan, currentuser) {
-  console.log("currentuser", currentuser);
-
-  const doclocation = doc(db, "Users", currentuser);
-  const fileRef = ref(storage, "ProfilePIC/" + currentuser + ".png");
-
-  //upload image
-  const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await getDownloadURL(fileRef);
-
-  const newvalue = {
-    UserName,
-    PhotoURL,
-    Slogan,
-    uid: currentuser,
-  };
-  //upload name
-  await setDoc(doclocation, newvalue);
-
-  console.log(getDoc(doclocation));
-}
 //EdiRooms
 export async function EditRoom(docid, RoomName, icon, Participants) {
   const doclocation = doc(db, "Private-Chat", docid);
@@ -462,37 +218,9 @@ export async function EditRoom(docid, RoomName, icon, Participants) {
   console.log("Updated Room" + docid);
 }
 
-//update with useeffect
-export function updatedb() {
-  const [Chats, setChats] = useState();
-  const [id, setid] = useState();
-
-  const Collocation = collection(db, "Users");
-
-  useEffect(() => {
-    onSnapshot(Collocation, (snapshot) => {
-      setChats(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-        }))
-      );
-    });
-  }, []);
-  // useEffect(() => {
-  //   onSnapshot(Collocation, (snapshot) => {
-  //     setChats(
-  //       snapshot.forEach((doc) => ({
-  //         id: doc.id,
-  //       }))
-  //     );
-  //   });
-  // }, [Chats]);
-
-  // return Chats;
-}
 //ADD
 //Join User
-//here
+
 export async function JoinUser(Invitationid, currentuser) {
   const doclocation = doc(db, "Private-Chat", Invitationid);
   await updateDoc(doclocation, {
@@ -534,55 +262,7 @@ export async function PostAnnounce(
   await addDoc(doclocation, newvalue);
   setdone(false);
 }
-//Add ONE-One messages
 
-// export async function CreateOnetoOnechat(
-//   currentUser,
-//   otheruser,
-//   text,
-//   name,
-//   icon
-// ) {
-//   console.log(
-//     "FROM:",
-//     currentUser,
-//     "TO:",
-//     otheruser,
-//     "TEXT:",
-//     text,
-//     "name:",
-//     name,
-//     "icon",
-//     icon
-//   );
-
-//   const Collocation = collection(
-//     db,
-//     "Users",
-//     otheruser,
-//     "OneOneChat",
-//     currentUser,
-//     "Messages"
-//   );
-//   const newvalue = {
-//     From: currentUser,
-//     text,
-//     seen: false,
-//     time: serverTimestamp(),
-//   };
-
-//   await setDoc(doc(db, "Users", otheruser, "OneOneChat", currentUser), {
-//     RoomName: name,
-//     icon: icon,
-//     LastMessage: "",
-//     Type: "OneToOne",
-//   });
-
-//   await addDoc(Collocation, newvalue);
-//   console.log("SUCCESS");
-
-//   //last message
-// }
 export async function PostOnetoOnechat(
   otheruser,
   currentUser,
@@ -591,7 +271,11 @@ export async function PostOnetoOnechat(
   icon,
   Forwarded,
   Invite,
-  InvitationData
+  InvitationData,
+  Photo,
+  PhotoDetails,
+  Sponsor,
+  otheruserdata
 ) {
   console.log(
     "FROM:",
@@ -623,7 +307,11 @@ export async function PostOnetoOnechat(
     "Messages"
   );
   const Doclocation = doc(db, "Users", currentUser, "OneOneChat", otheruser);
-
+  const fileRef = ref(storage, "PrivateDoc/" + uuid.v4() + ".png");
+  // const currentUserData = SpecifiedUserData(currentUser)
+  //upload image
+  const snapshot = await uploadBytes(fileRef, Photo);
+  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
   updateDoc(Doclocation, {
     Seen: false,
   });
@@ -636,6 +324,26 @@ export async function PostOnetoOnechat(
         time: serverTimestamp(),
         Invite: Invite,
         Invitationid: InvitationData?.id,
+      }
+    : PhotoURL
+    ? {
+        From: currentUser,
+        text,
+        PhotoURL,
+        Type: PhotoDetails.mimeType,
+        Size: PhotoDetails.size,
+        Name: PhotoDetails.name,
+        Forwarded: Forwarded,
+        // seen: false,
+        time: serverTimestamp(),
+      }
+    : Sponsor
+    ? {
+        From: currentUser,
+        text,
+        Forwarded: Forwarded,
+        time: serverTimestamp(),
+        Type: "Sponsor",
       }
     : {
         From: currentUser,
@@ -650,6 +358,13 @@ export async function PostOnetoOnechat(
     LastMessage: text,
     Type: "OneToOne",
     Seen: false,
+  });
+  await setDoc(doc(db, "Users", currentUser, "OneOneChat", otheruser), {
+    RoomName: otheruserdata?.UserName,
+    icon: otheruserdata?.PhotoURL,
+    LastMessage: text,
+    Type: "OneToOne",
+    Seen: true,
   });
 
   await addDoc(Collocation, newvalue);
@@ -668,26 +383,21 @@ export async function PostPrivateChats(
   icon,
   Forwarded,
   Invite,
-  InvitationData
+  InvitationData,
+  Photo,
+  PhotoDetails
 ) {
   const Collocation = collection(db, "Private-Chat", roomid, "Messages");
   const docrom = doc(db, "Private-Chat", roomid);
 
-  // const fileRef = ref(storage, "AnnouncePIC/" + uuid.v4() + ".png");
+  const fileRef = ref(storage, "PrivateDoc/" + uuid.v4() + ".png");
 
-  // //upload image
-  // const snapshot = await uploadBytes(fileRef, Photo);
-  // const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
-
-  // const newvalue = {
-  //   PhotoURL,
-  //   message,
-  //   currentuser,
-  //   // time: serverTimestamp(),
-  // };
+  //upload image
+  const snapshot = await uploadBytes(fileRef, Photo);
+  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
   const newvalue = Invite
     ? {
-        From: currentUser,
+        From,
         text,
         Forwarded: Forwarded,
         // seen: false,
@@ -695,13 +405,36 @@ export async function PostPrivateChats(
         Invite: Invite,
         Invitationid: InvitationData?.id,
       }
-    : {
-        From: currentUser,
+    : Forwarded && PhotoURL
+    ? {
+        From,
+        text,
+        PhotoURL,
+        Type: PhotoDetails.mimeType,
+        Size: PhotoDetails.size,
+        Name: PhotoDetails.name,
+        Forwarded: Forwarded,
+
+        time: serverTimestamp(),
+      }
+    : Forwarded && !PhotoURL
+    ? {
+        From,
         text,
         Forwarded: Forwarded,
-        // seen: false,
         time: serverTimestamp(),
-      };
+      }
+    : PhotoURL
+    ? {
+        From,
+        PhotoURL,
+        Type: PhotoDetails.mimeType,
+        Size: PhotoDetails.size,
+        Name: PhotoDetails.name,
+        text,
+        time: serverTimestamp(),
+      }
+    : { text, time: serverTimestamp(), From };
   // const newvalue2 = {
   //   LastMessage: "",
   //   Participants: participants,
@@ -740,7 +473,7 @@ export async function AddRooms(Photo, RoomName, Participants, useruid) {
     Participants: Participants,
     RoomName,
     icon: "",
-
+    owner: useruid,
     // time: serverTimestamp(),
   };
   //upload name
@@ -760,40 +493,7 @@ export async function Addroomphoto(Photo, docid) {
   };
   await updateDoc(doclocation, newvalue);
 }
-//post Comments
-export async function PostComments(
-  docid,
-  Photo,
-  message,
-  currentuser,
-  UserName,
-  UserPhoto
-) {
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    docid,
-    "Comments"
-  );
-  const fileRef = ref(storage, "CommentsPIC/" + uuid.v4() + ".png");
 
-  //upload image
-  const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
-
-  const newvalue = {
-    PhotoURL,
-    message,
-    user: currentuser,
-    UserName,
-    UserPhoto,
-    time: serverTimestamp(),
-  };
-  //upload name
-  await addDoc(Collocation, newvalue);
-}
 //Add UnreadUsers
 export async function AddUnreadUser(roomid, participants) {
   // const currentuser = useauth();
@@ -806,18 +506,30 @@ export async function AddUnreadUser(roomid, participants) {
 }
 //DELETE
 //Delete Rooms
-export async function LeaveRoom(docid, currentuser) {
+export async function LeaveRoom(docid, useruid) {
   const doclocation = doc(db, "Private-Chat", docid);
   await updateDoc(doclocation, {
-    Participants: arrayRemove(currentuser),
+    Participants: arrayRemove(useruid),
   });
 
   console.log("Left Room" + docid);
 }
-//here
+export async function CreatePosting(docid, useruid, Post) {
+  const doclocation = doc(db, "Private-Chat", docid);
+  if (Post == "owner") {
+    await updateDoc(doclocation, {
+      owner: useruid,
+    });
+  } else if (Post == "Leader") {
+    await updateDoc(doclocation, {
+      Leaders: arrayUnion(useruid),
+    });
+  }
+
+  console.log("Made Leader" + docid);
+}
 export async function DeleteUnreadUser(roomid, currentuser, Type) {
   // const currentuser = useauth();
-  const doclocation = doc(db, "Private-Chat", roomid);
   if (Type == "OneToOne") {
     const Doclocation2 = doc(db, "Users", currentuser, "OneOneChat", roomid);
 
@@ -825,10 +537,13 @@ export async function DeleteUnreadUser(roomid, currentuser, Type) {
       Seen: true,
     });
     console.log("SAW MESSAGES");
+  } else {
+    const doclocation = doc(db, "Private-Chat", roomid);
+    updateDoc(doclocation, {
+      UnreadUsers: arrayRemove(currentuser),
+    });
   }
-  updateDoc(doclocation, {
-    UnreadUsers: arrayRemove(currentuser),
-  });
+
   console.log("Message Viewed");
 }
 export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {

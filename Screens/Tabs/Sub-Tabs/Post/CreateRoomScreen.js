@@ -95,7 +95,7 @@ export default function App({ route }) {
                   color: "Colors.white",
                 }}
               >
-                Announce
+                Create
               </Text>
             </TouchableOpacity>
           </View>

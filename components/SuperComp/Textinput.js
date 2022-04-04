@@ -4,8 +4,9 @@ import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Features";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 
-export default function ChatBottom(props) {
+export default function SuperTextInput(props) {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,7 +23,19 @@ export default function ChatBottom(props) {
       //then set it as the image
 
       props.setPhoto(bytes);
-      props.setPhotoURL(result.uri);
+      props.setPhotoDetails(result);
+    }
+  };
+  const pickDocument = async () => {
+    let result = await DocumentPicker.getDocumentAsync({
+      // type: "application/pdf",
+    });
+
+    if (result != null) {
+      const doc = await fetch(result.uri);
+      const bytes = await doc.blob();
+      props.setPhoto(bytes);
+      props.setPhotoDetails(result);
     }
   };
   return (
@@ -50,7 +63,7 @@ export default function ChatBottom(props) {
         />
 
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ marginLeft: 12 }}>
+          <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickDocument}>
             <Entypo name="circle" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickImage}>
@@ -59,19 +72,6 @@ export default function ChatBottom(props) {
         </View>
       </View>
       {props.children}
-      {/* <TouchableOpacity
-        onPress={onSubmit}
-        style={{
-          backgroundColor: Colors.primary,
-          borderRadius: 20,
-          bottom: 10,
-          position: "absolute",
-          right: 10,
-          padding: 10,
-        }}
-      >
-        <FontAwesome name="send-o" size={20} color="white" />
-      </TouchableOpacity> */}
     </View>
   );
 }

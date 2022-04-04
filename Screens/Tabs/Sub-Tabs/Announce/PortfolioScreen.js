@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import { Ionicons, Entypo } from "@expo/vector-icons";
+import { SpecifiedUserData, Sponsor } from "../../../../BACKEND/firebase";
 import {
-  SpecifiedUserData,
   FollowUser,
   UnFollowUser,
   getUserDetailsCollection,
-} from "../../../../BACKEND/firebase";
+} from "../../../../BACKEND/Announce";
 import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
 import { logout, useauth } from "../../../../BACKEND/Auth";
 import { Divider } from "react-native-elements";
@@ -83,6 +83,15 @@ export default function App({ route }) {
       icon: specificuserdata?.PhotoURL,
       id: useruid,
       onechat: true,
+    });
+  }
+  async function SponsorUsers() {
+    navigation.navigate("Chat", {
+      name: specificuserdata?.UserName,
+      icon: specificuserdata?.PhotoURL,
+      id: useruid,
+      onechat: true,
+      Sponsor: true,
     });
   }
   return (
@@ -159,6 +168,17 @@ export default function App({ route }) {
               }}
             >
               {specificuserdata?.UserName}
+            </Text>
+            <Text
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 15,
+                fontWeight: "normal",
+                color: Colors.grey,
+              }}
+            >
+              @{useruid}
             </Text>
             {specificuserdata?.checked ? (
               <Image
@@ -323,7 +343,7 @@ export default function App({ route }) {
                     alignSelf: "center",
                     elevation: 3,
                   }}
-                  onPress={() => showtoast("Great! Ready to Sponsor")}
+                  onPress={() => SponsorUsers()}
                 >
                   <Text
                     style={{
