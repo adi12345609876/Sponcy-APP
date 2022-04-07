@@ -9,7 +9,7 @@ import {
   Easing,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 const { width } = Dimensions.get("screen");
 let deviceWidth = Dimensions.get("screen").width;
 let CIRCLESIZE = 50;
@@ -95,7 +95,7 @@ export default function PostButton() {
             },
           ]}
         >
-          <Image source={Homeicon} style={{ width: 25, height: 25 }} />
+          <Image source={{ uri: Homeicon }} style={{ width: 25, height: 25 }} />
         </Animated.View>
       </TouchableOpacity>
 
@@ -106,7 +106,10 @@ export default function PostButton() {
         ]}
       >
         <TouchableOpacity>
-          <Image source={Announceicon} style={{ width: 25, height: 25 }} />
+          <Image
+            source={{ uri: Announceicon }}
+            style={{ width: 25, height: 25 }}
+          />
         </TouchableOpacity>
       </Animated.View>
 

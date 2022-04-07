@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 
 //{icon && <AntDesign name={icon} size={24} color={color} />}
 const Tabs = ({ color, tab, onPress, icon }) => {
@@ -16,11 +16,10 @@ const Tabs = ({ color, tab, onPress, icon }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 1,
     paddingHorizontal: 12,
-
   },
 });
 

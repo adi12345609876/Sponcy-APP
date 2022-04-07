@@ -4,30 +4,34 @@
     "slug": "Sponcy",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/SponcyIcon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Splash2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FC8800"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-2241821858793323~2447831648"
+      },
       "supportsTablet": true
     },
     "android": {
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-2241821858793323~2272270500"
+      },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/SponcyIcon.png",
+        "backgroundColor": "#FC8800"
       },
       "package": "com.adinathr.Sponcy"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/SponcyIcon.png"
     }
   }
 }

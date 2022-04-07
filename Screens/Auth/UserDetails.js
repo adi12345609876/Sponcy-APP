@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -10,60 +10,35 @@ import {
 import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { styles } from "../../Features/Styles";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { BlurView } from "expo-blur";
 import { TextInput } from "react-native-paper";
 import { updateUser } from "../../BACKEND/Auth";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import { useauth } from "../../BACKEND/Auth";
-import nullPhoto from "../../assets/Photos/Dummyicon/Person.png";
-// import nullphoto from "../../assets/Photos/Dummyphotos/null.png";
-const Tab = createMaterialTopTabNavigator();
+import nullPhoto from "../../assets/Photos/null.png";
+import { useNavigation } from "@react-navigation/native";
+import { PickImage } from "../../Features/Utils";
 
-export default function App({ navigation }) {
+export default function App() {
+  const navigation = useNavigation();
+
   const currentuser = useauth();
   const [Photo, setPhoto] = useState();
   const [DisplayName, setDisplayName] = useState();
   const [Slogan, setSlogan] = useState("");
 
   const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(false);
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (!result.cancelled) {
-      //changing the file from long data to short readable https
-      const img = await fetch(result.uri);
-      const bytes = await img.blob();
-      //then set it as the image
-
-      setPhoto(bytes);
-      setPhotoURL(result.uri);
-      console.log(PhotoURL);
-    }
-  };
   async function handleClick() {
-    // upload(Photo, DisplayName, currentuser, setdone);UserName, Photo, Slogan, currentUser,setdone
-    console.log(
-      DisplayName,
-      Photo ? Photo : nullPhoto,
-      Slogan,
-      currentuser?.uid
-    );
     await updateUser(
       DisplayName,
       Photo ? Photo : nullPhoto,
       Slogan,
       currentuser?.uid
     );
-    console.log("Updated");
+
     navigation.navigate("Tabs");
   }
 
@@ -88,7 +63,7 @@ export default function App({ navigation }) {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity onPress={() => PickImage(setPhoto, setPhotoURL)}>
           <ImageBackground
             source={{ uri: PhotoURL }}
             resizeMode="cover"
@@ -101,18 +76,7 @@ export default function App({ navigation }) {
               alignItems: "center",
             }}
           >
-            {/* <BlurView
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "transparent",
-                height: 100,
-                width: 100,
-              }}
-              intensity={10}
-            > */}
             <Ionicons name="pencil" size={24} color="black" />
-            {/* </BlurView> */}
           </ImageBackground>
         </TouchableOpacity>
       </View>
@@ -147,7 +111,7 @@ export default function App({ navigation }) {
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>
         <TouchableOpacity
           style={{
-            backgroundColor: done || !DisplayName ? Colors.grey : "orange",
+            backgroundColor: !DisplayName ? Colors.grey : "orange",
             height: 50,
             width: 100,
             justifyContent: "center",
@@ -155,7 +119,7 @@ export default function App({ navigation }) {
             borderRadius: 10,
           }}
           onPress={handleClick}
-          disabled={done || !DisplayName}
+          disabled={!DisplayName}
         >
           <Text
             style={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}
@@ -167,13 +131,3 @@ export default function App({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});

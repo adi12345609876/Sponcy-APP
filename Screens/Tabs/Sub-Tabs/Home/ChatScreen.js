@@ -1,19 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import {
-  View,
   StyleSheet,
   SafeAreaView,
   ScrollView,
   ImageBackground,
 } from "react-native";
-import { Colors } from "../../../../Features/Features";
 import ChatHeader from "../../../../components/Chat/ChatHeader";
 import { ChatBottom } from "../../../../components/Chat/ChatBottom";
 import ChatCenter from "../../../../components/Chat/ChatCenter";
 import { OneOneChats, PrivateChats } from "../../../../BACKEND/firebase";
 import { useauth } from "../../../../BACKEND/Auth";
 import image from "../../../../assets/Photos/BGC.png";
-import ThreeDots from "../../../../components/SuperComp/3dotComp";
+import { styles } from "../../../../Features/Styles";
 
 export default function AssetExample({ route }) {
   const {
@@ -31,9 +29,7 @@ export default function AssetExample({ route }) {
     Leaders,
     Sponsor,
   } = route.params;
-  const currentuser = useauth();
   const messages = onechat ? OneOneChats(id) : PrivateChats(id);
-  console.log("Mess:", owner);
 
   return (
     <ImageBackground
@@ -61,7 +57,15 @@ export default function AssetExample({ route }) {
         />
       </ScrollView>
 
-      <SafeAreaView style={styles.bottomcontainer}>
+      <SafeAreaView
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "100%",
+          position: "absolute",
+          bottom: 0,
+        }}
+      >
         <ChatBottom
           roomid={id}
           participants={participants}
@@ -79,13 +83,3 @@ export default function AssetExample({ route }) {
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  bottomcontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    position: "absolute",
-    bottom: 0,
-  },
-});

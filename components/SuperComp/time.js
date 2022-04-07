@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 export default function Time({ time }) {
   return (
     <View>

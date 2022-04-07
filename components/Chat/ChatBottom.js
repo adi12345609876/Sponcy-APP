@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 //import all the components we are going to use
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import {
   AddUnreadUser,
   PostOnetoOnechat,
@@ -17,6 +17,7 @@ import {
 } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import Customtextinput from "../../components/SuperComp/Textinput";
+import { styles } from "../../Features/Styles";
 
 export function ChatBottom({
   roomid,
@@ -41,8 +42,6 @@ export function ChatBottom({
   const [Photo, setPhoto] = useState();
   const [PhotoDetails, setPhotoDetails] = useState();
 
-  console.log("Message", text, Mess, InvitationData, Invite);
-
   useEffect(() => {
     if (Invite) {
       settext(
@@ -61,10 +60,7 @@ export function ChatBottom({
 
   async function onSubmit() {
     const forwarded = Forwarded ? true : false;
-    if (text == "") {
-      console.warn("Empty Text Is not Valid,Please Type any text");
-    } else {
-      console.log("roomid:", roomid, "user:", currentUser?.uid, "TEXT:", text);
+    if (text != "") {
       if (!onechat) {
         await PostPrivateChats(
           roomid,
@@ -155,33 +151,3 @@ export function ChatBottom({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  textInputStyle: {
-    maxHeight: 100,
-    width: "60%",
-    borderRadius: 10,
-    // alignSelf: 'center',
-    // justifyContent: 'center',
-    fontSize: 15,
-    fontWeight: "450",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    backgroundColor: Colors.white,
-    alignItems: "center",
-  },
-  sectionStyle: {
-    backgroundColor: Colors.white,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    borderRadius: 10,
-    margin: 10,
-    maxHeight: 100,
-    alignSelf: "flex-start",
-  },
-});

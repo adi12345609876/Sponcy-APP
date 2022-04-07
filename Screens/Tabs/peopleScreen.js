@@ -1,72 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
   StyleSheet,
   Image,
   FlatList,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
 //components
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
-import Nullprofile from "../../Hooks/NullProfile";
-import Name from "../../components/SuperComp/Name";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 //assets
-import DummynullProfile from "../../assets/Photos/Dummyicon/actualnullimage.png";
-import DummyNetflixIcon from "../../assets/Photos/Dummyicon/Netflix.png";
-import DummyTeslaIcon from "../../assets/Photos/Dummyicon/Tesla.png";
 import { Usersforchat } from "../../BACKEND/firebase";
 import { getUserDetailsCollection } from "../../BACKEND/Announce";
 import { useauth } from "../../BACKEND/Auth";
-import { compare2arrays } from "../../Hooks/GlobalHooks";
 //feautures
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
+import { styles } from "../../Features/Styles";
 
-// data
-export const Netflixdata = [
-  {
-    id: 1,
-    UserName: "Netflix",
-    PhotoURL: DummyNetflixIcon,
-    checked: true,
-  },
-];
-export const Tesladata = [
-  {
-    id: 2,
-    UserName: "Tesla",
-    PhotoURL: DummyTeslaIcon,
-    checked: true,
-  },
-];
-export const Adinathdata = [
-  {
-    id: 3,
-    UserName: "Adinath",
-    PhotoURL: null,
-    checked: false,
-  },
-];
-
-const Header = ({ heading }) => (
-  <View style={styles.titleContainer}>
-    <Text style={styles.title}>{heading}</Text>
-  </View>
-);
-const RenderItems = ({ name, image }) => (
-  <TouchableOpacity>
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={image ? image : Nullprofile({ name })}
-      />
-      <Name name={name} />
-    </View>
-  </TouchableOpacity>
-);
 export default function AssetExample({ navigation }) {
   const currentuser = useauth();
   const userdetails = getUserDetailsCollection(currentuser?.uid);
@@ -78,7 +28,7 @@ export default function AssetExample({ navigation }) {
         setDetails(doc);
       });
     }
-    // console.log("MAPPED", userdetails);
+
     const Followers = Details?.Followers;
     const Following = Details?.Following;
 
@@ -95,7 +45,7 @@ export default function AssetExample({ navigation }) {
     const DudesFilter = AllUsers?.filter((users) => {
       return Dudesid?.includes(users?.id);
     });
-    // console.log("FILTERED", filtered);
+
     return {
       Followersdata: FollowersFilter,
       Followingdata: FollowingFilter,
@@ -103,7 +53,7 @@ export default function AssetExample({ navigation }) {
     };
   }
   const DetailsUserData = compare2arrays();
-  console.log(DetailsUserData);
+
   const Followers = DetailsUserData.Followersdata;
   const Following = DetailsUserData.Followingdata;
   const Dudes = DetailsUserData.Dudesdata; //<--He is the person who follows you and you follow him
@@ -111,7 +61,7 @@ export default function AssetExample({ navigation }) {
   const PeopleData = [
     {
       title: "Sponsorer",
-      data: [...Netflixdata, ...Tesladata],
+      data: [],
     },
     {
       title: "Sponsoring",
@@ -134,7 +84,7 @@ export default function AssetExample({ navigation }) {
   return (
     <AnimatedScroolView>
       {Followers ? (
-        <View style={styles.container}>
+        <View style={styles.Peoplecontainer}>
           <FlatList
             data={PeopleData}
             renderItem={({ item }) => (
@@ -174,12 +124,7 @@ export default function AssetExample({ navigation }) {
                         })
                       }
                     >
-                      <Image
-                        style={styles.image}
-                        source={
-                          item?.PhotoURL ? item?.PhotoURL : DummynullProfile
-                        }
-                      />
+                      <Image style={styles.image} source={item?.PhotoURL} />
                       <Text
                         style={{
                           fontSize: 18,
@@ -199,99 +144,3 @@ export default function AssetExample({ navigation }) {
     </AnimatedScroolView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    marginVertical: 8,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: "400",
-    fontStyle: "normal",
-  },
-  container: {
-    paddingVertical: 12,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    backgroundColor: Colors.white,
-  },
-  image: {
-    width: 70,
-    height: 70,
-    borderRadius: 200,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
-});
-// const PeoplerenderItem = ({ item }) => {
-//   const SearchFilter = item?.UserName?.toLowerCase()?.includes(
-//     route?.params?.Searchtext?.toLowerCase()
-//   );
-
-//   return (
-//     <>
-//       {SearchFilter ? (
-//         <TouchableOpacity
-//           style={{
-//             margin: 10,
-//             justifyContent: "center",
-//             alignItems: "center",
-//             paddingVertical: 10,
-//             marginHorizontal: 15,
-//           }}
-//           onPress={() =>
-//             navigation.navigate("Portfolio", {
-//               useruid: item?.id,
-//             })
-//           }
-//         >
-//           <Image
-//             style={styles.image}
-//             source={item?.PhotoURL ? item?.PhotoURL : DummynullProfile}
-//           />
-//           <Text
-//             style={{
-//               fontSize: 18,
-//               fontWeight: "bold",
-//             }}
-//           >
-//             {item?.UserName}
-//           </Text>
-//         </TouchableOpacity>
-//       ) : route?.params?.Searchtext == undefined ? (
-//         <TouchableOpacity
-//           style={{
-//             margin: 10,
-//             justifyContent: "center",
-//             alignItems: "center",
-//             paddingVertical: 10,
-//             marginHorizontal: 15,
-//           }}
-//           onPress={() =>
-//             navigation.navigate("Portfolio", {
-//               useruid: item?.id,
-//             })
-//           }
-//         >
-//           <Image
-//             style={styles.image}
-//             source={item?.PhotoURL ? item?.PhotoURL : DummynullProfile}
-//           />
-//           <Text
-//             style={{
-//               fontSize: 18,
-//               fontWeight: "bold",
-//             }}
-//           >
-//             {item?.UserName}
-//           </Text>
-//         </TouchableOpacity>
-//       ) : (
-//         <Text>nothing</Text>
-//       )}
-//     </>
-//   );
-// };

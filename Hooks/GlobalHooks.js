@@ -27,18 +27,12 @@ export function generateUUID() {
 //getids
 export function Participants(participants) {
   const Users = Usersforchat();
-  console.log("part", participants);
-  console.log("Users", Users);
 
   const Parts = participants?.map((doc) => {
     return doc;
   });
 
-  console.log("Parts", Parts);
-
   const filtered = Users?.filter((users) => {
-    console.log("USERS:", users.id);
-
     return Parts?.includes(users?.id);
   });
 
@@ -67,14 +61,12 @@ export function compare2arrays(Bigarray, Smallarray) {
       setDetails(doc);
     });
   }
-  const m = Details?.Followers;
-  // console.log("MAPPED", m);
 
   //filter user
   const filtered = Bigarray?.filter((users) => {
-    return m?.includes(users?.id);
+    return Details?.Followers?.includes(users?.id);
   });
-  // console.log("FILTERED", filtered);
+
   return filtered;
 }
 //get Time from Timestamp
@@ -92,4 +84,20 @@ export function TimestamptoTime(time) {
     .replace(/(:\d{2}| )$/, "");
 
   return { date: date, time: FormattedTime, normaltime: atTime };
+}
+export function filterAnnounces(Announce, userdetails) {
+  const [Details, setDetails] = useState();
+  if (userdetails) {
+    userdetails?.then((doc) => {
+      setDetails(doc);
+    });
+  }
+  const m = Details?.Following;
+  //filter user
+  const filtered = Announce?.filter((users) => {
+    const final = m?.includes(users?.currentuser);
+    return final;
+  });
+
+  return filtered;
 }

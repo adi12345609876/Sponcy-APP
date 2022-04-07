@@ -6,13 +6,14 @@ import AnimatedScroolView from "../../../../components/Animation/AnimatedScroolT
 
 import renderSeparator from "../../../../components/SuperComp/Separator";
 //assets
-// import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
+import { styles } from "../../../../Features/Styles";
+
 import { ChatRooms, Usersforchat } from "../../../../BACKEND/firebase";
 import { useauth } from "../../../../BACKEND/Auth";
 import ParticipantsItem from "../../../../FlatlistItem/ParticipantsItem";
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import { useNavigation } from "@react-navigation/native";
 //features
 let deviceWidth = Dimensions.get("screen").width;
@@ -34,7 +35,6 @@ export default function AssetExample({ route }) {
   const onUpdateValue = (index, value, id) => {
     Users[index].selected = value;
 
-    // console.log(Users);
     return setuserdata([...Users]);
   };
   function AllSelecetedIds() {
@@ -45,7 +45,6 @@ export default function AssetExample({ route }) {
   }
   function handledone() {
     const selectedIds = AllSelecetedIds();
-    console.log("Participants:", selectedIds);
 
     navigation.navigate("EditRooms", { selectedIds });
     // navigation.navigate("EditRooms", { selectedId });
@@ -54,9 +53,6 @@ export default function AssetExample({ route }) {
   const Usersrender = ({ item, index }) => {
     // previousUser(item.id);
     const selectedIds = AllSelecetedIds();
-
-    // console.log("ITEM", item.selected);
-    // console.log("JoinedArray:", selectedIds);
 
     return (
       <ParticipantsItem
@@ -77,17 +73,13 @@ export default function AssetExample({ route }) {
   let yFilter = SelectedId.map((itemY) => {
     return itemY;
   });
-  console.log("2Seletyetdid", SelectedId);
 
   let ind = Users?.filter((itemX, index) => {
     yFilter?.includes(itemX.id);
     return index;
   });
-  console.log("2selectedidfilter", ind);
 
   let filteredX = Users?.filter((itemX) => yFilter?.includes(itemX.id));
-
-  console.log("2`All Seleceted Users", filteredX);
 
   return (
     <AnimatedScroolView>
@@ -113,5 +105,3 @@ export default function AssetExample({ route }) {
     </AnimatedScroolView>
   );
 }
-//style
-const styles = StyleSheet.create({});

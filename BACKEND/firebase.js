@@ -50,7 +50,6 @@ export function ChatRooms() {
 
   useEffect(() => {
     if (currentuser) {
-      console.log(currentuser?.uid);
       const q = query(
         Collocation,
         where("Participants", "array-contains", currentuser?.uid)
@@ -76,7 +75,7 @@ export function OneOneMess(currentUser) {
   useEffect(() => {
     if (currentUser) {
       const Collocation = collection(db, "Users", currentUser, "OneOneChat");
-      console.log("currentUser", currentUser);
+
       onSnapshot(Collocation, (snapshot) => {
         setMessages(
           snapshot.docs.map((doc) => ({
@@ -164,17 +163,10 @@ export function SpecifiedUserData(useruid) {
   useEffect(() => {
     if (useruid) {
       const doclocation = doc(db, "Users", useruid);
-      //mount
-      let isMounted = true;
-      //condition
-      getDoc(doclocation).then((doc) => {
-        if (isMounted) setUsers(doc.data());
-      });
 
-      //unmount
-      return () => {
-        isMounted = false;
-      };
+      getDoc(doclocation).then((doc) => {
+        setUsers(doc.data());
+      });
     }
   }, [useruid]);
 
@@ -202,8 +194,9 @@ export async function setUser(uid) {
   await setDoc(doclocation2, {
     Followers: [],
     Following: [],
+    Sponsorers: [],
+    Sponsoring: [],
   });
-  console.log("DONE");
 }
 
 //EdiRooms
@@ -215,7 +208,6 @@ export async function EditRoom(docid, RoomName, icon, Participants) {
     icon,
   };
   updateDoc(doclocation, newvalue);
-  console.log("Updated Room" + docid);
 }
 
 //ADD
@@ -277,19 +269,6 @@ export async function PostOnetoOnechat(
   Sponsor,
   otheruserdata
 ) {
-  console.log(
-    "FROM:",
-    currentUser,
-    "TO:",
-    otheruser,
-    "TEXT:",
-    text,
-    "name:",
-    name,
-    "icon",
-    icon
-  );
-
   const Collocation = collection(
     db,
     "Users",
@@ -369,7 +348,6 @@ export async function PostOnetoOnechat(
 
   await addDoc(Collocation, newvalue);
   await addDoc(Collocation2, newvalue);
-  console.log("SUCCESS");
 
   //last message
 }
@@ -502,7 +480,6 @@ export async function AddUnreadUser(roomid, participants) {
   updateDoc(doclocation, {
     UnreadUsers: arrayUnion(...participants),
   });
-  console.log("Notified");
 }
 //DELETE
 //Delete Rooms
@@ -511,8 +488,6 @@ export async function LeaveRoom(docid, useruid) {
   await updateDoc(doclocation, {
     Participants: arrayRemove(useruid),
   });
-
-  console.log("Left Room" + docid);
 }
 export async function CreatePosting(docid, useruid, Post) {
   const doclocation = doc(db, "Private-Chat", docid);
@@ -525,8 +500,6 @@ export async function CreatePosting(docid, useruid, Post) {
       Leaders: arrayUnion(useruid),
     });
   }
-
-  console.log("Made Leader" + docid);
 }
 export async function DeleteUnreadUser(roomid, currentuser, Type) {
   // const currentuser = useauth();
@@ -536,15 +509,12 @@ export async function DeleteUnreadUser(roomid, currentuser, Type) {
     updateDoc(Doclocation2, {
       Seen: true,
     });
-    console.log("SAW MESSAGES");
   } else {
     const doclocation = doc(db, "Private-Chat", roomid);
     updateDoc(doclocation, {
       UnreadUsers: arrayRemove(currentuser),
     });
   }
-
-  console.log("Message Viewed");
 }
 export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
   // const currentuser = useauth();
@@ -560,10 +530,7 @@ export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
         updateDoc(doc(db, "Users", currentuser, "OneOneChat", roomid), {
           Seen: true,
         });
-        console.log("SAW MESSAGES");
       }
     }
   });
-
-  console.log("Message Viewed");
 }

@@ -6,21 +6,20 @@ import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import HomeItem from "../../FlatlistItem/HomeItem";
 import renderSeparator from "../../components/SuperComp/Separator";
 //assets
-// import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
-import { ChatRooms, Usersforchat, OneOneMess } from "../../BACKEND/firebase";
+
+import { ChatRooms, OneOneMess } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
-import UsersItem from "../../FlatlistItem/UsersHomeItem";
+import { styles } from "../../Features/Styles";
+import { color } from "react-native-elements/dist/helpers";
+import { Colors } from "../../Features/Colors";
 //features
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
 
 export default function AssetExample({ route }) {
   const { message, Forwarded, Invite, InvitationData } = route.params;
+
   const currentuser = useauth();
   const Rooms = ChatRooms();
   const OnetoOne = OneOneMess(currentuser?.uid);
-  console.log("ONENOET", OnetoOne);
-  // Rooms?.map((room) => console.log("rooms:", room));
 
   const RoomsrenderItem = ({ item }) => {
     //Todo include mesagesSearchFilter the same way we inluded filter for roomname and in return ( {mesagesSearchFilter ? <mesagesitem mes={item.messages} roomname> })
@@ -110,12 +109,25 @@ export default function AssetExample({ route }) {
   };
   return (
     <AnimatedScroolView>
+      <Text
+        style={{ color: Colors.secondary, fontWeight: "bold", fontSize: 25 }}
+      >
+        This screen is still under development so if you want to give review and
+        feedback send it to "perfectsmooth22@gmail.com"
+      </Text>
+
       <View
         style={{
           marginBottom: 100,
         }}
       >
         <Text>Organisations</Text>
+        {/* <Button
+          title="Press to schedule a notification"
+          onPress={async () => {
+            await schedulePushNotification();
+          }}
+        /> */}
         <FlatList
           data={Rooms}
           renderItem={RoomsrenderItem}
@@ -134,5 +146,3 @@ export default function AssetExample({ route }) {
     </AnimatedScroolView>
   );
 }
-//style
-const styles = StyleSheet.create({});

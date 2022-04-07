@@ -1,18 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  ImageBackground,
-} from "react-native";
+import { View, FlatList } from "react-native";
 import ChatItem from "../../FlatlistItem/ChatItem";
-import image from "../../assets/Photos/BGC.png";
-import { Colors } from "../../Features/Features";
 import { useauth } from "../../BACKEND/Auth";
 import { DeleteUnreadUserOnMess } from "../../BACKEND/firebase";
 import { TimestamptoTime } from "../../Hooks/GlobalHooks";
+import { styles } from "../../Features/Styles";
 
 export default function App({ messages, roomid, Type, Invite, owner }) {
   const ScroolRef = useRef();

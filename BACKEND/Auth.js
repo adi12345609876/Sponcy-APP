@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./1.Config";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, storage } from "./firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 initializeApp(firebaseConfig);
 const auth = getAuth();
@@ -49,34 +49,43 @@ export function Gitlogin() {
 }
 //DisplayName,Slogan,icon
 export async function updateUser(UserName, Photo, Slogan, currentuser) {
-  console.log("currentuser", currentuser);
+  if (currentuser) {
+    const doclocation = doc(db, "Users", currentuser);
+    const fileRef = ref(storage, "ProfilePIC/" + currentuser + ".png");
 
-  const doclocation = doc(db, "Users", currentuser);
-  const fileRef = ref(storage, "ProfilePIC/" + currentuser + ".png");
+    //upload image
+    const snapshot = await uploadBytes(fileRef, Photo);
+    const PhotoURL = await getDownloadURL(fileRef);
 
-  //upload image
-  const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await getDownloadURL(fileRef);
-
-  const newvalue = {
-    UserName,
-    PhotoURL,
-    Slogan,
-    uid: currentuser,
-  };
-  //upload name
-  await updateDoc(doclocation, newvalue);
+    const newvalue = {
+      UserName,
+      PhotoURL,
+      Slogan,
+      uid: currentuser,
+    };
+    await updateDoc(doclocation, newvalue);
+  }
 }
 //Set Username
-export async function SetUsername(UserName) {
-  const doclocation = doc(db, "Users", UserName);
+export async function setToken(expoToken, currentuser) {
+  // const Collocation = doc(db, "Users", currentuser, "Details", "EventsDoc");
+
+  const doclocation = doc(db, "Users", currentuser);
+  const doclocation2 = doc(db, "ExpoTokens", expoToken);
 
   const newvalue = {
     UserName: "",
     PhotoURL: "",
     Slogan: "",
-    uid: UserName,
+    expoToken: expoToken,
   };
   //upload name
   await setDoc(doclocation, newvalue);
+  // await setDoc(Collocation, {
+  //   Followers: [],
+  //   Following: [],
+  //   Sponsorers: [],
+  //   Sponsoring: [],
+  // });
+  await setDoc(doclocation2, {});
 }

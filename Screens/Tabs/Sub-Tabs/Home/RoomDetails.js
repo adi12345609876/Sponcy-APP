@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Participants } from "../../../../Hooks/GlobalHooks";
@@ -8,6 +8,7 @@ import ThreeDots from "../../../../components/SuperComp/3dotComp";
 import { CreatePosting, LeaveRoom } from "../../../../BACKEND/firebase";
 import { async } from "@firebase/util";
 import { useauth } from "../../../../BACKEND/Auth";
+import { styles } from "../../../../Features/Styles";
 
 export default function AssetExample({ route }) {
   const currentuser = useauth();
@@ -19,8 +20,6 @@ export default function AssetExample({ route }) {
 
   const [visible, setvisible] = useState();
 
-  console.log("Participants:", participantsdetails, "owner", owner);
-  // console.log(participantsdetails?.uid == owner);
   async function RemoveFromGrp(Useruid) {
     await LeaveRoom(id, Useruid);
   }
@@ -36,7 +35,7 @@ export default function AssetExample({ route }) {
         <Ionicons name="arrow-back-outline" size={24} color={Colors.grey} />
       </TouchableOpacity>
       <Image
-        source={icon}
+        source={{ uri: icon }}
         style={{ height: 40, width: 40, borderRadius: 200 }}
       />
 
@@ -45,7 +44,7 @@ export default function AssetExample({ route }) {
       {participantsdetails?.map((item) => (
         <View>
           <Image
-            source={item.PhotoURL}
+            source={{ uri: item?.PhotoURL }}
             style={{ height: 40, width: 40, borderRadius: 200 }}
           />
 
@@ -87,13 +86,3 @@ export default function AssetExample({ route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  bottomcontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    position: "absolute",
-    bottom: 0,
-  },
-});

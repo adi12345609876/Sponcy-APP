@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Time from "../components/SuperComp/time";
-import { Colors } from "../Features/Features";
+import { Colors } from "../Features/Colors";
 import { useauth } from "../BACKEND/Auth";
 import ThreeDots from "../components/SuperComp/3dotComp";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db, JoinUser, SpecifiedUserData } from "../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useLoading } from "../Hooks/LoadingContext";
+import { styles } from "../Features/Styles";
 
 export default function ChatItem({
   message,
@@ -51,16 +52,13 @@ export default function ChatItem({
     setshowLoading(false);
   }
   function ForwardMessage() {
-    console.log("Forwarded", message);
     navigation.navigate("HomeChat", {
       message,
       Forwarded: true,
     });
   }
   async function JoinInvited() {
-    console.log("Invited", Invitationid);
     await JoinUser(Invitationid, currentuser?.uid);
-    console.log("YOUR NOW A MEMEBER OF", Invitationid);
   }
 
   const [threedotvisible, setthreevisible] = useState(false);
@@ -141,45 +139,3 @@ export default function ChatItem({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  sending: {
-    padding: 18,
-    backgroundColor: Colors.white,
-    alignSelf: "flex-end",
-    borderBottomColor: 20,
-    marginRight: 15,
-    marginBottom: 20,
-    maxWidth: "80%",
-    position: "relative",
-    borderRadius: 20,
-    borderTopRightRadius: 0,
-    marginTop: 12,
-  },
-  reciving: {
-    padding: 18,
-    backgroundColor: Colors.tertiary,
-    alignSelf: "flex-start",
-    margin: 15,
-    maxWidth: "80%",
-    position: "relative",
-    borderRadius: 20,
-    borderTopLeftRadius: 0,
-  },
-  text: {
-    // width: 160,
-    // height: 20,
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "400",
-    fontStyle: "normal",
-    color: Colors.black,
-    textAlign: "center",
-  },
-  time: {
-    fontFamily: "Roboto",
-    fontSize: 10,
-    color: Colors.grey,
-    fontWeight: "600",
-  },
-});

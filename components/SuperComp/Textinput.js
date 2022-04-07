@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     // alignSelf: 'center',
     // justifyContent: 'center',
     fontSize: 15,
-    fontWeight: "450",
+    fontWeight: "400",
   },
   container: {
     justifyContent: "space-between",

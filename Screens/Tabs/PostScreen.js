@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import Constants from "expo-constants";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import button from "../../assets/Icon/EmailSend.png";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { styles } from "../../Features/Styles";
 
 import { UserData, PostAnnounce, AddUnreadUser } from "../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -37,7 +37,6 @@ export default function App() {
       userdetails
         ?.then((doc) => {
           setFollowers(doc.Followers);
-          console.log(Followers);
         })
         .catch((e) => console.log("ERER", e));
     }
@@ -63,7 +62,6 @@ export default function App() {
     }
   };
   async function handleClick() {
-    console.log([Photo, text, currentuser.uid, setdone, Followers]);
     await PostAnnounce(
       Photo,
       text,
@@ -74,13 +72,12 @@ export default function App() {
     );
     AddUnseenUsers(currentuser?.uid, Followers);
 
-    console.log("Updated");
     navigation.navigate("Tabs", {
       initialRoute: "Announce",
     });
   }
   return (
-    <View style={styles.container}>
+    <View style={styles.Postcontainer}>
       <>
         <View
           style={{
@@ -156,7 +153,7 @@ export default function App() {
             alignItems: "center",
             backgroundColor: Colors.primary,
           }}
-          onPress={() => navigation.navigate("Participants")}
+          onPress={() => navigation.navigate("CreateRooms")}
         >
           <Text style={{ color: Colors.white }}> create New Room?</Text>
         </TouchableOpacity>
@@ -164,27 +161,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: Constants.statusBarHeight + 15,
-  },
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
-  input: {
-    maxHeight: 200,
-    height: 200,
-    textAlignVertical: "top",
-    borderColor: Colors.grey,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-  },
-});

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -9,25 +9,18 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
-// You can import from local files
-import { Colors } from "../Features/Features";
-import AnnounceScreen from "./Tabs/AnnounceScreen";
-
-import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
-import DummyTeslaIcon from "../assets/Photos/Dummyicon/Tesla.png";
+import { Colors } from "../Features/Colors";
 // or any pure javascript modules available in npm
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import {
   AddSearchhistory,
   Announces,
   GetSearchhistory,
 } from "../BACKEND/Announce";
 import { Usersforchat } from "../BACKEND/firebase";
-import { async } from "@firebase/util";
 import { useauth } from "../BACKEND/Auth";
 import { useLoading } from "../Hooks/LoadingContext";
+import { styles } from "../Features/Styles";
 
 export default function App({ route }) {
   const AnnounceData = Announces();
@@ -182,7 +175,7 @@ export default function App({ route }) {
             />
           </TouchableOpacity>
           <TextInput
-            style={styles.input}
+            style={styles.Searchinput}
             placeholder="Search"
             underlineColorAndroid="transparent"
             autoComplete
@@ -270,78 +263,3 @@ export default function App({ route }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  recent: {
-    marginLeft: 15,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    borderColor: "grey",
-    // borderBottomWidth: 0.5,
-    // borderTopWidth: 0.5,
-    width: "100%",
-    alignItems: "flex-end",
-    maxWidth: deviceWidth,
-  },
-  container1: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    paddingTop: 40,
-    maxWidth: deviceWidth,
-  },
-  input: {
-    width: "80%",
-    borderRadius: 10,
-    fontSize: 15,
-    fontWeight: "450",
-    marginLeft: 10,
-    maxWidth: deviceWidth,
-  },
-  sectionStyle: {
-    maxWidth: deviceWidth - 10,
-
-    backgroundColor: Colors.white,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    borderRadius: 10,
-    margin: 10,
-    maxHeight: 100,
-    alignSelf: "flex-start",
-  },
-});
-
-/* <FlatList
-              data={item.data}
-              horizontal={item.type == "People"}
-              ListEmptyComponent={<View style={{ height: 100 }}></View>}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={{
-                    margin: 10,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-end",
-                    paddingVertical: 10,
-                    marginHorizontal: 15,
-                    flexDirection: "row",
-                    maxHeight: 50,
-                  }}
-                >
-                  <View style={{ marginRight: 10 }}>
-                    <Ionicons name="refresh" size={20} color="grey" />
-                  </View>
-
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: "grey",
-                    }}
-                  >
-                    {item.text}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            /> */

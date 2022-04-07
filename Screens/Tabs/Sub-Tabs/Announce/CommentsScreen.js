@@ -11,24 +11,22 @@ import {
   ScrollView,
 } from "react-native";
 //components
-import Nullprofile from "../../../../Hooks/NullProfile";
 import NameText from "../../../../components/SuperComp/Name";
 import Time from "../../../../components/SuperComp/time";
 import Customtextinput from "../../../../components/SuperComp/Textinput";
 //assets
-import DummyNetflixIcon from "../../../../assets/Photos/Dummyicon/Netflix.png";
-import DummyTeslaIcon from "../../../../assets/Photos/Dummyicon/Tesla.png";
 import CommentItem from "../../../../FlatlistItem/CommentItem";
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import { UserData } from "../../../../BACKEND/firebase";
 import { getComments, PostComments } from "../../../../BACKEND/Announce";
 import { FontAwesome } from "@expo/vector-icons";
 import { useauth } from "../../../../BACKEND/Auth";
 import { TimestamptoTime } from "../../../../Hooks/GlobalHooks";
 // import { ParticularUser } from "../../../../Hooks/GlobalHooks";
+import { styles } from "../../../../Features/Styles";
 
 const HomeItem = ({ navigation, route }) => {
   const { message, photo, name, icon, checked, time, id } = route.params;
@@ -40,20 +38,11 @@ const HomeItem = ({ navigation, route }) => {
   const [senttext, setsenttext] = useState("");
   const [Photo, setPhoto] = useState();
   const [PhotoURL, setPhotoURL] = useState();
-  console.log(Comments);
+
   useEffect(() => {
     setsenttext(text);
-    console.log(senttext);
   }, [text]);
   async function Submit() {
-    console.log(
-      id,
-      Photo ? Photo : "",
-      senttext ? senttext : "",
-      currentuser?.uid,
-      currentUserData?.array?.UserName,
-      currentUserData?.array?.PhotoURL
-    );
     await PostComments(
       id,
       Photo ? Photo : null,
@@ -64,11 +53,10 @@ const HomeItem = ({ navigation, route }) => {
     );
     settext("");
     setheight(23);
-    console.log("Submitted");
   }
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
-    console.log("TIME:", Time);
+
     return (
       <CommentItem
         message={item.message}
@@ -88,10 +76,7 @@ const HomeItem = ({ navigation, route }) => {
         <View style={styles.originalmessage}>
           <View style={styles.topcontainer}>
             <TouchableOpacity>
-              <Image
-                source={icon ? icon : Nullprofile({ name })}
-                style={styles.profileicon}
-              />
+              <Image source={{ uri: icon }} style={styles.profileicon} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.namecontainer}>
               <NameText name={name} />
@@ -105,7 +90,7 @@ const HomeItem = ({ navigation, route }) => {
           </View>
           {photo && (
             <TouchableOpacity style={styles.photocontainer}>
-              <Image source={photo} style={styles.photo} />
+              <Image source={{ uri: photo }} style={styles.photo} />
             </TouchableOpacity>
           )}
         </View>
@@ -169,75 +154,4 @@ const HomeItem = ({ navigation, route }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  topcontainer: {
-    flexDirection: "row",
-    marginVertical: 10,
-  },
-  bottomcontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: deviceWidth,
-    position: "absolute",
-    bottom: 0,
-    backgroundColor: "red",
-  },
-  comments: {},
-  originalmessage: {},
-  profileicon: {
-    width: 60,
-    height: 60,
-    borderRadius: 200,
-    marginHorizontal: 5,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
-  photocontainer: {
-    width: deviceWidth,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  photo: {
-    width: 250,
-    height: 200,
-    borderRadius: 20,
-    borderColor: Colors.white,
-    borderWidth: 2,
-    elevation: 2,
-    marginLeft: 10,
-  },
-  messagecontainer: {
-    maxWidth: deviceWidth - 100,
-    marginLeft: 60,
-    marginBottom: 10,
-    justifyContent: "center",
-    textAlign: "center",
-  },
-  message: {
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "650",
-    fontStyle: "normal",
-    color: Colors.black,
-    letterSpacing: 1,
-  },
-  iconcontainer: {
-    flexDirection: "row",
-    width: 340,
-    justifyContent: "space-evenly",
-    marginVertical: 30,
-  },
-  namecontainer: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-
-    marginTop: 10,
-  },
-  timecontainer: {
-    width: deviceWidth / 2,
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-});
 export default HomeItem;

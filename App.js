@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Dimensions } from "react-native";
-import { useFonts } from "expo-font";
-import { initializeApp } from "firebase/app";
+import React from "react";
 
-import { LogBox } from "react-native";
+// import { LogBox } from "react-native";
 //BACKEND
 import { UserData } from "./BACKEND/firebase";
-import { firebaseConfig } from "./BACKEND/1.Config";
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -19,9 +15,7 @@ import TabBar from "./components/Tabs/BottomTab";
 import Header from "./components/Tabs/HeaderTab";
 
 //screens
-import SplashScreen from "./Screens/Auth/SplashScreen";
 import SignINScreen from "./Screens/Auth/SignIN";
-import SignUpScreen from "./Screens/Auth/SIgnUp";
 import HomeChatScreen from "./Screens/Tabs/HomeChatScreen";
 import AnnounceScreen from "./Screens/Tabs/AnnounceScreen";
 import NotifyScreen from "./Screens/Tabs/NotificationScreen";
@@ -40,22 +34,31 @@ import EditRoomsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditRooms";
 import EditparticipantsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditParticipants";
 import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
 import VerifyScreen from "./Screens/Auth/VerifyScreen";
-import FollowersScreen from "./Screens/Tabs/Sub-Tabs/Announce/FollowersScreen";
-import Dummy from "./Boiler";
+
 import LoadingProvider from "./Hooks/LoadingContext";
 //icons
-const Homeicon = require("./assets/Icon/Homeadvisor.png");
-const Announceicon = require("./assets/Icon/Annnounce.png");
+const Homeicon = require("./assets/Icon/Home.png");
+const Announceicon = require("./assets/Icon/Announce.png");
 const Notifyicon = require("./assets/Icon/Notify.png");
 const Peopleicon = require("./assets/Icon/Person.png");
+const HomeiconX = require("./assets/Icon/HomeX.png");
+const AnnounceiconX = require("./assets/Icon/AnnounceX.png");
+const NotifyiconX = require("./assets/Icon/NotifyX.png");
+const PeopleiconX = require("./assets/Icon/PersonX.png");
 //features
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+//ADMOB
+//Banner Android: ca-app-pub-2241821858793323/8713857097
+//Interstitle Android:ca-app-pub-2241821858793323/9318978865
+
+//Banner ios:ca-app-pub-2241821858793323/4471359754
+//Interstitle ios:ca-app-pub-2241821858793323/7835889699
 
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Announce"
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         header: (props) => <Header {...props} />,
@@ -64,80 +67,40 @@ function MyTabs() {
       <Tab.Screen
         name="Announce"
         component={AnnounceScreen}
-        initialParams={{ icon: Announceicon }}
+        initialParams={{ icon: Announceicon, iconX: AnnounceiconX }}
       />
       <Tab.Screen
         name="Home"
         component={HomeChatScreen}
-        initialParams={{ icon: Homeicon }}
+        initialParams={{ icon: Homeicon, iconX: HomeiconX }}
       />
       <Tab.Screen
         name="Notify"
         component={NotifyScreen}
-        initialParams={{ icon: Notifyicon }}
+        initialParams={{ icon: Notifyicon, iconX: NotifyiconX }}
       />
       <Tab.Screen
         name="People"
         component={PeopleScreen}
-        initialParams={{ icon: Peopleicon }}
+        initialParams={{ icon: Peopleicon, iconX: PeopleiconX }}
       />
     </Tab.Navigator>
   );
 }
 function MyStack() {
   const currentUserData = UserData();
-  const [logedin, setlogedin] = useState();
-  //chaneg to true
-  const [SplashScreenvisible, setSplashScreenvisible] = useState(false);
-  const [count, setcount] = useState(0);
   const currentuser = useauth();
-
-  useEffect(() => {
-    if (currentuser) {
-      setlogedin(true);
-    } else {
-      setlogedin(false);
-    }
-  }, [currentuser]);
-
-  //make an function run only for first five seconds
-  const fivesec = setTimeout(() => {
-    if (count < 5) {
-      const increase = count + 1;
-      setcount(increase);
-    }
-  }, 1000);
-  useEffect(() => {
-    if (count < 3) {
-      setSplashScreenvisible(true);
-    } else {
-      setSplashScreenvisible(false);
-    }
-  }, [count]);
 
   return (
     <Stack.Navigator initialRouteName="">
-      {SplashScreenvisible ? (
-        <>
-          <Stack.Screen
-            name="Splash"
-            component={SplashScreen}
-            options={{ headerShown: false }}
-          />
-        </>
-      ) : null}
-      {logedin && !SplashScreenvisible && currentUserData?.array?.UserName ? (
+      {currentuser && currentUserData?.array?.UserName ? (
         <>
           <Stack.Screen
             name="Tabs"
             component={MyTabs}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Dummy"
-            component={Dummy}
-            options={{ headerShown: true }}
-          />
+
           <Stack.Screen
             name="Edit"
             component={EditScreen}
@@ -218,15 +181,10 @@ function MyStack() {
             component={RoomDetailsScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Followers"
-            component={FollowersScreen}
-            options={{ headerShown: false }}
-          />
         </>
       ) : (
         [
-          !SplashScreenvisible && !logedin ? (
+          !currentuser ? (
             <>
               <Stack.Screen
                 name="SignIn"
@@ -234,7 +192,7 @@ function MyStack() {
                 options={{ headerShown: false }}
               />
             </>
-          ) : !SplashScreenvisible && !currentUserData?.array?.UserName ? (
+          ) : !currentUserData?.array?.UserName ? (
             [
               <>
                 <Stack.Screen

@@ -2,7 +2,7 @@ import React from "react";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 // import Postedmessages from "../../Screens/Tabs/Sub-Tabs/Announce/Postedmess";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import { useauth } from "../../BACKEND/Auth";
 
 import { Announces, currentuserReplies } from "../../BACKEND/Announce";
@@ -22,7 +22,7 @@ export default function Header({ useruid }) {
   );
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
-    console.log("TIME:", Time);
+
     return (
       <CommentItem
         message={item.message}
@@ -37,7 +37,7 @@ export default function Header({ useruid }) {
   };
   const PostedItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
-    console.log("TIME:", Time);
+
     return (
       <AnnounceItem
         message={item.message}
@@ -55,30 +55,26 @@ export default function Header({ useruid }) {
   };
 
   const Reliedmessages = () => {
-    console.log("cc", currentusercomments);
-
     return (
-      <ScrollView>
+      <View>
         <FlatList
           data={currentusercomments}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           // ItemSeparatorComponent={renderSeparator}
         />
-      </ScrollView>
+      </View>
     );
   };
   const UserAnnounces = () => {
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          <FlatList
-            data={Postedmessages}
-            renderItem={PostedItem}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-      </ScrollView>
+      <View>
+        <FlatList
+          data={Postedmessages}
+          renderItem={PostedItem}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     );
   };
   return (
@@ -103,30 +99,3 @@ export default function Header({ useruid }) {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    marginVertical: 8,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: "400",
-    fontStyle: "normal",
-  },
-  container: {
-    paddingVertical: 12,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    backgroundColor: Colors.white,
-  },
-  image: {
-    width: 70,
-    height: 70,
-    borderRadius: 200,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
-});

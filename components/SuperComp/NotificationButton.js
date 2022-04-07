@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 const Notificationbutton = ({ number }) => (
   <View
     style={{
@@ -24,5 +24,4 @@ const Notificationbutton = ({ number }) => (
   </View>
 );
 
-const styles = StyleSheet.create({});
 export default Notificationbutton;

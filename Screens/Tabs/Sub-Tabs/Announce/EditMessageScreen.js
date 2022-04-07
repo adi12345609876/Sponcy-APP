@@ -10,8 +10,9 @@ import {
 import Constants from "expo-constants";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import button from "../../../../assets/Icon/EmailSend.png";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { styles } from "../../../../Features/Styles";
 
 import { UserData, PostAnnounce, db } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -137,27 +138,3 @@ export default function App({ route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: Constants.statusBarHeight + 15,
-  },
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
-  input: {
-    maxHeight: 200,
-    height: 200,
-    textAlignVertical: "top",
-    borderColor: Colors.grey,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-  },
-});

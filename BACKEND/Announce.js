@@ -41,8 +41,6 @@ export function Announces() {
             id: doc.id,
           }))
         );
-      } else {
-        console.log("NO ANNOUNCES😲😮");
       }
     });
   }, []);
@@ -80,8 +78,6 @@ export function currentuserReplies(useruid) {
 
   useEffect(() => {
     if (useruid) {
-      console.log("user:", useruid);
-
       const q = query(
         collectionGroup(db, "Comments"),
         where("user", "==", useruid),
@@ -96,8 +92,6 @@ export function currentuserReplies(useruid) {
           }))
         );
       });
-    } else {
-      console.error("OOPS !DEFINE AN USERUID");
     }
   }, [currentuser]);
 
@@ -119,14 +113,10 @@ export async function getUserDetailsCollection(otheruser) {
       onSnapshot(Doclocation_array, (snap) => {
         setComments(snap.data());
       });
-    } else {
-      console.error("OOPS !NO USER IS DEFINED BY DEFAULT");
     }
   }, [otheruser]);
 
-  // console.log("Details", Comments);
   return Comments;
-  // return await getDoc(Doclocation_array).then((doc) => doc.data());
 }
 //Like
 export async function Likemessage(currentuser, messageid) {
@@ -144,8 +134,6 @@ export async function Likemessage(currentuser, messageid) {
   const increseliked = updateDoc(Doclocation2, {
     Like: increment(1),
   });
-
-  console.log("Liked");
 }
 //Unlike
 export async function Dislikemessage(currentuser, messageid) {
@@ -169,8 +157,6 @@ export async function Dislikemessage(currentuser, messageid) {
     Like: increment(-1),
   });
   // }
-
-  console.log("DisLiked", get);
 }
 //Follow
 export async function FollowUser(currentuser, otheruser) {
@@ -200,7 +186,34 @@ export async function FollowUser(currentuser, otheruser) {
   await updateDoc(Doccurrentuser_num, {
     Following: increment(1),
   });
-  console.log("Followering", otheruser, "by", currentuser);
+}
+export async function SponsorUser(currentuser, otheruser) {
+  //const [Comments, setComments] = useState();
+
+  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
+  const Doclocation_num = doc(db, "Users", otheruser);
+  const Doccurrentuser_array = doc(
+    db,
+    "Users",
+    currentuser,
+    "Details",
+    "EventsDoc"
+  );
+  const Doccurrentuser_num = doc(db, "Users", currentuser);
+  //for otheruser
+  const AddUserFollow = await updateDoc(Doclocation_array, {
+    Sponsorers: arrayUnion(currentuser),
+  });
+  const increseFollow = await updateDoc(Doclocation_num, {
+    Sponsorers: increment(1),
+  });
+  //for currentuser
+  await updateDoc(Doccurrentuser_array, {
+    Sponsoring: arrayUnion(otheruser),
+  });
+  await updateDoc(Doccurrentuser_num, {
+    Sponsoring: increment(1),
+  });
 }
 //UnFollow
 export async function UnFollowUser(currentuser, otheruser) {
@@ -235,8 +248,6 @@ export async function UnFollowUser(currentuser, otheruser) {
     Following: increment(-1),
   });
   // }
-
-  console.log("DisLiked", get);
 }
 //Add Comments
 export async function PostComments(

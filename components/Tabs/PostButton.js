@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 const { width } = Dimensions.get("screen");
 let deviceWidth = Dimensions.get("screen").width;
 let CIRCLERADIUS = 250;

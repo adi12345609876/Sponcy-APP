@@ -10,8 +10,9 @@ import {
 import Constants from "expo-constants";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import button from "../../../../assets/Icon/EmailSend.png";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { styles } from "../../../../Features/Styles";
 
 import {
   UserData,
@@ -39,7 +40,6 @@ export default function App({ route }) {
 
   const [PhotoURL, setPhotoURL] = useState();
   //   const [done, setdone] = useState(false);
-  console.log("SelecetedID:", selectedIds ? selectedIds : null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -61,11 +61,7 @@ export default function App({ route }) {
     }
   };
   async function handleClick() {
-    console.log(
-      "FINAL DATA:"[(docid, Photo, text, "Users:", [...selectedIds])]
-    );
     await EditRoom(docid, text, Photo, [...selectedIds]);
-    console.log("Updated");
     navigation.navigate("Tabs");
   }
   return (
@@ -157,27 +153,3 @@ export default function App({ route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: Constants.statusBarHeight + 15,
-  },
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
-  input: {
-    maxHeight: 200,
-    height: 200,
-    textAlignVertical: "top",
-    borderColor: Colors.grey,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-  },
-});

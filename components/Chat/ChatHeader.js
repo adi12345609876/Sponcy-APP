@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 import Name from "../SuperComp/Name";
 import { useNavigation } from "@react-navigation/native";
 import ThreeDots from "../../components/SuperComp/3dotComp";
 import { LeaveRoom, EditRoom } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
+import { styles } from "../../Features/Styles";
 
 export default function ChatHeader({
   name,
@@ -32,9 +33,6 @@ export default function ChatHeader({
     });
   }
   async function EditingRoom() {
-    // await EditRoom(id, "RoomName", "", "Participants", currentUser.uid);
-    console.log("part:", participants);
-
     navigation.navigate("EditRooms", { name, icon, id, participants });
   }
   function MoveToDetails() {
@@ -59,7 +57,7 @@ export default function ChatHeader({
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 10 }}>
             <Image
-              source={icon}
+              source={{ uri: icon }}
               style={{ width: 50, height: 50, borderRadius: 200 }}
             />
           </TouchableOpacity>
@@ -105,23 +103,3 @@ export default function ChatHeader({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  headercontainer: {
-    paddingHorizontal: 12,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: Colors.primary,
-    width: "100%",
-    height: 90,
-    elevation: 2,
-  },
-
-  logo: {
-    height: 15,
-    width: 15,
-    marginLeft: 1,
-    marginTop: 9,
-  },
-});

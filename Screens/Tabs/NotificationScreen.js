@@ -8,6 +8,7 @@ import { ChatRooms, OneOneMess, Usersforchat } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import { getUserDetailsCollection } from "../../BACKEND/Announce";
 //assets
+import { styles } from "../../Features/Styles";
 
 //features
 let deviceWidth = Dimensions.get("screen").width;
@@ -36,9 +37,7 @@ export default function AssetExample({ navigation }) {
     return filtered;
   }
   const DetailsUserData = compare2arrays(AllUsers, userdetails);
-  console.log(DetailsUserData);
-  OnetoOne?.map((r) => console.log("RRRR", r));
-  console.log("ONENOET", OnetoOne);
+
   //render
   const renderItem = ({ item }) => (
     <NotifyItem
@@ -52,7 +51,7 @@ export default function AssetExample({ navigation }) {
   const UserrenderItem = ({ item }) => (
     <NotifyItem
       name={item.UserName}
-      icon={item.PhotoURL}
+      icon={item?.PhotoURL}
       UnreadSeenUsers={item.UnseenUsers}
       id={item.id}
       participants={item.Participants}
@@ -99,5 +98,3 @@ export default function AssetExample({ navigation }) {
     </AnimatedScroolView>
   );
 }
-
-const styles = StyleSheet.create({});

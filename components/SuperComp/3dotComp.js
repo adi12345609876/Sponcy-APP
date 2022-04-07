@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 // import { TouchableOpacity } from "react-native-gesture-handler";
 export default function AssetExample({ visibility, height, width, data }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -43,20 +43,3 @@ export default function AssetExample({ visibility, height, width, data }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  Card: {
-    backgroundColor: Colors.tertiary,
-    alignSelf: "flex-start",
-    zIndex: 1,
-    // position: "absolute",
-  },
-  container: {
-    // alignItems: "center",
-    // justifyContent: "center",
-    // padding: 2,
-    // position: "absolute",
-    // left: 0,
-    // bottom: 0,
-  },
-});

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useTabBar } from "../../Hooks/TabBarprovider";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 let offsetY = 0;
 const AnimatedScrollView = ({ children, ...restProps }) => {
   const { setShowTabBar } = useTabBar();

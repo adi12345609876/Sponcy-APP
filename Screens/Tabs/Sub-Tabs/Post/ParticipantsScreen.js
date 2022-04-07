@@ -6,14 +6,15 @@ import AnimatedScroolView from "../../../../components/Animation/AnimatedScroolT
 
 import renderSeparator from "../../../../components/SuperComp/Separator";
 //assets
-// import DummyNetflixIcon from "../assets/Photos/Dummyicon/Netflix.png";
 import { ChatRooms, Usersforchat } from "../../../../BACKEND/firebase";
 import { useauth } from "../../../../BACKEND/Auth";
 import ParticipantsItem from "../../../../FlatlistItem/ParticipantsItem";
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { styles } from "../../../../Features/Styles";
+
 //features
 let deviceWidth = Dimensions.get("screen").width;
 let deviceHeight = Dimensions.get("screen").height;
@@ -50,7 +51,6 @@ export default function AssetExample() {
   const selectedId = Users?.filter((item) => item?.selected).map(
     (item) => item.id
   );
-  console.log(selectedId);
 
   return (
     <AnimatedScroolView>
@@ -76,5 +76,3 @@ export default function AssetExample() {
     </AnimatedScroolView>
   );
 }
-//style
-const styles = StyleSheet.create({});

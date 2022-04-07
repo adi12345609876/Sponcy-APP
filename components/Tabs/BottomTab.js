@@ -8,14 +8,16 @@ import {
 } from "react-native";
 import { useTabBar } from "../../Hooks/TabBarprovider";
 import Tabs from "./Tabs";
-import { Colors } from "../../Features/Features";
+import { Colors } from "../../Features/Colors";
 const { width } = Dimensions.get("screen");
 import PostButton from "./PostButton";
 const TabBar = ({ state, navigation }) => {
-  const [selected, setSelected] = useState("Home");
+  const [selected, setSelected] = useState("Announce");
   const { routes } = state;
   const renderColor = (currentTab) =>
     currentTab === selected ? Colors.primary : Colors.black;
+  const renderIcon = (route) =>
+    route.name === selected ? route.params.iconX : route.params.icon;
 
   const { showTabBar } = useTabBar();
 
@@ -56,7 +58,7 @@ const TabBar = ({ state, navigation }) => {
         {routes.map((route, index) => (
           <Tabs
             tab={route}
-            icon={route.params.icon}
+            icon={renderIcon(route)}
             onPress={() => handlePress(route.name, index)}
             color={renderColor(route.name)}
             key={route.key}

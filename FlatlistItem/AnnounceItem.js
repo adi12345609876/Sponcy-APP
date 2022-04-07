@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
+
 import {
   Text,
   View,
@@ -16,11 +18,11 @@ import {
 import ThreeDots from "../components/SuperComp/3dotComp";
 //components
 import { Card } from "react-native-paper";
+import { styles } from "../Features/Styles";
 
-import Nullprofile from "../Hooks/NullProfile";
 import NameText from "../components/SuperComp/Name";
 import Time from "../components/SuperComp/time";
-import { Colors } from "../Features/Features";
+import { Colors } from "../Features/Colors";
 //assets
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db, UserData } from "../BACKEND/firebase";
@@ -43,6 +45,7 @@ const AnnounceItem = ({
   id,
   user,
   LikedUsers,
+  IsAds,
 }) => {
   const navigation = useNavigation();
   const [threedotvisible, setthreevisible] = useState(false);
@@ -70,18 +73,23 @@ const AnnounceItem = ({
     });
   }
   async function Likeit(id) {
-    console.log("currentuser:", currentuser?.uid, "id:", id);
-
     Likemessage(currentuser?.uid, id);
   }
   async function Dislikeit(id) {
-    console.log("currentuser:", currentuser?.uid, "id:", id);
-
     Dislikemessage(currentuser?.uid, id);
   }
   return (
     <View>
       <View style={styles.container}>
+        {IsAds && (
+          <View>
+            <AdMobBanner
+              bannerSize="banner"
+              adUnitID="ca-app-pub-2241821858793323/8713857097"
+            />
+          </View>
+        )}
+
         <TouchableOpacity
           style={{ flexDirection: "row" }}
           onPress={() =>
@@ -91,10 +99,7 @@ const AnnounceItem = ({
           }
         >
           <View>
-            <Image
-              source={icon ? icon : Nullprofile({ name })}
-              style={styles.profileicon}
-            />
+            <Image source={{ uri: icon }} style={styles.profileicon} />
           </View>
           <View style={styles.namecontainer}>
             <NameText name={name} />
@@ -139,7 +144,7 @@ const AnnounceItem = ({
       </View>
       {photo && (
         <TouchableOpacity style={styles.photocontainer}>
-          <Image source={photo} style={styles.photo} />
+          <Image source={{ uri: photo }} style={styles.photo} />
         </TouchableOpacity>
       )}
       <View style={styles.iconcontainer}>
@@ -150,9 +155,9 @@ const AnnounceItem = ({
               photo,
               name,
               icon,
-
               time,
               id,
+              user,
             })
           }
         >
@@ -178,73 +183,15 @@ const AnnounceItem = ({
           </>
         )}
 
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <AntDesign name="retweet" size={15} color="black" />
         </TouchableOpacity>
         <TouchableOpacity>
           <Entypo name="share" size={15} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flexDirection: "row", marginVertical: 10 },
-  profileicon: {
-    width: 60,
-    height: 60,
-    borderRadius: 200,
-    marginHorizontal: 5,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
-  photocontainer: {
-    width: deviceWidth,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  photo: {
-    width: 250,
-    height: 200,
-    borderRadius: 20,
-    borderColor: Colors.white,
-    borderWidth: 2,
-    elevation: 2,
-    marginLeft: 10,
-  },
-  messagecontainer: {
-    maxWidth: deviceWidth - 100,
-    marginLeft: 60,
-    marginBottom: 10,
-    justifyContent: "center",
-    textAlign: "center",
-  },
-  message: {
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "650",
-    fontStyle: "normal",
-    color: Colors.black,
-    letterSpacing: 1,
-  },
-  iconcontainer: {
-    flexDirection: "row",
-    width: 340,
-    justifyContent: "space-evenly",
-    marginVertical: 30,
-  },
-  namecontainer: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-
-    marginTop: 10,
-  },
-  timecontainer: {
-    width: deviceWidth / 2,
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-});
 export default AnnounceItem;

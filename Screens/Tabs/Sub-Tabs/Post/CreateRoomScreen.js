@@ -10,28 +10,20 @@ import {
 import Constants from "expo-constants";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import button from "../../../../assets/Icon/EmailSend.png";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
+import { styles } from "../../../../Features/Styles";
 
 import { UserData, PostAnnounce, AddRooms } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../../../../BACKEND/Auth";
 
 export default function App({ route }) {
-  const { selectedId } = route.params;
-
   const navigation = useNavigation();
   const currentuser = useauth();
-
   const [text, settext] = useState();
-  const [Users, setUsers] = useState();
-
   const [Photo, setPhoto] = useState();
-
   const [PhotoURL, setPhotoURL] = useState();
-  //   const [done, setdone] = useState(false);
-  console.log(selectedId ? selectedId : null);
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -52,18 +44,11 @@ export default function App({ route }) {
     }
   };
   async function handleClick() {
-    console.log([Photo, text, "Users:", [...selectedId, currentuser?.uid]]);
-    await AddRooms(
-      Photo,
-      text,
-      [...selectedId, currentuser?.uid],
-      currentuser?.uid
-    );
-    console.log("Updated");
+    await AddRooms(Photo, text, [currentuser?.uid], currentuser?.uid);
     navigation.navigate("Tabs");
   }
   return (
-    <View style={styles.container}>
+    <View style={styles.Postcontainer}>
       <>
         <View
           style={{
@@ -113,31 +98,7 @@ export default function App({ route }) {
             maxLength={250}
           />
         </View>
-        {/* <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
-          <TextInput
-            placeholder="Members"
-            style={styles.input}
-            underlineColorAndroid="transparent"
-            onChangeText={setUsers}
-            autoComplete
-            textAlign="left"
-            value={Users}
-            multiline
-            maxLength={250}
-          />
-          <TouchableOpacity
-            style={{
-              height: 100,
-              backgroundColor: Colors.primary,
 
-              borderRadius: 10,
-              padding: 12,
-            }}
-            onPress={() => navigation.navigate("Participants")}
-          >
-            <Text>Add Participants</Text>
-          </TouchableOpacity>
-        </View> */}
         <TouchableOpacity style={{ margin: 20 }} onPress={pickImage}>
           <View
             style={{
@@ -160,27 +121,3 @@ export default function App({ route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: Constants.statusBarHeight + 15,
-  },
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
-  input: {
-    maxHeight: 200,
-    height: 200,
-    textAlignVertical: "top",
-    borderColor: Colors.grey,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-  },
-});

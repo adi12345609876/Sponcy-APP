@@ -16,18 +16,24 @@ import {
   FollowUser,
   UnFollowUser,
   getUserDetailsCollection,
+  SponsorUser,
 } from "../../../../BACKEND/Announce";
-import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
+// import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
 import { logout, useauth } from "../../../../BACKEND/Auth";
 import { Divider } from "react-native-elements";
 import ThreeDots from "../../../../components/SuperComp/3dotComp";
-import { Colors } from "../../../../Features/Features";
+import { Colors } from "../../../../Features/Colors";
 import PortfolioTab from "../../../../components/Tabs/PortfolioTab";
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../../../../Hooks/GlobalHooks";
+import { showtoast } from "../../../../Features/Utils";
+import { styles } from "../../../../Features/Styles";
+
 export default function App({ route }) {
   const navigation = useNavigation();
   const { useruid } = route.params;
+  const specificuserdata = SpecifiedUserData(useruid);
+  const userdetails = getUserDetailsCollection(useruid);
   const currentuser = useauth();
 
   //  const FormattedLikes = numFormatter(likes);
@@ -35,49 +41,23 @@ export default function App({ route }) {
   const [threedotvisible, setthreevisible] = useState(false);
   const [alreadyfollwing, setalreadyfollwing] = useState();
 
-  const specificuserdata = SpecifiedUserData(useruid);
-  const userdetails = getUserDetailsCollection(useruid);
   useEffect(() => {
     if (userdetails) {
       userdetails?.then((doc) => {
         setalreadyfollwing(doc?.Followers.includes(currentuser?.uid));
-        console.log("DOC:", doc);
       });
     }
   }, [userdetails]);
 
-  console.log("alreadyfollwing:", alreadyfollwing);
-
-  function showtoast(msg) {
-    if (Platform.OS === "android") {
-      ToastAndroid.show(msg, ToastAndroid.SHORT);
-    } else {
-    }
-  }
-
   async function handleFollow() {
-    console.log(
-      "currentuser:",
-      currentuser?.uid,
-      "otheruser",
-      specificuserdata?.uid
-    );
+    showtoast("Following");
 
     FollowUser(currentuser?.uid, specificuserdata?.uid);
   }
   async function handleUnFollow() {
-    console.log(
-      "currentuser:",
-      currentuser?.uid,
-      "otheruser",
-      specificuserdata?.uid
-    );
-
     UnFollowUser(currentuser?.uid, specificuserdata?.uid);
   }
   function TalkPrivately() {
-    // name, icon, id,onechat
-    //  currentUser, otheruser, specificuserdata?.UserName, specificuserdata?.PhotoURL;
     navigation.navigate("Chat", {
       name: specificuserdata?.UserName,
       icon: specificuserdata?.PhotoURL,
@@ -86,6 +66,8 @@ export default function App({ route }) {
     });
   }
   async function SponsorUsers() {
+    showtoast("Ready to sponsor");
+    SponsorUser(currentuser?.uid, specificuserdata?.uid);
     navigation.navigate("Chat", {
       name: specificuserdata?.UserName,
       icon: specificuserdata?.PhotoURL,
@@ -108,7 +90,7 @@ export default function App({ route }) {
         barStyle={"light-content"}
       />
       <ImageBackground
-        source={{ uri: specificuserdata?.PhotoURL }}
+        source={specificuserdata?.PhotoURL}
         resizeMode="cover"
         style={{
           flex: 0.4,
@@ -169,18 +151,8 @@ export default function App({ route }) {
             >
               {specificuserdata?.UserName}
             </Text>
-            <Text
-              style={{
-                marginLeft: 10,
-                fontFamily: "Roboto",
-                fontSize: 15,
-                fontWeight: "normal",
-                color: Colors.grey,
-              }}
-            >
-              @{useruid}
-            </Text>
-            {specificuserdata?.checked ? (
+
+            {/* {specificuserdata?.checked ? (
               <Image
                 style={{
                   marginLeft: 10,
@@ -190,7 +162,7 @@ export default function App({ route }) {
                 }}
                 source={checkcircle}
               />
-            ) : null}
+            ) : null} */}
             <Text
               style={{
                 position: "absolute",
@@ -220,29 +192,21 @@ export default function App({ route }) {
         <Divider style={{ width: 1000 }} />
         <View style={{ marginTop: 5 }}>
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Followers", {
-                  userdetails,
-                })
-              }
+            <Text
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 15,
+                fontWeight: "300",
+                fontStyle: "normal",
+                color: Colors.black,
+              }}
             >
-              <Text
-                style={{
-                  marginLeft: 10,
-                  fontFamily: "Roboto",
-                  fontSize: 15,
-                  fontWeight: "300",
-                  fontStyle: "normal",
-                  color: Colors.black,
-                }}
-              >
-                Followers
-              </Text>
-              <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-                {numFormatter(specificuserdata?.Followers)}
-              </Text>
-            </TouchableOpacity>
+              Followers
+            </Text>
+            <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
+              {numFormatter(specificuserdata?.Followers)}
+            </Text>
 
             <View
               style={{
