@@ -36,7 +36,7 @@ export default function App() {
     if (userdetails) {
       userdetails
         ?.then((doc) => {
-          setFollowers(doc.Followers);
+          setFollowers(doc?.Followers);
         })
         .catch((e) => console.log("ERER", e));
     }

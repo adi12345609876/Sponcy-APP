@@ -184,7 +184,7 @@ function MyStack() {
         </>
       ) : (
         [
-          !currentuser ? (
+          !currentuser && !currentUserData?.array?.UserName ? (
             <>
               <Stack.Screen
                 name="SignIn"

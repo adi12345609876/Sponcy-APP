@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "903091214185",
+    "project_id": "sponcy-7003f",
+    "storage_bucket": "sponcy-7003f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903091214185:android:ab808182be95bcee080ff8",
+        "android_client_info": {
+          "package_name": "com.adinathr.Sponcy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903091214185-n2bvlh9pn2j09d8qrllhh2h9s4ld88cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX4ZRhSV0Yi0pOPeefMp6_erR6kwY6DJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903091214185-n2bvlh9pn2j09d8qrllhh2h9s4ld88cm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
