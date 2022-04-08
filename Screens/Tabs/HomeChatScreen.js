@@ -109,11 +109,12 @@ export default function AssetExample({ route }) {
   };
   return (
     <AnimatedScroolView>
-      <Text
-        style={{ color: Colors.secondary, fontWeight: "bold", fontSize: 25 }}
-      >
+      <Text style={styles.Smalltext}>
         This screen is still under development so if you want to give review and
-        feedback send it to "perfectsmooth22@gmail.com"
+        feedback send it to
+      </Text>
+      <Text style={[styles.Smalltext, { color: "blue" }]}>
+        perfectsmooth22@gmail.com"
       </Text>
 
       <View

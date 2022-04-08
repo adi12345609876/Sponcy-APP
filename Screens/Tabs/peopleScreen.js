@@ -124,7 +124,10 @@ export default function AssetExample({ navigation }) {
                         })
                       }
                     >
-                      <Image style={styles.image} source={item?.PhotoURL} />
+                      <Image
+                        style={styles.image}
+                        source={{ uri: item?.PhotoURL }}
+                      />
                       <Text
                         style={{
                           fontSize: 18,

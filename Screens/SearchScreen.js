@@ -186,15 +186,7 @@ export default function App({ route }) {
           />
 
           <TouchableOpacity
-            style={{
-              marginRight: 20,
-              borderRadius: 10,
-              backgroundColor: Colors.grey,
-              height: 30,
-              width: 30,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={[styles.Searchbox, { marginRight: 20 }]}
             onPress={() => HandleSearch()}
           >
             <EvilIcons name="search" size={24} color="black" />

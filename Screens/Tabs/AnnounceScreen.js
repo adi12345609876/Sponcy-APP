@@ -124,18 +124,18 @@ export default function AnnounceScreen({ route }) {
         >
           <View style={{ paddingHorizontal: 10 }}>
             <TouchableOpacity
-              style={{ backgroundColor: Colors.grey }}
+              style={styles.Searchbox}
               onPress={() => setSubScreen("Following")}
             >
-              <Text style={{ color: Colors.white }}>Following</Text>
+              <Text style={styles.Smalltext}>Following</Text>
             </TouchableOpacity>
           </View>
           <View style={{ paddingHorizontal: 10 }}>
             <TouchableOpacity
-              style={{ backgroundColor: Colors.grey }}
+              style={styles.Searchbox}
               onPress={() => setSubScreen("Announces")}
             >
-              <Text style={{ color: Colors.white }}>All Announces</Text>
+              <Text style={styles.Smalltext}>All Announces</Text>
             </TouchableOpacity>
           </View>
         </View>

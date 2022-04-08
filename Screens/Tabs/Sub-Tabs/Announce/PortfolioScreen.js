@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
-  Image,
   StatusBar,
   TouchableOpacity,
   ImageBackground,
-  ToastAndroid,
-  Platform,
 } from "react-native";
 import Constants from "expo-constants";
 import { Ionicons, Entypo } from "@expo/vector-icons";
-import { SpecifiedUserData, Sponsor } from "../../../../BACKEND/firebase";
+import { SpecifiedUserData } from "../../../../BACKEND/firebase";
 import {
   FollowUser,
   UnFollowUser,
@@ -38,7 +35,7 @@ export default function App({ route }) {
 
   //  const FormattedLikes = numFormatter(likes);
 
-  const [threedotvisible, setthreevisible] = useState(false);
+  const [threedotvisible, setthreevisible] = useState();
   const [alreadyfollwing, setalreadyfollwing] = useState();
 
   useEffect(() => {
@@ -80,7 +77,7 @@ export default function App({ route }) {
     <View
       style={{
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight / 10,
         backgroundColor: Colors.white,
       }}
     >
@@ -90,7 +87,7 @@ export default function App({ route }) {
         barStyle={"light-content"}
       />
       <ImageBackground
-        source={specificuserdata?.PhotoURL}
+        source={{ uri: specificuserdata?.PhotoURL }}
         resizeMode="cover"
         style={{
           flex: 0.4,
@@ -101,16 +98,23 @@ export default function App({ route }) {
       >
         <View style={{ backgroundColor: "", flexDirection: "row" }}>
           <TouchableOpacity
-            style={{ marginLeft: 10 }}
+            style={[styles.Searchbox, { marginLeft: 10 }]}
             onPress={() => navigation.goBack()}
           >
-            <Ionicons name="arrow-back-outline" size={24} color={Colors.grey} />
+            <Ionicons
+              name="arrow-back-outline"
+              size={24}
+              color={Colors.black}
+            />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ position: "absolute", right: 10 }}
+            style={[
+              styles.Searchbox,
+              { position: "absolute", marginRight: 10, right: 10 },
+            ]}
             onPress={() => setthreevisible(!threedotvisible)}
           >
-            <Entypo name="dots-three-vertical" size={24} color={Colors.grey} />
+            <Entypo name="dots-three-vertical" size={24} color={Colors.black} />
           </TouchableOpacity>
           <View style={{ top: 30, position: "absolute", right: 18 }}>
             <ThreeDots
@@ -118,11 +122,11 @@ export default function App({ route }) {
               height={100}
               width={200}
               data={[
-                {
-                  text: "Settings",
-                  icon: "settings-sharp",
-                  func: () => {},
-                },
+                // {
+                //   text: "Settings",
+                //   icon: "settings-sharp",
+                //   func: () => {},
+                // },
                 {
                   text: "Logout",
                   icon: "log-out-outline",

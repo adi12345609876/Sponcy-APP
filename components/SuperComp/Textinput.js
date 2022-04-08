@@ -5,27 +5,9 @@ import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import { PickImage } from "../../Features/Utils";
 
 export default function SuperTextInput(props) {
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      //changing the file from long data to short readable https
-      const img = await fetch(result.uri);
-      const bytes = await img.blob();
-      //then set it as the image
-
-      props.setPhoto(bytes);
-      props.setPhotoDetails(result);
-    }
-  };
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({
       // type: "application/pdf",
@@ -66,7 +48,10 @@ export default function SuperTextInput(props) {
           <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickDocument}>
             <Entypo name="circle" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickImage}>
+          <TouchableOpacity
+            style={{ marginLeft: 12 }}
+            onPress={() => PickImage(props.setPhoto, props.setPhotoURL)}
+          >
             <Ionicons name="camera" size={24} color="black" />
           </TouchableOpacity>
         </View>

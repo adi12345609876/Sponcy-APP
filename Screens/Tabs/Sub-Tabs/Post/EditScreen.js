@@ -19,7 +19,7 @@ import { UserData } from "../../../../BACKEND/firebase";
 import { updateUser } from "../../../../BACKEND/Auth";
 import { useauth } from "../../../../BACKEND/Auth";
 import { Colors } from "../../../../Features/Colors";
-
+import { PickImage } from "../../../../Features/Utils";
 const Tab = createMaterialTopTabNavigator();
 
 export default function App({ navigation }) {
@@ -31,27 +31,15 @@ export default function App({ navigation }) {
 
   const [PhotoURL, setPhotoURL] = useState();
   const [done, setdone] = useState(false);
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (!result.cancelled) {
-      //changing the file from long data to short readable https
-      const img = await fetch(result.uri);
-      const bytes = await img.blob();
-      //then set it as the image
-
-      setPhoto(bytes);
-      setPhotoURL(result.uri);
-    }
-  };
   async function handleClick() {
-    await updateUser(DisplayName, Photo, Slogan, currentuser, setdone);
+    await updateUser(
+      DisplayName ? DisplayName : currentUserData?.array?.UserName,
+      Photo ? Photo : currentUserData?.array?.PhotoURL,
+      Slogan ? Slogan : currentUserData?.array?.Slogan,
+      currentuser?.uid,
+      setdone
+    );
     navigation.navigate("Tabs");
   }
 
@@ -71,12 +59,11 @@ export default function App({ navigation }) {
       <View
         style={{
           flex: 0.4,
-
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity onPress={() => PickImage(setPhoto, setPhotoURL)}>
           <ImageBackground
             source={{
               uri: PhotoURL ? PhotoURL : currentUserData?.array?.PhotoURL,
@@ -144,7 +131,7 @@ export default function App({ navigation }) {
             borderRadius: 10,
           }}
           onPress={handleClick}
-          disabled={done || !Photo}
+          disabled={done || !DisplayName}
         >
           <Text
             style={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}

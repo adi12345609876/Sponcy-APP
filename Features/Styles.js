@@ -5,6 +5,7 @@ let deviceHeight = Dimensions.get("screen").height;
 import Constants from "expo-constants";
 
 export const styles = StyleSheet.create({
+  //container
   Postcontainer: {
     paddingTop: Constants.statusBarHeight + 15,
   },
@@ -103,13 +104,48 @@ export const styles = StyleSheet.create({
     height: 90,
     elevation: 2,
   },
-  //non container
   container: {
     paddingVertical: 12,
     flexDirection: "row",
     alignItems: "flex-start",
     backgroundColor: Colors.white,
   },
+  UsersHomecontainer: {
+    flex: 1,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    backgroundColor: Colors.white,
+    alignItems: "center",
+  },
+  //text
+  Bigtext: {
+    fontSize: 25,
+    fontWeight: "bold",
+    // textAlign: "center",
+    color: Colors.black,
+  },
+  Mediumtext: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: Colors.black,
+  },
+  Smalltext: {
+    fontSize: 15,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: Colors.black,
+  },
+  Searchbox: {
+    borderRadius: 10,
+    backgroundColor: Colors.grey,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: Colors.black,
+    borderWidth: 0.5,
+    elevation: 2,
+  },
+
   logo: {
     height: 15,
     width: 15,
@@ -126,13 +162,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "400",
   },
-  UsersHomecontainer: {
-    flex: 1,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    backgroundColor: Colors.white,
-    alignItems: "center",
-  },
+
   sectionStyle: {
     maxWidth: deviceWidth - 10,
     backgroundColor: Colors.white,
@@ -240,18 +270,6 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "400",
     fontStyle: "normal",
-  },
-
-  //Editmessage
-
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
   },
 
   //CommentsScreen

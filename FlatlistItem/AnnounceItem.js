@@ -1,36 +1,20 @@
 import React, { useState } from "react";
-import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
+import { AdMobBanner } from "expo-ads-admob";
 
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
-import {
-  MaterialCommunityIcons,
-  Entypo,
-  AntDesign,
-  Ionicons,
-} from "@expo/vector-icons";
+import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
 import ThreeDots from "../components/SuperComp/3dotComp";
 //components
-import { Card } from "react-native-paper";
 import { styles } from "../Features/Styles";
 
 import NameText from "../components/SuperComp/Name";
 import Time from "../components/SuperComp/time";
-import { Colors } from "../Features/Colors";
 //assets
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db, UserData } from "../BACKEND/firebase";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../BACKEND/firebase";
 import { Dislikemessage, Likemessage } from "../BACKEND/Announce";
 import { useauth } from "../BACKEND/Auth";
 //features
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../Hooks/GlobalHooks";
 import { useLoading } from "../Hooks/LoadingContext";
@@ -51,7 +35,7 @@ const AnnounceItem = ({
   const [threedotvisible, setthreevisible] = useState(false);
   const FormattedLikes = numFormatter(likes);
   const currentuser = useauth();
-  const { setshowLoading, showLoading } = useLoading();
+  const { setshowLoading } = useLoading();
 
   async function DeleteMessage(id) {
     setshowLoading(true);

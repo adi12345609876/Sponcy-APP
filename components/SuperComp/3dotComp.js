@@ -4,7 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
 import { Colors } from "../../Features/Colors";
-// import { TouchableOpacity } from "react-native-gesture-handler";
+import { styles } from "../../Features/Styles";
+
 export default function AssetExample({ visibility, height, width, data }) {
   const [selectedId, setSelectedId] = useState(null);
   const [pressfunc, setpressfunc] = useState();
@@ -19,7 +20,7 @@ export default function AssetExample({ visibility, height, width, data }) {
     <>
       {visibility && (
         <Card style={[styles.Card, { height: height, width: width }]}>
-          <View style={styles.container}>
+          <View>
             {data.map((item) => (
               <>
                 <TouchableOpacity

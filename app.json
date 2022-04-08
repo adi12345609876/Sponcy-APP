@@ -29,10 +29,11 @@
         "foregroundImage": "./assets/SponcyIcon.png",
         "backgroundColor": "#FC8800"
       },
-      "package": "com.adinathr.Sponcy"
+      "package": "com.adinathr.Sponcy",
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/SponcyIcon.png"
+      "favicon": "./assets/favicon.png"
     }
   }
 }

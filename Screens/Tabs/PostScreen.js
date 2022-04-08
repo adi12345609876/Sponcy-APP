@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ImageBackground,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import button from "../../assets/Icon/EmailSend.png";
@@ -20,6 +21,7 @@ import {
   AddUnseenUsers,
   getUserDetailsCollection,
 } from "../../BACKEND/Announce";
+import { PickImage } from "../../Features/Utils";
 export default function App() {
   const navigation = useNavigation();
   const currentuser = useauth();
@@ -42,25 +44,6 @@ export default function App() {
     }
   }, [userdetails]);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      //changing the file from long data to short readable https
-      const img = await fetch(result.uri);
-      const bytes = await img.blob();
-      //then set it as the image
-
-      setPhoto(bytes);
-      setPhotoURL(result.uri);
-    }
-  };
   async function handleClick() {
     await PostAnnounce(
       Photo,
@@ -127,23 +110,31 @@ export default function App() {
             maxLength={250}
           />
         </View>
-        <TouchableOpacity style={{ margin: 20 }} onPress={pickImage}>
-          <View
+        <TouchableOpacity
+          style={{
+            margin: 20,
+            justifyContent: "center",
+
+            alignItems: "center",
+          }}
+          onPress={() => PickImage(setPhoto, setPhotoURL)}
+        >
+          <ImageBackground
+            source={{ uri: PhotoURL }}
+            resizeMode="cover"
             style={{
-              width: 300,
               height: 200,
-              backgroundColor: Colors.primary,
-              borderRadius: 10,
+              width: 200,
+              borderRadius: 20,
+              backgroundColor: Colors.grey,
+
               justifyContent: "center",
+
               alignItems: "center",
             }}
           >
-            <MaterialCommunityIcons
-              name="camera-plus"
-              size={50}
-              color="Colors.whitedfa"
-            />
-          </View>
+            <Ionicons name="pencil" size={24} color="black" />
+          </ImageBackground>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
