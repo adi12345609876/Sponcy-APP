@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { Button, View } from "react-native";
 // import { LogBox } from "react-native";
 //BACKEND
 import { UserData } from "./BACKEND/firebase";
@@ -7,6 +7,14 @@ import { UserData } from "./BACKEND/firebase";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+
+const Drawer = createDrawerNavigator();
 //Hooks
 import TabBarprovider from "./Hooks/TabBarprovider";
 import { useauth } from "./BACKEND/Auth";
@@ -36,6 +44,8 @@ import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
 import VerifyScreen from "./Screens/Auth/VerifyScreen";
 
 import LoadingProvider from "./Hooks/LoadingContext";
+import DrawerContent from "./components/Tabs/DrawerContent";
+import { getUserDetailsCollection } from "./BACKEND/Announce";
 //icons
 const Homeicon = require("./assets/Icon/Home.png");
 const Announceicon = require("./assets/Icon/Announce.png");
@@ -60,9 +70,7 @@ function MyTabs() {
     <Tab.Navigator
       initialRouteName="Announce"
       tabBar={(props) => <TabBar {...props} />}
-      screenOptions={{
-        header: (props) => <Header {...props} />,
-      }}
+      screenOptions={{ headerShown: false }}
     >
       <Tab.Screen
         name="Announce"
@@ -87,20 +95,43 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
-function MyStack() {
-  const currentUserData = UserData();
-  const currentuser = useauth();
 
+function MyStack() {
+  // const currentUserData = UserData();
+  const currentuser = useauth();
+  const [LogedIn, setLogedIn] = useState();
+  const [loading, setloading] = useState(true);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setloading(false);
+  //   }, 2000);
+  // }, []);
+  useEffect(() => {
+    console.log(currentuser);
+
+    if (currentuser == undefined) {
+      setLogedIn("NoUser");
+    } else if (currentuser?.displayName == undefined) {
+      setLogedIn("NoName");
+    } else {
+      setLogedIn("SignedIN");
+    }
+  }, [currentuser]);
   return (
     <Stack.Navigator initialRouteName="">
-      {currentuser && currentUserData?.array?.UserName ? (
+      {LogedIn == "SignedIN" ? (
         <>
+          <Stack.Screen
+            name="MyDrawer"
+            component={MyDrawer}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Tabs"
             component={MyTabs}
             options={{ headerShown: false }}
           />
-
           <Stack.Screen
             name="Edit"
             component={EditScreen}
@@ -184,34 +215,52 @@ function MyStack() {
         </>
       ) : (
         [
-          !currentuser && !currentUserData?.array?.UserName ? (
-            <>
-              <Stack.Screen
-                name="SignIn"
-                component={SignINScreen}
-                options={{ headerShown: false }}
-              />
-            </>
-          ) : !currentUserData?.array?.UserName ? (
-            [
-              <>
-                <Stack.Screen
-                  name="UserDetails"
-                  component={UserDetailsEditScreen}
-                  options={{ headerShown: false }}
-                />
-
-                <Stack.Screen
-                  name="VerifyScreen"
-                  component={VerifyScreen}
-                  options={{ headerShown: false }}
-                />
-              </>,
-            ]
-          ) : null,
+          LogedIn == "NoUser" ? (
+            <Stack.Screen
+              name="SignIn"
+              component={SignINScreen}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="UserDetails"
+              component={UserDetailsEditScreen}
+              options={{ headerShown: false }}
+            />
+          ),
         ]
       )}
     </Stack.Navigator>
+  );
+}
+//!currentuser && !currentUserData?.array?.UserName ?
+
+function MyDrawer() {
+  const [Followers, setFollowers] = useState();
+  const currentuser = useauth();
+  const userdetails = getUserDetailsCollection(currentuser?.uid);
+
+  useEffect(() => {
+    if (userdetails) {
+      userdetails
+        ?.then((doc) => {
+          setFollowers(doc?.Followers);
+        })
+        .catch((e) => console.log("ERER", e));
+    }
+  }, [userdetails]);
+  console.log("FOLLOWIBNG", Followers);
+
+  return (
+    <Drawer.Navigator
+      useLegacyImplementation
+      drawerContent={(props) => <DrawerContent {...props} />}
+      screenOptions={{
+        header: (props) => <Header {...props} />,
+      }}
+    >
+      <Drawer.Screen name="Tabs" component={MyTabs} />
+    </Drawer.Navigator>
   );
 }
 

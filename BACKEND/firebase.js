@@ -18,8 +18,10 @@ import {
 import { useEffect, useState } from "react";
 import { useauth } from "./Auth";
 import uuid from "react-native-uuid";
+import { getApp } from "firebase/app";
+const firebaseApp = getApp();
 
-export const storage = getStorage();
+export const storage = getStorage(firebaseApp, "gs://sponcy-7003f.appspot.com");
 export const db = getFirestore();
 
 //GET
@@ -176,12 +178,12 @@ export function SpecifiedUserData(useruid) {
 //SetUser
 export async function setUser(uid) {
   const doclocation = doc(db, "Users", uid);
-  const doclocation2 = doc(db, "Users", uid, "Details", "EventsDoc");
+  const doclocation2 = doc(db, "Users", uid);
   const newvalue = {
     UserName: "",
     PhotoURL:
       "https://firebasestorage.googleapis.com/v0/b/sponcy-7003f.appspot.com/o/Person.png?alt=media&token=79018f26-8263-4230-8713-97c68a845570.png",
-    Slogan: "",
+    Bio: "",
     Followers: 0,
     Following: 0,
     Sponsoring: 0,
@@ -225,8 +227,7 @@ export async function PostAnnounce(
   message,
   currentuser,
   UserName,
-  UserPhoto,
-  setdone
+  UserPhoto
 ) {
   const doclocation = collection(
     db,
@@ -235,24 +236,34 @@ export async function PostAnnounce(
     "Message"
   );
   const fileRef = ref(storage, "AnnouncePIC/" + uuid.v4() + ".png");
-  setdone(true);
   //upload image
-  const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+  Photo ? await uploadBytes(fileRef, Photo) : null;
+  const PhotoURL = Photo ? await getDownloadURL(fileRef) : null;
 
-  const newvalue = {
-    PhotoURL,
-    message,
-    currentuser,
-    Like: 0,
-    LikedUser: [],
-    UserName,
-    UserPhoto,
-    time: serverTimestamp(),
-  };
+  const newvalue = UserPhoto
+    ? {
+        PhotoURL,
+        message,
+        currentuser,
+        Like: 0,
+        LikedUser: [],
+        UserName,
+        UserPhoto,
+        time: serverTimestamp(),
+      }
+    : {
+        PhotoURL,
+        message,
+        currentuser,
+        Like: 0,
+        LikedUser: [],
+        UserName,
+        UserPhoto: null,
+        time: serverTimestamp(),
+      };
   //upload name
+
   await addDoc(doclocation, newvalue);
-  setdone(false);
 }
 
 export async function PostOnetoOnechat(
@@ -287,7 +298,7 @@ export async function PostOnetoOnechat(
   );
   const Doclocation = doc(db, "Users", currentUser, "OneOneChat", otheruser);
   const fileRef = ref(storage, "PrivateDoc/" + uuid.v4() + ".png");
-  // const currentUserData = SpecifiedUserData(currentUser)
+
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);

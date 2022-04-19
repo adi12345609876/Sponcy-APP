@@ -19,6 +19,7 @@ import { UserData, PostAnnounce, AddRooms } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../../../../BACKEND/Auth";
 import { PickImage } from "../../../../Features/Utils";
+import { SuperButton } from "../../../../components/SuperComp/SuperComp";
 
 export default function App({ route }) {
   const navigation = useNavigation();
@@ -26,10 +27,13 @@ export default function App({ route }) {
   const [text, settext] = useState();
   const [Photo, setPhoto] = useState();
   const [PhotoURL, setPhotoURL] = useState();
+  const [loading, setloading] = useState();
 
   async function handleClick() {
     await AddRooms(Photo, text, [currentuser?.uid], currentuser?.uid);
-    navigation.navigate("Tabs");
+    navigation.navigate("Tabs", {
+      screen: "Announce",
+    });
   }
   return (
     <View style={styles.Postcontainer}>
@@ -50,7 +54,14 @@ export default function App({ route }) {
             </TouchableOpacity>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <TouchableOpacity style={styles.submitbutton} onPress={handleClick}>
+            <SuperButton
+              text={"Create"}
+              onPress={() => handleClick()}
+              loading={loading}
+              textstyle={styles.createbuttontext}
+              buttonstyle={styles.submitbutton}
+            />
+            {/* <TouchableOpacity style={styles.submitbutton} onPress={handleClick}>
               <Image
                 source={button}
                 style={{ height: 35, width: 35, marginRight: 5 }}
@@ -66,7 +77,7 @@ export default function App({ route }) {
               >
                 Create
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
         <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
@@ -75,7 +86,6 @@ export default function App({ route }) {
             style={styles.input}
             underlineColorAndroid="transparent"
             onChangeText={settext}
-            autoComplete
             textAlign="left"
             value={text}
             multiline

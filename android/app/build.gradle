@@ -155,7 +155,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sponcy"
+        applicationId "com.adinathr.Sponcy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

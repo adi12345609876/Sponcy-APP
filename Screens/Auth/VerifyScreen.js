@@ -1,33 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
+import { onAuthStateChanged, sendEmailVerification } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Button,
-  RefreshControl,
-} from "react-native";
-import { useauth } from "../../BACKEND/Auth";
+import { Text, View, SafeAreaView, TouchableOpacity } from "react-native";
+import { auth, useauth } from "../../BACKEND/Auth";
+import { Colors } from "../../Features/Colors";
 import { styles } from "../../Features/Styles";
 
 import { useLoading } from "../../Hooks/LoadingContext";
 // import { Colors } from "./Features/Features";
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-};
+
 export default function AssetExample({ route }) {
   const navigation = useNavigation();
+
+  // const [currentuser, setcurrentuser] = React.useState();
   const currentuser = useauth();
-
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
 
   useEffect(() => {
     if (currentuser?.emailVerified) {
@@ -36,19 +22,23 @@ export default function AssetExample({ route }) {
   }, [currentuser]);
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
-        refreshControl={<RefreshControl refreshing={refreshing} />}
-      >
-        <Text style={{ fontSize: 23, fontweight: "bold", color: "red" }}>
-          {currentuser?.email}
-        </Text>
-        <Text style={{ fontSize: 23, fontweight: "bold", color: "red" }}>
-          go and verify your email and Click on the refresh buton after verifing
-        </Text>
+      <Text style={{ fontSize: 23, fontweight: "bold", color: "red" }}>
+        {currentuser?.email}
+      </Text>
+      <Text style={{ fontSize: 23, fontweight: "bold", color: "red" }}>
+        go and verify your email and Click on the refresh buton after verifing
+      </Text>
 
-        <Button title="refresh" onPress={() => onRefresh()} />
-      </ScrollView>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity
+          style={styles.createbutton}
+          onPress={() => sendEmailVerification(currentuser)}
+        >
+          <Text style={[styles.createbuttontext, { color: Colors.primary }]}>
+            Resend
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

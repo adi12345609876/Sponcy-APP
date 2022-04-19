@@ -5,23 +5,31 @@ import {
   TouchableOpacity,
   Animated,
   Image,
+  Button,
 } from "react-native";
 import { useTabBar } from "../../Hooks/TabBarprovider";
 import { Entypo, EvilIcons } from "@expo/vector-icons";
 import ThreeDots from "../../components/SuperComp/3dotComp";
 import { Colors } from "../../Features/Colors";
 import Constants from "expo-constants";
-import { useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { UserData } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import { useRoute } from "@react-navigation/native";
 import SponcyImage from "../../assets/Sponcy.png";
 
-export default function Header() {
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+
+export default function Header({ navigation }) {
   const route = useRoute();
   const currentuser = useauth();
-  const currentUserData = UserData();
-  const navigation = useNavigation();
+  // const currentUserData = UserData();
+  // const navigation = useNavigation();
   const animation = useRef(new Animated.Value(0)).current;
   const { showTabBar } = useTabBar();
   const [threedotvisible, setthreevisible] = useState(false);
@@ -57,21 +65,27 @@ export default function Header() {
           borderWidth: 2,
           backgroundColor: Colors.grey,
         }}
-        onPress={() =>
-          navigation.navigate("Portfolio", {
-            useruid: currentuser?.uid,
-          })
-        }
+        onPress={() => navigation.openDrawer()}
+        // onPress={() =>
+        //   navigation.navigate("Portfolio", {
+        //     useruid: currentuser?.uid,
+        //   })
+        // }
       >
         <Image
-          source={{
-            uri: currentUserData?.array?.PhotoURL,
-          }}
+          source={{ uri: currentuser?.photoURL }}
           style={{ width: 50, height: 50, borderRadius: 200 }}
         />
       </TouchableOpacity>
+      {/* <Button title="Open drawer" onPress={() => navigation.openDrawer()} /> */}
       <TouchableOpacity
-        style={{ maxHeight: 120, height: 120 }}
+        style={{
+          maxHeight: 120,
+          height: 120,
+
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         onPress={() =>
           navigation.navigate("Tabs", {
             screen: "Announce",
@@ -105,6 +119,7 @@ const styles = StyleSheet.create({
     height: 90,
     elevation: 2,
     borderRadius: 10,
+    marginTop: Constants.statusBarHeight,
   },
   logo: {
     paddingTop: Constants.statusBarHeight + 50,

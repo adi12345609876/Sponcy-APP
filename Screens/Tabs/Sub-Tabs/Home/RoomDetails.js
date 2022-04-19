@@ -9,6 +9,7 @@ import { CreatePosting, LeaveRoom } from "../../../../BACKEND/firebase";
 import { async } from "@firebase/util";
 import { useauth } from "../../../../BACKEND/Auth";
 import { styles } from "../../../../Features/Styles";
+import NameText from "../../../../components/SuperComp/Name";
 
 export default function AssetExample({ route }) {
   const currentuser = useauth();
@@ -32,33 +33,51 @@ export default function AssetExample({ route }) {
         style={{ marginLeft: 10 }}
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back-outline" size={24} color={Colors.grey} />
+        <Ionicons name="arrow-back-outline" size={24} color={Colors.black} />
       </TouchableOpacity>
-      <Image
-        source={{ uri: icon }}
-        style={{ height: 40, width: 40, borderRadius: 200 }}
-      />
-
-      <Text>{name}</Text>
+      <View style={styles.ceneteredcontainer}>
+        <Image
+          source={{ uri: icon }}
+          style={{
+            height: 200,
+            width: 200,
+            borderRadius: 20,
+            backgroundColor: Colors.grey,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        />
+        <Text style={styles.Bigtext}>{name}</Text>
+      </View>
       <Text style={{ fontWeight: "bold", fontsize: 15 }}>Participants:</Text>
       {participantsdetails?.map((item) => (
         <View>
-          <Image
-            source={{ uri: item?.PhotoURL }}
-            style={{ height: 40, width: 40, borderRadius: 200 }}
-          />
-
-          <TouchableOpacity
-            style={{ top: 10, position: "relative" }}
-            onPress={() => setvisible(item.id)}
-          >
-            <Text>{item.UserName}</Text>
-          </TouchableOpacity>
-          {item?.uid == owner ? (
-            <Text>Owner</Text>
-          ) : (
-            Leaders.includes(item?.uid) && <Text>Leader</Text>
-          )}
+          <View>
+            <TouchableOpacity
+              style={{
+                top: 10,
+                position: "relative",
+                flexDirection: "row",
+              }}
+              onPress={() => setvisible(item.id)}
+            >
+              <Image
+                source={{ uri: item?.PhotoURL }}
+                style={{
+                  height: 40,
+                  width: 40,
+                  borderRadius: 200,
+                  marginHorizontal: 15,
+                }}
+              />
+              <NameText name={item.UserName} />
+              {item?.uid == owner ? (
+                <Text style={[styles.Smalltext, { color: "red" }]}>Owner</Text>
+              ) : (
+                Leaders.includes(item?.uid) && <Text>Leader</Text>
+              )}
+            </TouchableOpacity>
+          </View>
 
           <View style={{ top: 10, position: "absolute", right: 20 }}>
             <ThreeDots
@@ -79,7 +98,6 @@ export default function AssetExample({ route }) {
               ]}
             />
           </View>
-
           {/* <Entypo name="dots-three-vertical" size={20} color="black" /> */}
         </View>
       ))}

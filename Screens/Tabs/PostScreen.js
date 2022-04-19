@@ -21,17 +21,18 @@ import {
   AddUnseenUsers,
   getUserDetailsCollection,
 } from "../../BACKEND/Announce";
-import { PickImage } from "../../Features/Utils";
+import { PickImage, showtoast } from "../../Features/Utils";
+import { SuperButton } from "../../components/SuperComp/SuperComp";
 export default function App() {
   const navigation = useNavigation();
   const currentuser = useauth();
-  const currentUserData = UserData();
+  // const currentUserData = UserData();
   const userdetails = getUserDetailsCollection(currentuser?.uid);
 
   const [text, settext] = useState();
   const [Photo, setPhoto] = useState();
   const [Followers, setFollowers] = useState();
-
+  const [loading, setloading] = useState();
   const [PhotoURL, setPhotoURL] = useState();
   const [done, setdone] = useState(false);
   useEffect(() => {
@@ -45,19 +46,27 @@ export default function App() {
   }, [userdetails]);
 
   async function handleClick() {
-    await PostAnnounce(
-      Photo,
-      text,
-      currentuser?.uid,
-      currentUserData?.array?.UserName,
-      currentUserData?.array?.PhotoURL,
-      setdone
-    );
-    AddUnseenUsers(currentuser?.uid, Followers);
+    if (text != undefined) {
+      if (currentuser) {
+        setloading(true);
+        await PostAnnounce(
+          Photo,
+          text,
+          currentuser?.uid,
+          currentuser?.displayName,
+          currentuser?.photoURL
+        );
+        // if (Followers) await AddUnseenUsers(currentuser?.uid, Followers);
+        setloading(false);
+        navigation.navigate("MyDrawer");
+      } else {
+        console.log("NO USER");
+      }
+    } else {
+      setloading(false);
 
-    navigation.navigate("Tabs", {
-      initialRoute: "Announce",
-    });
+      showtoast("Enter some text");
+    }
   }
   return (
     <View style={styles.Postcontainer}>
@@ -78,23 +87,19 @@ export default function App() {
             </TouchableOpacity>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <TouchableOpacity style={styles.submitbutton} onPress={handleClick}>
-              <Image
-                source={button}
-                style={{ height: 35, width: 35, marginRight: 5 }}
-              />
-
-              <Text
-                style={{
-                  marginRight: 14,
-                  marginBottom: 10,
-                  fontWeight: "bold",
-                  color: "Colors.white",
-                }}
-              >
-                Announce
-              </Text>
-            </TouchableOpacity>
+            <SuperButton
+              text={"Announce"}
+              onPress={() => handleClick()}
+              loading={loading}
+              image={button}
+              textstyle={{
+                marginRight: 14,
+                marginBottom: 10,
+                fontWeight: "bold",
+                color: "Colors.white",
+              }}
+              buttonstyle={styles.submitbutton}
+            />
           </View>
         </View>
         <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
@@ -103,7 +108,6 @@ export default function App() {
             style={styles.input}
             underlineColorAndroid="transparent"
             onChangeText={settext}
-            autoComplete
             textAlign="left"
             value={text}
             multiline

@@ -14,6 +14,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -31,9 +32,9 @@ export function Announces() {
     "LltxTedBAbKMuN07tX6j",
     "Message"
   );
-  const q = query(Collocation, orderBy("time"));
   useEffect(() => {
-    onSnapshot(Collocation, (snapshot) => {
+    const q = query(Collocation, orderBy("time", "desc"));
+    onSnapshot(q, (snapshot) => {
       if (!snapshot.empty) {
         setAnnounce(
           snapshot.docs.map((doc) => ({
@@ -103,13 +104,7 @@ export async function getUserDetailsCollection(otheruser) {
 
   useEffect(() => {
     if (otheruser) {
-      const Doclocation_array = doc(
-        db,
-        "Users",
-        otheruser,
-        "Details",
-        "EventsDoc"
-      );
+      const Doclocation_array = doc(db, "Users", otheruser);
       onSnapshot(Doclocation_array, (snap) => {
         setComments(snap.data());
       });
@@ -162,43 +157,31 @@ export async function Dislikemessage(currentuser, messageid) {
 export async function FollowUser(currentuser, otheruser) {
   //const [Comments, setComments] = useState();
 
-  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
+  const Doclocation_array = doc(db, "Users", otheruser);
   const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(
-    db,
-    "Users",
-    currentuser,
-    "Details",
-    "EventsDoc"
-  );
+  const Doccurrentuser_array = doc(db, "Users", currentuser);
   const Doccurrentuser_num = doc(db, "Users", currentuser);
   //for otheruser
-  const AddUserFollow = await updateDoc(Doclocation_array, {
+  const AddUserFollow = await setDoc(Doclocation_array, {
     Followers: arrayUnion(currentuser),
   });
-  const increseFollow = await updateDoc(Doclocation_num, {
+  const increseFollow = await setDoc(Doclocation_num, {
     Followers: increment(1),
   });
   //for currentuser
-  await updateDoc(Doccurrentuser_array, {
+  await setDoc(Doccurrentuser_array, {
     Following: arrayUnion(otheruser),
   });
-  await updateDoc(Doccurrentuser_num, {
+  await setDoc(Doccurrentuser_num, {
     Following: increment(1),
   });
 }
 export async function SponsorUser(currentuser, otheruser) {
   //const [Comments, setComments] = useState();
 
-  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
+  const Doclocation_array = doc(db, "Users", otheruser);
   const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(
-    db,
-    "Users",
-    currentuser,
-    "Details",
-    "EventsDoc"
-  );
+  const Doccurrentuser_array = doc(db, "Users", currentuser);
   const Doccurrentuser_num = doc(db, "Users", currentuser);
   //for otheruser
   const AddUserFollow = await updateDoc(Doclocation_array, {
@@ -219,15 +202,9 @@ export async function SponsorUser(currentuser, otheruser) {
 export async function UnFollowUser(currentuser, otheruser) {
   // const [AnnounceData, setAnnounceData] = useState();
 
-  const Doclocation_array = doc(db, "Users", otheruser, "Details", "EventsDoc");
+  const Doclocation_array = doc(db, "Users", otheruser);
   const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(
-    db,
-    "Users",
-    currentuser,
-    "Details",
-    "EventsDoc"
-  );
+  const Doccurrentuser_array = doc(db, "Users", currentuser);
   const Doccurrentuser_num = doc(db, "Users", currentuser);
   const get = await getDoc(Doclocation_num).then((doc) => doc.data());
   //for otheruser

@@ -65,7 +65,9 @@ export default function App({ route }) {
   function handleClick() {
     EditMessage(id);
 
-    navigation.navigate("Tabs");
+    navigation.navigate("Tabs", {
+      screen: "Announce",
+    });
   }
   return (
     <View style={styles.container}>
@@ -110,7 +112,6 @@ export default function App({ route }) {
           style={styles.input}
           underlineColorAndroid="transparent"
           onChangeText={settext}
-          autoComplete
           textAlign="left"
           value={text}
           multiline

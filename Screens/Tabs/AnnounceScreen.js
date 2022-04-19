@@ -44,27 +44,26 @@ export default function AnnounceScreen({ route }) {
   //   await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: false });
   //   await AdMobInterstitial.showAdAsync();
   // });
-  const [SubScreen, setSubScreen] = useState("Following");
+  const [SubScreen, setSubScreen] = useState("Announces");
   const RawAnnounces = Announces();
   const currentuser = useauth();
   const userdetails = getUserDetailsCollection(currentuser?.uid);
 
   const FollowingAnnounce = filterAnnounces(RawAnnounces, userdetails);
 
-  const AnnounceData =
-    SubScreen == "Following" ? FollowingAnnounce : RawAnnounces;
+  const data = SubScreen == "Following" ? FollowingAnnounce : RawAnnounces;
 
   const ads = [];
   const alternate = 5;
 
-  const data = AnnounceData?.reduce((acc, curr, i) => {
-    if ((i + 1) % alternate === 0) {
-      const adIndex = Math.floor(i / alternate) % ads.length;
-      return [...acc, curr, { ...ads[adIndex], IsAds: true }];
-    }
+  // const data = AnnounceData?.reduce((acc, curr, i) => {
+  //   if ((i + 1) % alternate === 0) {
+  //     const adIndex = Math.floor(i / alternate) % ads.length;
+  //     return [...acc, curr, { ...ads[adIndex], IsAds: true }];
+  //   }
 
-    return [...acc, curr];
-  }, []);
+  //   return [...acc, curr];
+  // }, []);
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
 
@@ -80,33 +79,32 @@ export default function AnnounceScreen({ route }) {
       <>
         {SearchFilter ? (
           <AnnounceItem
+            icon={item?.UserPhoto}
             message={item.message}
             photo={item.PhotoURL}
             name={item.UserName}
-            icon={item.UserPhoto}
             // checked={item.checked}
             likes={item.Like}
             time={Time.time}
             id={item.id}
             user={item.currentuser}
             LikedUsers={item.LikedUser}
-            IsAds={item.IsAds}
-
+            Searchtext={route?.params?.Searchtext}
             // Type={item.Type}
           />
         ) : route?.params?.Searchtext == undefined ? (
           <AnnounceItem
+            icon={item?.UserPhoto}
             message={item.message}
             photo={item.PhotoURL}
             name={item.UserName}
-            icon={item.UserPhoto}
             // checked={item.checked}
             likes={item.Like}
             time={Time.time}
             id={item.id}
             user={item.currentuser}
             LikedUsers={item.LikedUser}
-            IsAds={item.IsAds}
+            Searchtext={route?.params?.Searchtext}
           />
         ) : null}
       </>
@@ -124,7 +122,13 @@ export default function AnnounceScreen({ route }) {
         >
           <View style={{ paddingHorizontal: 10 }}>
             <TouchableOpacity
-              style={styles.Searchbox}
+              style={[
+                styles.Searchbox,
+                {
+                  backgroundColor:
+                    SubScreen == "Following" ? Colors.primary : Colors.grey,
+                },
+              ]}
               onPress={() => setSubScreen("Following")}
             >
               <Text style={styles.Smalltext}>Following</Text>
@@ -132,14 +136,25 @@ export default function AnnounceScreen({ route }) {
           </View>
           <View style={{ paddingHorizontal: 10 }}>
             <TouchableOpacity
-              style={styles.Searchbox}
+              style={[
+                styles.Searchbox,
+                {
+                  backgroundColor:
+                    SubScreen == "Announces" ? Colors.primary : Colors.grey,
+                },
+              ]}
               onPress={() => setSubScreen("Announces")}
             >
               <Text style={styles.Smalltext}>All Announces</Text>
             </TouchableOpacity>
           </View>
         </View>
-
+        <View>
+          <AdMobBanner
+            bannerSize="banner"
+            adUnitID="ca-app-pub-2241821858793323/8713857097"
+          />
+        </View>
         <FlatList
           data={data}
           renderItem={renderItem}

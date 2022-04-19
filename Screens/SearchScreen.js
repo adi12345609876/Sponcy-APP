@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  Image,
 } from "react-native";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Colors } from "../Features/Colors";
@@ -41,14 +42,12 @@ export default function App({ route }) {
   });
 
   async function HandleSearch() {
-    setshowLoading(true);
     await AddSearchhistory(currentuser?.uid, Searchtext);
     navigation.navigate("Tabs", {
       screen: ScreenName,
 
       params: { Searchtext: Searchtext },
     });
-    setshowLoading(false);
   }
   const renderMesages = ({ item }) => {
     const SearchFilter = item?.message
@@ -178,7 +177,6 @@ export default function App({ route }) {
             style={styles.Searchinput}
             placeholder="Search"
             underlineColorAndroid="transparent"
-            autoComplete
             textAlign="left"
             clearButtonMode="always"
             onChangeText={setSearchtext}

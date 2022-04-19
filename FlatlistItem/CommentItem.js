@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   Text,
@@ -15,27 +16,40 @@ import { styles } from "../Features/Styles";
 
 //features
 
-const HomeItem = ({ message, photo, name, icon, time, id }) => {
+const HomeItem = ({ message, photo, name, icon, time, id, user }) => {
+  const navigation = useNavigation();
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <View style={{ marginBottom: 50 }}>
+      <TouchableOpacity
+        style={{ flexDirection: "row" }}
+        onPress={() =>
+          navigation.navigate("Portfolio", {
+            useruid: user,
+          })
+        }
+      >
+        <View>
+          <Image source={{ uri: icon }} style={styles.profileicon} />
+        </View>
         <View style={styles.Peoplecontainer}>
           <NameText name={name} icon={icon} />
           <View style={styles.timecontainer}>
             <Time time={time} />
           </View>
         </View>
-        {photo && (
-          <TouchableOpacity style={styles.photocontainer}>
-            <Image source={{ uri: photo }} style={styles.photo} />
-          </TouchableOpacity>
-        )}
-        {message && (
-          <View style={styles.messagecontainer}>
-            {message && <Text style={styles.message}>{message}</Text>}
-          </View>
-        )}
-        {/* <View style={styles.iconcontainer}>
+      </TouchableOpacity>
+
+      {photo && (
+        <TouchableOpacity style={styles.photocontainer}>
+          <Image source={{ uri: photo }} style={styles.photo} />
+        </TouchableOpacity>
+      )}
+      {message && (
+        <View style={styles.messagecontainer}>
+          {message && <Text style={styles.message}>{message}</Text>}
+        </View>
+      )}
+      {/* <View style={styles.iconcontainer}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Comments", {
@@ -65,8 +79,7 @@ const HomeItem = ({ message, photo, name, icon, time, id }) => {
           <Entypo name="share" size={15} color="black" />
         </TouchableOpacity>
       </View> */}
-      </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

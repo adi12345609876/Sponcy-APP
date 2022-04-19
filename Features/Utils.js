@@ -9,10 +9,13 @@ import {
   Dimensions,
   Platform,
   ToastAndroid,
+  Alert,
+  Share,
 } from "react-native";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import * as ImagePicker from "expo-image-picker";
+import { Gitlogin, Glogin } from "../BACKEND/Auth";
 
 export async function registerForPushNotificationsAsync() {
   if (Platform.OS != "web") {
@@ -73,4 +76,35 @@ export function showtoast(msg) {
     ToastAndroid.show(msg, ToastAndroid.SHORT);
   } else {
   }
+}
+export async function HandleShare() {
+  try {
+    await Share.share({
+      title: "I recommend Sponcy",
+      message:
+        "I recommend Sponcy || Sponcy is an App that helps youn to show your Skill to the World, AppLink:https://radinath098.wixsite.com/sponcy ",
+      url: "https://radinath098.wixsite.com/sponcy",
+    });
+  } catch (error) {
+    alert(error.message);
+  }
+}
+export async function handleToInstagram() {
+  const instagramURL = "https://www.instagram.com/perfectsmooth22/";
+  return Linking.openURL(instagramURL);
+}
+
+export async function handleToYoutube() {
+  const instagramURL = `https://www.youtube.com/channel/UCEdm7bUe-C0k2kFyA4r81UA`;
+  return Linking.openURL(instagramURL);
+}
+export async function handletoTwitter() {
+  const instagramURL = `https://twitter.com/PerfectSmooth`;
+  return Linking.openURL(instagramURL);
+}
+export async function ShowAlert(Title, Message, positivefunc) {
+  Alert.alert(Title, Message, [
+    positivefunc ? { text: "Sure", onPress: () => positivefunc } : null,
+    { text: "Cancel", onPress: () => console.log("Cancel") },
+  ]);
 }

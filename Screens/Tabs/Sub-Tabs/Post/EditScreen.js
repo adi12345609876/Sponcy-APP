@@ -20,6 +20,7 @@ import { updateUser } from "../../../../BACKEND/Auth";
 import { useauth } from "../../../../BACKEND/Auth";
 import { Colors } from "../../../../Features/Colors";
 import { PickImage } from "../../../../Features/Utils";
+import { SuperButton } from "../../../../components/SuperComp/SuperComp";
 const Tab = createMaterialTopTabNavigator();
 
 export default function App({ navigation }) {
@@ -27,20 +28,23 @@ export default function App({ navigation }) {
   const currentUserData = UserData();
   const [Photo, setPhoto] = useState();
   const [DisplayName, setDisplayName] = useState();
-  const [Slogan, setSlogan] = useState();
-
+  const [Bio, setBio] = useState();
+  const [loading, setloading] = useState();
+  // const currentUserData = UserData();
   const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(false);
+  const [done, setdone] = useState(true);
 
   async function handleClick() {
+    setloading(true);
     await updateUser(
-      DisplayName ? DisplayName : currentUserData?.array?.UserName,
-      Photo ? Photo : currentUserData?.array?.PhotoURL,
-      Slogan ? Slogan : currentUserData?.array?.Slogan,
-      currentuser?.uid,
-      setdone
+      DisplayName ? DisplayName : currentuser?.displayName,
+      Photo ? Photo : currentuser?.photoURL,
+      Bio ? Bio : currentUserData?.Bio,
+      currentuser
     );
-    navigation.navigate("Tabs");
+    setloading(false);
+
+    navigation.navigate("MyDrawer");
   }
 
   return (
@@ -66,7 +70,7 @@ export default function App({ navigation }) {
         <TouchableOpacity onPress={() => PickImage(setPhoto, setPhotoURL)}>
           <ImageBackground
             source={{
-              uri: PhotoURL ? PhotoURL : currentUserData?.array?.PhotoURL,
+              uri: PhotoURL ? PhotoURL : currentuser?.PhotoURL,
             }}
             resizeMode="cover"
             style={{
@@ -102,9 +106,7 @@ export default function App({ navigation }) {
               }}
               placeholder="Name"
               onChangeText={setDisplayName}
-              value={
-                DisplayName ? DisplayName : currentUserData?.array?.UserName
-              }
+              value={DisplayName ? DisplayName : currentuser?.displayName}
             />
           </View>
           <TextInput
@@ -114,31 +116,18 @@ export default function App({ navigation }) {
               fontSize: 25,
               fontWeight: "bold",
             }}
-            placeholder="Name"
-            onChangeText={setSlogan}
-            value={Slogan ? Slogan : currentUserData?.array?.Slogan}
+            placeholder="Your Bio..."
+            onChangeText={setBio}
+            value={Bio ? Bio : currentUserData?.Bio}
           />
         </View>
       </View>
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: done || !Photo ? Colors.grey : "orange",
-            height: 50,
-            width: 100,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
-          }}
-          onPress={handleClick}
-          disabled={done || !DisplayName}
-        >
-          <Text
-            style={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}
-          >
-            Done
-          </Text>
-        </TouchableOpacity>
+        <SuperButton
+          text={"Done"}
+          onPress={() => handleClick()}
+          loading={loading}
+        />
       </View>
     </View>
   );

@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../../../../Hooks/GlobalHooks";
 import { showtoast } from "../../../../Features/Utils";
 import { styles } from "../../../../Features/Styles";
-
+import * as Updates from "expo-updates";
 export default function App({ route }) {
   const navigation = useNavigation();
   const { useruid } = route.params;
@@ -34,13 +34,14 @@ export default function App({ route }) {
   const currentuser = useauth();
 
   //  const FormattedLikes = numFormatter(likes);
-
+  console.log(specificuserdata?.PhotoURL);
   const [threedotvisible, setthreevisible] = useState();
   const [alreadyfollwing, setalreadyfollwing] = useState();
 
   useEffect(() => {
     if (userdetails) {
       userdetails?.then((doc) => {
+        console.log(doc);
         setalreadyfollwing(doc?.Followers.includes(currentuser?.uid));
       });
     }
@@ -50,6 +51,11 @@ export default function App({ route }) {
     showtoast("Following");
 
     FollowUser(currentuser?.uid, specificuserdata?.uid);
+  }
+  async function handleLogout() {
+    showtoast("Loged out");
+    logout();
+    navigation.navigate("SignIn");
   }
   async function handleUnFollow() {
     UnFollowUser(currentuser?.uid, specificuserdata?.uid);
@@ -72,6 +78,24 @@ export default function App({ route }) {
       onechat: true,
       Sponsor: true,
     });
+  }
+  async function UpdateApp() {
+    showtoast("Updating....");
+    console.log("Updating....");
+
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        showtoast("Updating....");
+        console.log("Updating....");
+        await Updates.reloadAsync();
+      } else {
+        showtoast("no updates");
+      }
+    } catch (e) {
+      showtoast("An error occured");
+    }
   }
   return (
     <View
@@ -130,12 +154,17 @@ export default function App({ route }) {
                 {
                   text: "Logout",
                   icon: "log-out-outline",
-                  func: () => logout(),
+                  func: () => handleLogout(),
                 },
                 {
                   text: "Edit",
                   icon: "pencil",
                   func: () => navigation.navigate("Edit"),
+                },
+                {
+                  text: "Update",
+                  icon: "cloud-download-outline",
+                  func: () => UpdateApp(),
                 },
               ]}
             />
@@ -190,7 +219,7 @@ export default function App({ route }) {
               color: Colors.grey,
             }}
           >
-            {specificuserdata?.Slogan}
+            {specificuserdata?.Bio}
           </Text>
         </View>
         <Divider style={{ width: 1000 }} />

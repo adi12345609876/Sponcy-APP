@@ -20,26 +20,26 @@ import { useauth } from "../../BACKEND/Auth";
 import nullPhoto from "../../assets/Photos/null.png";
 import { useNavigation } from "@react-navigation/native";
 import { PickImage } from "../../Features/Utils";
+import { SuperButton } from "../../components/SuperComp/SuperComp";
 
-export default function App() {
-  const navigation = useNavigation();
+export default function App({ navigation }) {
+  // const navigation = useNavigation();
 
   const currentuser = useauth();
   const [Photo, setPhoto] = useState();
   const [DisplayName, setDisplayName] = useState();
-  const [Slogan, setSlogan] = useState("");
+  const [Bio, setBio] = useState("");
 
   const [PhotoURL, setPhotoURL] = useState();
+  const [loading, setloading] = useState(false);
 
   async function handleClick() {
-    await updateUser(
-      DisplayName,
-      Photo ? Photo : nullPhoto,
-      Slogan,
-      currentuser?.uid
-    );
-
-    navigation.navigate("Tabs");
+    setloading(true);
+    await updateUser(DisplayName, Photo ? Photo : nullPhoto, Bio, currentuser);
+    setloading(false);
+    navigation.navigate("MyDrawer", {
+      initialRoute: "Tabs",
+    });
   }
 
   return (
@@ -102,15 +102,18 @@ export default function App() {
               fontSize: 25,
               fontWeight: "bold",
             }}
-            placeholder="Name"
-            onChangeText={setSlogan}
-            value={Slogan}
+            placeholder="Bio"
+            onChangeText={setBio}
+            value={Bio}
           />
         </View>
       </View>
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>
-        <TouchableOpacity
-          style={{
+        <SuperButton
+          text={"Done"}
+          onPress={() => handleClick()}
+          loading={loading}
+          buttonstyle={{
             backgroundColor: !DisplayName ? Colors.grey : "orange",
             height: 50,
             width: 100,
@@ -118,15 +121,8 @@ export default function App() {
             alignItems: "center",
             borderRadius: 10,
           }}
-          onPress={handleClick}
-          disabled={!DisplayName}
-        >
-          <Text
-            style={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}
-          >
-            Done
-          </Text>
-        </TouchableOpacity>
+          textstyle={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}
+        />
       </View>
     </View>
   );

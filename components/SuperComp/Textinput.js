@@ -37,7 +37,6 @@ export default function SuperTextInput(props) {
             props.setheight(event.nativeEvent.contentSize.height);
           }}
           onChangeText={props.settext}
-          autoComplete
           textAlign="left"
           // onSubmitEditing={(e) => onSubmit(e.nativeEvent.texts)}
           value={props.text}

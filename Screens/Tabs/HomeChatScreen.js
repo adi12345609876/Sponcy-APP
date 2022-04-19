@@ -109,33 +109,21 @@ export default function AssetExample({ route }) {
   };
   return (
     <AnimatedScroolView>
-      <Text style={styles.Smalltext}>
-        This screen is still under development so if you want to give review and
-        feedback send it to
-      </Text>
-      <Text style={[styles.Smalltext, { color: "blue" }]}>
-        perfectsmooth22@gmail.com"
-      </Text>
-
       <View
         style={{
           marginBottom: 100,
         }}
       >
-        <Text>Organisations</Text>
-        {/* <Button
-          title="Press to schedule a notification"
-          onPress={async () => {
-            await schedulePushNotification();
-          }}
-        /> */}
+        <Text style={[styles.Smalltext, { textAlign: "left" }]}>
+          Organisations
+        </Text>
         <FlatList
           data={Rooms}
           renderItem={RoomsrenderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
         />
-        <Text>Peoples</Text>
+        <Text style={[styles.Smalltext, { textAlign: "left" }]}>Peoples</Text>
 
         <FlatList
           data={OnetoOne}

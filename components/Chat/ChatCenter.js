@@ -34,10 +34,14 @@ export default function App({ messages, roomid, Type, Invite, owner }) {
   useEffect(() => {
     DeleteUnreadUserOnMess(roomid, currentuser?.uid, Type);
     setTimeout(() => {
-      ScroolRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      try {
+        ScroolRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }, 100);
   }, [messages]);
 

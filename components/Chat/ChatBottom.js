@@ -18,6 +18,8 @@ import {
 import { useauth } from "../../BACKEND/Auth";
 import Customtextinput from "../../components/SuperComp/Textinput";
 import { styles } from "../../Features/Styles";
+import { SuperButton } from "../SuperComp/SuperComp";
+import { showtoast } from "../../Features/Utils";
 
 export function ChatBottom({
   roomid,
@@ -34,13 +36,13 @@ export function ChatBottom({
 }) {
   const currentUser = useauth();
 
-  const userdata = SpecifiedUserData(currentUser?.uid);
   const otheruserdata = SpecifiedUserData(roomid);
   const [height, setheight] = useState(23);
   const [text, settext] = useState();
 
   const [Photo, setPhoto] = useState();
   const [PhotoDetails, setPhotoDetails] = useState();
+  const [loading, setloading] = useState();
 
   useEffect(() => {
     if (Invite) {
@@ -60,7 +62,7 @@ export function ChatBottom({
 
   async function onSubmit() {
     const forwarded = Forwarded ? true : false;
-    if (text != "") {
+    if (text != undefined) {
       if (!onechat) {
         await PostPrivateChats(
           roomid,
@@ -81,8 +83,8 @@ export function ChatBottom({
           roomid,
           currentUser?.uid,
           text,
-          userdata?.UserName,
-          userdata?.PhotoURL,
+          currentUser?.displayName,
+          currentUser?.photoURL,
           forwarded,
           Invite,
           InvitationData,
@@ -95,6 +97,8 @@ export function ChatBottom({
 
       setheight(23);
       settext("");
+    } else {
+      showtoast("put some text");
     }
   }
 
@@ -125,17 +129,9 @@ export function ChatBottom({
           setPhoto={setPhoto}
           setPhotoDetails={setPhotoDetails}
         />
-        {/* <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ marginLeft: 12 }}>
-            <Entypo name="circle" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 12 }}>
-            <Ionicons name="camera" size={24} color="black" />
-          </TouchableOpacity>
-        </View> */}
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={onSubmit}
         style={{
           backgroundColor: Colors.primary,
@@ -147,7 +143,21 @@ export function ChatBottom({
         }}
       >
         <FontAwesome name="send-o" size={20} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <SuperButton
+        onPress={() => onSubmit()}
+        loading={loading}
+        buttonstyle={{
+          backgroundColor: Colors.primary,
+          borderRadius: 20,
+          bottom: 10,
+          position: "absolute",
+          right: 10,
+          padding: 10,
+        }}
+      >
+        <FontAwesome name="send-o" size={20} color="white" />
+      </SuperButton>
     </View>
   );
 }

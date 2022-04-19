@@ -24,7 +24,9 @@ export default function ChatHeader({
 
   async function LeaveRooms() {
     await LeaveRoom(id, currentUser?.uid);
-    navigation.navigate("Tabs");
+    navigation.navigate("Tabs", {
+      screen: "Announce",
+    });
   }
   async function InvitingRoom() {
     navigation.navigate("HomeChat", {

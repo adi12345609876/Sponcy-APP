@@ -273,7 +273,13 @@ export const styles = StyleSheet.create({
   },
 
   //CommentsScreen
-
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "white",
+  },
   comments: {},
   originalmessage: {},
   profileicon: {
@@ -281,7 +287,7 @@ export const styles = StyleSheet.create({
     height: 60,
     borderRadius: 200,
     marginHorizontal: 5,
-    borderColor: Colors.white,
+    borderColor: Colors.black,
     borderWidth: 2,
   },
 
@@ -359,12 +365,12 @@ export const styles = StyleSheet.create({
     padding: 15,
   },
 
-  or: {
-    //done
-    textAlign: "center",
-    fontFamily: "Roboto",
-    color: Colors.grey,
-  },
+  // or: {
+  //   //done
+  //   textAlign: "center",
+  //   fontFamily: "Roboto",
+  //   color: Colors.grey,
+  // },
   signinbutton: {
     width: deviceWidth,
     height: 50,
@@ -387,6 +393,14 @@ export const styles = StyleSheet.create({
     height: 70,
     borderRadius: 23,
     backgroundColor: Colors.black,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  createtext: {
+    marginRight: 14,
+    marginBottom: 10,
+    fontWeight: "bold",
+    color: Colors.white,
   },
   createbuttontext: {
     fontFamily: "Roboto",
@@ -465,7 +479,7 @@ export const styles = StyleSheet.create({
     marginLeft: 20,
     marginHorizontal: 1,
     borderRadius: 200,
-    borderColor: Colors.white,
+    borderColor: Colors.black,
     borderWidth: 2,
   },
   end: { justifyContent: "flex-end" },
@@ -477,15 +491,6 @@ export const styles = StyleSheet.create({
   },
 
   //comments
-
-  profileicon: {
-    width: 60,
-    height: 60,
-    borderRadius: 200,
-    marginHorizontal: 5,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
 
   photo: {
     width: 250,
@@ -555,15 +560,6 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
   },
   //Announce
-
-  profileicon: {
-    width: 60,
-    height: 60,
-    borderRadius: 200,
-    marginHorizontal: 5,
-    borderColor: Colors.white,
-    borderWidth: 2,
-  },
 
   photo: {
     width: 250,

@@ -28,12 +28,11 @@ export default function ChatItem({
 }) {
   const navigation = useNavigation();
   const currentuser = useauth();
-  const Specificuserdata = SpecifiedUserData(From);
+  const Specificuserdata = SpecifiedUserData(From); //<--UPDATE HERE (remove SpecificUser)
+
   const { setshowLoading, showLoading } = useLoading();
 
   async function DeleteMessage(id) {
-    setshowLoading(true);
-
     const Doclocation = doc(
       db,
       "Users",
@@ -49,8 +48,8 @@ export default function ChatItem({
     } else {
       await deleteDoc(Doclocation2);
     }
-    setshowLoading(false);
   }
+  //UPDATE HERE
   function ForwardMessage() {
     navigation.navigate("HomeChat", {
       message,
@@ -84,7 +83,11 @@ export default function ChatItem({
           >
             {Specificuserdata?.UserName}
           </Text>
-          <Text style={styles.text}>{message}</Text>
+          {owner == From ? (
+            <Text style={[styles.text, { fontWeight: "bold" }]}>{message}</Text>
+          ) : (
+            <Text style={[styles.text]}>{message}</Text>
+          )}
           {Invite && (
             <TouchableOpacity
               onPress={() => JoinInvited()}

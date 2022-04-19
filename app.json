@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sponcy",
     "slug": "Sponcy",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/SponcyIcon.png",
     "splash": {
@@ -11,7 +11,7 @@
       "backgroundColor": "#FC8800"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 6000
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -30,7 +30,7 @@
         "backgroundColor": "#FC8800"
       },
       "package": "com.adinathr.Sponcy",
-      "versionCode": 1
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -32,7 +32,7 @@ const HomeItem = ({ navigation, route }) => {
   const { message, photo, name, icon, checked, time, id } = route.params;
   const Comments = getComments(id);
   const currentuser = useauth();
-  const currentUserData = UserData();
+  // const currentUserData = UserData();
   const [text, settext] = useState();
   const [height, setheight] = useState(23);
   const [senttext, setsenttext] = useState("");
@@ -48,8 +48,8 @@ const HomeItem = ({ navigation, route }) => {
       Photo ? Photo : null,
       senttext ? senttext : null,
       currentuser?.uid,
-      currentUserData?.array?.UserName,
-      currentUserData?.array?.PhotoURL
+      currentuser?.displayName,
+      currentuser?.photoURL
     );
     settext("");
     setheight(23);
@@ -66,6 +66,7 @@ const HomeItem = ({ navigation, route }) => {
         // checked={item.checked}
         time={Time.time}
         id={item.id}
+        user={item.user}
       />
     );
   };
@@ -115,6 +116,7 @@ const HomeItem = ({ navigation, route }) => {
             <View
               style={{
                 marginLeft: 20,
+                marginBottom: 10,
               }}
             >
               <FlatList

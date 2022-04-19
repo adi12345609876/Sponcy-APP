@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { AdMobBanner } from "expo-ads-admob";
 
-import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  SafeAreaView,
+  FlatList,
+  Image,
+} from "react-native";
 import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
 import ThreeDots from "../components/SuperComp/3dotComp";
 //components
@@ -10,8 +17,8 @@ import { styles } from "../Features/Styles";
 import NameText from "../components/SuperComp/Name";
 import Time from "../components/SuperComp/time";
 //assets
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "../BACKEND/firebase";
+import { collection, deleteDoc, doc } from "firebase/firestore";
+import { db, Usersforchat } from "../BACKEND/firebase";
 import { Dislikemessage, Likemessage } from "../BACKEND/Announce";
 import { useauth } from "../BACKEND/Auth";
 //features
@@ -20,25 +27,27 @@ import { numFormatter } from "../Hooks/GlobalHooks";
 import { useLoading } from "../Hooks/LoadingContext";
 
 const AnnounceItem = ({
+  icon,
   message,
   photo,
   name,
-  icon,
   likes,
   time,
   id,
   user,
   LikedUsers,
-  IsAds,
+
+  Searchtext,
 }) => {
   const navigation = useNavigation();
   const [threedotvisible, setthreevisible] = useState(false);
   const FormattedLikes = numFormatter(likes);
   const currentuser = useauth();
-  const { setshowLoading } = useLoading();
+  const AllUsers = Usersforchat();
+  // const { setshowLoading } = useLoading();
+  // console.log("ICON", icon);
 
   async function DeleteMessage(id) {
-    setshowLoading(true);
     const doclocation = doc(
       db,
       "Announce",
@@ -47,7 +56,8 @@ const AnnounceItem = ({
       id
     );
     await deleteDoc(doclocation);
-    setshowLoading(false);
+
+    setthreevisible(false);
   }
   async function Editmessage(id) {
     navigation.navigate("Editmessage", {
@@ -55,6 +65,7 @@ const AnnounceItem = ({
       message,
       photo,
     });
+    setthreevisible(false);
   }
   async function Likeit(id) {
     Likemessage(currentuser?.uid, id);
@@ -62,18 +73,32 @@ const AnnounceItem = ({
   async function Dislikeit(id) {
     Dislikemessage(currentuser?.uid, id);
   }
+  const renderItem = ({ item }) => {
+    const SearchFilter = item?.UserName?.toLowerCase()?.includes(
+      Searchtext?.toLowerCase()
+    );
+
+    return <>{SearchFilter ? <></> : null}</>;
+  };
   return (
-    <View>
+    <SafeAreaView>
       <View style={styles.container}>
-        {IsAds && (
-          <View>
-            <AdMobBanner
-              bannerSize="banner"
-              adUnitID="ca-app-pub-2241821858793323/8713857097"
-            />
-          </View>
+        {Searchtext && (
+          <>
+            {AllUsers?.map((item) => {
+              <View>
+                <Text>{item.Username}</Text>
+              </View>;
+            })}
+            {/* <FlatList
+              data={AllUsers}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            /> */}
+          </>
         )}
 
+        <Image source={icon} style={styles.profileicon} />
         <TouchableOpacity
           style={{ flexDirection: "row" }}
           onPress={() =>
@@ -82,9 +107,6 @@ const AnnounceItem = ({
             })
           }
         >
-          <View>
-            <Image source={{ uri: icon }} style={styles.profileicon} />
-          </View>
           <View style={styles.namecontainer}>
             <NameText name={name} />
           </View>
@@ -154,14 +176,14 @@ const AnnounceItem = ({
         {LikedUsers?.includes(currentuser?.uid) ? (
           <>
             <TouchableOpacity onPress={() => Dislikeit(id)}>
-              <AntDesign name="heart" size={15} color="black" />
+              <AntDesign name="heart" size={15} color="red" />
               <Text>{FormattedLikes}</Text>
             </TouchableOpacity>
           </>
         ) : (
           <>
             <TouchableOpacity onPress={() => Likeit(id)}>
-              <AntDesign name="hearto" size={15} color="black" />
+              <AntDesign name="hearto" size={15} color="red" />
               <Text>{FormattedLikes}</Text>
             </TouchableOpacity>
           </>
@@ -174,7 +196,7 @@ const AnnounceItem = ({
           <Entypo name="share" size={15} color="black" />
         </TouchableOpacity> */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
