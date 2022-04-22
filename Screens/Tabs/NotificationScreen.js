@@ -21,17 +21,17 @@ export default function AssetExample({ navigation }) {
   const userdetails = getUserDetailsCollection(currentuser?.uid);
   const AllUsers = Usersforchat();
   function compare2arrays(Bigarray, Smallarray) {
-    const [Details, setDetails] = useState();
-    if (Smallarray) {
-      Smallarray?.then((doc) => {
-        setDetails(doc);
-      });
-    }
-    const m = Details?.Following;
+    // const [Details, setDetails] = useState();
+    // if (Smallarray) {
+    //   Smallarray?.then((doc) => {
+    //     setDetails(doc);
+    //   });
+    // }
+    // const m = Details?.Following;
 
     //filter user
     const filtered = Bigarray?.filter((users) => {
-      return m?.includes(users?.id);
+      return Smallarray?.Following?.includes(users?.id);
     });
 
     return filtered;

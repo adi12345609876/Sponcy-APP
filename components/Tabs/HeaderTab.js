@@ -6,6 +6,7 @@ import {
   Animated,
   Image,
   Button,
+  SafeAreaView,
 } from "react-native";
 import { useTabBar } from "../../Hooks/TabBarprovider";
 import { Entypo, EvilIcons } from "@expo/vector-icons";
@@ -24,7 +25,9 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-
+const Notifyicon = require("../../assets/Icon/Notify.png");
+// const NotifyiconX = require("./assets/Icon/NotifyX.png");
+const LOGO_HEIGHT = 50;
 export default function Header({ navigation }) {
   const route = useRoute();
   const currentuser = useauth();
@@ -73,22 +76,22 @@ export default function Header({ navigation }) {
         // }
       >
         <Image
-          source={{ uri: currentuser?.photoURL }}
+          source={{
+            uri: currentuser?.photoURL ? currentuser?.photoURL : null,
+          }}
           style={{ width: 50, height: 50, borderRadius: 200 }}
         />
       </TouchableOpacity>
       {/* <Button title="Open drawer" onPress={() => navigation.openDrawer()} /> */}
       <TouchableOpacity
         style={{
-          maxHeight: 120,
-          height: 120,
-
+          height: 10,
           justifyContent: "center",
           alignItems: "center",
         }}
         onPress={() =>
-          navigation.navigate("Tabs", {
-            screen: "Announce",
+          navigation.navigate("MyDrawer", {
+            screen: "Tabs",
           })
         }
       >
@@ -96,13 +99,9 @@ export default function Header({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={{ top: 10 }}
-        onPress={() =>
-          navigation.navigate("SearchScreen", {
-            ScreenName: route.name,
-          })
-        }
+        onPress={() => navigation.navigate("NotifyScreen")}
       >
-        <EvilIcons name="search" size={35} color="black" />
+        <Image source={Notifyicon} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -119,10 +118,13 @@ const styles = StyleSheet.create({
     height: 90,
     elevation: 2,
     borderRadius: 10,
-    marginTop: Constants.statusBarHeight,
+    marginTop: Constants.statusBarHeight - 10,
   },
   logo: {
-    paddingTop: Constants.statusBarHeight + 50,
+    paddingTop: Constants.statusBarHeight + 40,
     paddingBottom: 0,
+    //width = 3*height
+    height: LOGO_HEIGHT,
+    width: 3 * LOGO_HEIGHT,
   },
 });

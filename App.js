@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, View } from "react-native";
-// import { LogBox } from "react-native";
+import { ActivityIndicator } from "react-native";
+
 //BACKEND
-import { UserData } from "./BACKEND/firebase";
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from "@react-navigation/drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Drawer = createDrawerNavigator();
 //Hooks
@@ -30,7 +24,7 @@ import NotifyScreen from "./Screens/Tabs/NotificationScreen";
 import PeopleScreen from "./Screens/Tabs/peopleScreen";
 import PortfolioScreen from "./Screens/Tabs/Sub-Tabs/Announce/PortfolioScreen";
 import ChatScreen from "./Screens/Tabs/Sub-Tabs/Home/ChatScreen";
-import SearchScreen from "./Screens/SearchScreen";
+import SearchScreen from "./Screens/Tabs/SearchScreen";
 import CommentsScreen from "./Screens/Tabs/Sub-Tabs/Announce/CommentsScreen";
 import PostScreen from "./Screens/Tabs/PostScreen";
 import EditScreen from "./Screens/Tabs/Sub-Tabs/Post/EditScreen";
@@ -41,19 +35,23 @@ import ParticipantsScreen from "./Screens/Tabs/Sub-Tabs/Post/ParticipantsScreen"
 import EditRoomsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditRooms";
 import EditparticipantsScreen from "./Screens/Tabs/Sub-Tabs/Home/EditParticipants";
 import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
-import VerifyScreen from "./Screens/Auth/VerifyScreen";
+import SettingsScreen from "./Screens/Drawer/Settings";
+import ReAuthScreen from "./Screens/Auth/ReAuth";
+import SearchResultsScreen from "./Screens/Tabs/Sub-Tabs/Search/SearchResults";
 
 import LoadingProvider from "./Hooks/LoadingContext";
+import ThemeProvider from "./Hooks/ThemeContext";
 import DrawerContent from "./components/Tabs/DrawerContent";
+import StateContext, { UseState } from "./Hooks/StateContext";
 import { getUserDetailsCollection } from "./BACKEND/Announce";
 //icons
 const Homeicon = require("./assets/Icon/Home.png");
 const Announceicon = require("./assets/Icon/Announce.png");
-const Notifyicon = require("./assets/Icon/Notify.png");
+const Searchicon = require("./assets/Icon/Search.png");
 const Peopleicon = require("./assets/Icon/Person.png");
 const HomeiconX = require("./assets/Icon/HomeX.png");
 const AnnounceiconX = require("./assets/Icon/AnnounceX.png");
-const NotifyiconX = require("./assets/Icon/NotifyX.png");
+const SearchiconX = require("./assets/Icon/SearchX.png");
 const PeopleiconX = require("./assets/Icon/PersonX.png");
 //features
 const Stack = createNativeStackNavigator();
@@ -83,9 +81,9 @@ function MyTabs() {
         initialParams={{ icon: Homeicon, iconX: HomeiconX }}
       />
       <Tab.Screen
-        name="Notify"
-        component={NotifyScreen}
-        initialParams={{ icon: Notifyicon, iconX: NotifyiconX }}
+        name="Search"
+        component={SearchScreen}
+        initialParams={{ icon: Searchicon, iconX: SearchiconX }}
       />
       <Tab.Screen
         name="People"
@@ -97,140 +95,152 @@ function MyTabs() {
 }
 
 function MyStack() {
-  // const currentUserData = UserData();
   const currentuser = useauth();
-  const [LogedIn, setLogedIn] = useState();
   const [loading, setloading] = useState(true);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setloading(false);
-  //   }, 2000);
-  // }, []);
+  const { LogedIn, setLogedIn } = UseState();
   useEffect(() => {
-    console.log(currentuser);
-
     if (currentuser == undefined) {
       setLogedIn("NoUser");
-    } else if (currentuser?.displayName == undefined) {
+    } else if (currentuser && currentuser?.displayName == undefined) {
       setLogedIn("NoName");
-    } else {
+    } else if (currentuser && currentuser?.displayName) {
       setLogedIn("SignedIN");
     }
   }, [currentuser]);
+  useEffect(() => {
+    setTimeout(() => {
+      setloading(false);
+    }, 2000);
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
   return (
-    <Stack.Navigator initialRouteName="">
-      {LogedIn == "SignedIN" ? (
-        <>
-          <Stack.Screen
-            name="MyDrawer"
-            component={MyDrawer}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Tabs"
-            component={MyTabs}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Edit"
-            component={EditScreen}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="HomeChat"
-            component={HomeChatScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Announce"
-            component={AnnounceScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Notify"
-            component={NotifyScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="People"
-            component={PeopleScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Portfolio"
-            component={PortfolioScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Chat"
-            component={ChatScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Comments"
-            component={CommentsScreen}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="SearchScreen"
-            component={SearchScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Post"
-            component={PostScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Editmessage"
-            component={EditMessageScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="CreateRooms"
-            component={CreateRoomsScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Participants"
-            component={ParticipantsScreen}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="EditRooms"
-            component={EditRoomsScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Editparticipants"
-            component={EditparticipantsScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="RoomDetails"
-            component={RoomDetailsScreen}
-            options={{ headerShown: false }}
-          />
-        </>
-      ) : (
-        [
-          LogedIn == "NoUser" ? (
+    <>
+      <Stack.Navigator initialRouteName="">
+        {LogedIn == "SignedIN" ? (
+          <>
             <Stack.Screen
-              name="SignIn"
-              component={SignINScreen}
+              name="MyDrawer"
+              component={MyDrawer}
               options={{ headerShown: false }}
             />
-          ) : (
             <Stack.Screen
-              name="UserDetails"
-              component={UserDetailsEditScreen}
+              name="Tabs"
+              component={MyTabs}
               options={{ headerShown: false }}
             />
-          ),
-        ]
-      )}
-    </Stack.Navigator>
+            <Stack.Screen
+              name="ReAuth"
+              component={ReAuthScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SearchResults"
+              component={SearchResultsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Edit"
+              component={EditScreen}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="HomeChat"
+              component={HomeChatScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Announce"
+              component={AnnounceScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Notify"
+              component={NotifyScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="People"
+              component={PeopleScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Portfolio"
+              component={PortfolioScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Comments"
+              component={CommentsScreen}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="NotifyScreen"
+              component={NotifyScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Post"
+              component={PostScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Editmessage"
+              component={EditMessageScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CreateRooms"
+              component={CreateRoomsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Participants"
+              component={ParticipantsScreen}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="EditRooms"
+              component={EditRoomsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Editparticipants"
+              component={EditparticipantsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RoomDetails"
+              component={RoomDetailsScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          [
+            LogedIn == "NoUser" ? (
+              <Stack.Screen
+                name="SignIn"
+                component={SignINScreen}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              <Stack.Screen
+                name="UserDetails"
+                component={UserDetailsEditScreen}
+                options={{ headerShown: false }}
+              />
+            ),
+          ]
+        )}
+      </Stack.Navigator>
+    </>
   );
 }
 //!currentuser && !currentUserData?.array?.UserName ?
@@ -249,7 +259,6 @@ function MyDrawer() {
         .catch((e) => console.log("ERER", e));
     }
   }, [userdetails]);
-  console.log("FOLLOWIBNG", Followers);
 
   return (
     <Drawer.Navigator
@@ -258,20 +267,30 @@ function MyDrawer() {
       screenOptions={{
         header: (props) => <Header {...props} />,
       }}
+      initialRouteName=""
     >
       <Drawer.Screen name="Tabs" component={MyTabs} />
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
     </Drawer.Navigator>
   );
 }
 
 export default function App() {
   return (
-    <LoadingProvider>
-      <TabBarprovider>
-        <NavigationContainer>
-          <MyStack />
-        </NavigationContainer>
-      </TabBarprovider>
-    </LoadingProvider>
+    <StateContext>
+      <ThemeProvider>
+        <LoadingProvider>
+          <TabBarprovider>
+            <NavigationContainer>
+              <MyStack />
+            </NavigationContainer>
+          </TabBarprovider>
+        </LoadingProvider>
+      </ThemeProvider>
+    </StateContext>
   );
 }

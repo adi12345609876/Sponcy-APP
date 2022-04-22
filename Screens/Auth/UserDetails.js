@@ -21,25 +21,31 @@ import nullPhoto from "../../assets/Photos/null.png";
 import { useNavigation } from "@react-navigation/native";
 import { PickImage } from "../../Features/Utils";
 import { SuperButton } from "../../components/SuperComp/SuperComp";
+import { UseState } from "../../Hooks/StateContext";
 
-export default function App({ navigation }) {
-  // const navigation = useNavigation();
+export default function App() {
+  const navigation = useNavigation();
 
   const currentuser = useauth();
-  const [Photo, setPhoto] = useState();
-  const [DisplayName, setDisplayName] = useState();
+  const [Photo, setPhoto] = useState("");
+  const [DisplayName, setDisplayName] = useState("");
   const [Bio, setBio] = useState("");
+  const [Work, setWork] = useState("");
 
   const [PhotoURL, setPhotoURL] = useState();
   const [loading, setloading] = useState(false);
-
+  const { LogedIn, setLogedIn } = UseState();
   async function handleClick() {
     setloading(true);
-    await updateUser(DisplayName, Photo ? Photo : nullPhoto, Bio, currentuser);
+    await updateUser(
+      DisplayName,
+      Photo ? Photo : nullPhoto,
+      Bio,
+      Work,
+      currentuser
+    );
     setloading(false);
-    navigation.navigate("MyDrawer", {
-      initialRoute: "Tabs",
-    });
+    setLogedIn("SignedIN");
   }
 
   return (
@@ -65,7 +71,7 @@ export default function App({ navigation }) {
       >
         <TouchableOpacity onPress={() => PickImage(setPhoto, setPhotoURL)}>
           <ImageBackground
-            source={{ uri: PhotoURL }}
+            source={{ uri: PhotoURL ? PhotoURL : null }}
             resizeMode="cover"
             style={{
               height: 100,
@@ -92,20 +98,53 @@ export default function App({ navigation }) {
               }}
               placeholder="Name"
               onChangeText={setDisplayName}
+              maxLength={10}
               value={DisplayName}
             />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {DisplayName?.length}/10
+            </Text>
           </View>
-          <TextInput
-            style={{
-              marginLeft: 10,
-              fontFamily: "Roboto",
-              fontSize: 25,
-              fontWeight: "bold",
-            }}
-            placeholder="Bio"
-            onChangeText={setBio}
-            value={Bio}
-          />
+          <View>
+            <TextInput
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 25,
+                fontWeight: "bold",
+              }}
+              placeholder="Your Bio..."
+              onChangeText={setBio}
+              maxLength={20}
+              value={Bio}
+            />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {Bio?.length}/20
+            </Text>
+          </View>
+          <View>
+            <TextInput
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 25,
+                fontWeight: "bold",
+              }}
+              placeholder="Your Work.."
+              onChangeText={setWork}
+              value={Work}
+              maxLength={15}
+            />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {Work?.length}/15
+            </Text>
+          </View>
         </View>
       </View>
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>
@@ -121,7 +160,11 @@ export default function App({ navigation }) {
             alignItems: "center",
             borderRadius: 10,
           }}
-          textstyle={{ fontWeight: "bold", fontSize: 20, color: Colors.white }}
+          textstyle={{
+            fontWeight: "bold",
+            fontSize: 20,
+            color: Colors.white,
+          }}
         />
       </View>
     </View>

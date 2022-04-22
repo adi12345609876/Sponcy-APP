@@ -31,7 +31,7 @@ export function SuperButton(props) {
         <>
           {props.image && (
             <Image
-              source={props.image}
+              source={props.image ? props.image : null}
               style={
                 props.imagestyle
                   ? props.imagestyle

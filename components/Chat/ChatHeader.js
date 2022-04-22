@@ -24,8 +24,8 @@ export default function ChatHeader({
 
   async function LeaveRooms() {
     await LeaveRoom(id, currentUser?.uid);
-    navigation.navigate("Tabs", {
-      screen: "Announce",
+    navigation.navigate("MyDrawer", {
+      screen: "Tabs",
     });
   }
   async function InvitingRoom() {
@@ -59,7 +59,7 @@ export default function ChatHeader({
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 10 }}>
             <Image
-              source={{ uri: icon }}
+              source={{ uri: icon ? icon : null }}
               style={{ width: 50, height: 50, borderRadius: 200 }}
             />
           </TouchableOpacity>

@@ -31,8 +31,8 @@ export default function App({ route }) {
 
   async function handleClick() {
     await AddRooms(Photo, text, [currentuser?.uid], currentuser?.uid);
-    navigation.navigate("Tabs", {
-      screen: "Announce",
+    navigation.navigate("MyDrawer", {
+      screen: "Tabs",
     });
   }
   return (

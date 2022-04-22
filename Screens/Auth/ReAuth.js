@@ -12,7 +12,6 @@ let deviceWidth = Dimensions.get("screen").width;
 import { LinearGradient } from "expo-linear-gradient";
 import * as Notifications from "expo-notifications";
 
-import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../Features/Colors";
 import {
   registerForPushNotificationsAsync,
@@ -27,21 +26,16 @@ import {
   Glogin,
   Gitlogin,
   setToken,
+  ChangeEmail,
 } from "../../BACKEND/Auth";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 import { sendEmailVerification } from "firebase/auth";
 import { useLoading } from "../../Hooks/LoadingContext";
 import { styles } from "../../Features/Styles";
 import { SuperButton } from "../../components/SuperComp/SuperComp";
 import { Card } from "react-native-paper";
-if (Platform.OS != "web") {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
-}
 
 export default function Signin({ route }) {
   // const { reauthenticate } = route.params;
@@ -53,38 +47,16 @@ export default function Signin({ route }) {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(false);
 
-  useEffect(() => {
-    //setToken
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
-  }, [expoPushToken]);
-  async function handleSignin() {
-    if (password.length > 9) {
-      try {
-        setloading(true);
-        await signup(email, password).then((user) => {
-          setToken(expoPushToken, user?.user?.uid).then(
-            navigation.navigate("UserDetails")
-          );
-        });
-        setloading(false);
-      } catch (error) {
-        setloading(false);
-        seterror(true);
-        showtoast(error);
-        console.log(error);
-      }
-    } else {
-      showtoast("Password must have 10 letters");
-    }
-  }
   async function handleLogin() {
     if (password.length > 9) {
       try {
         setloading(true);
-        await login(email, password);
+        await login(email, password).then(ChangeEmail(currentuser, newEmail));
+
         setloading(false);
+        navigation.navigate("MyDrawer", {
+          initialRoute: "Settings",
+        });
       } catch (e) {
         seterror(true);
         setloading(false);
@@ -99,18 +71,32 @@ export default function Signin({ route }) {
       <View style={{ marginVertical: 10 }}>
         <LinearGradient
           style={styles.circlestyle1}
-          colors={[Colors.primary, Colors.secondary]}
+          colors={["#FF5F6D", "#FFC371"]}
         />
         <LinearGradient
           style={styles.circlestyle2}
-          colors={[Colors.primary, Colors.secondary]}
+          colors={["#FF5F6D", "#FFC371"]}
         />
         <View style={{ position: "absolute" }}>
-          {/* {reauthenticate ? (
-            <Text style={styles.signINStyle}>Re-authenticate</Text>
-          ) : (
-          )} */}
-          <Text style={styles.signINStyle}>Sign In</Text>
+          <TouchableOpacity
+            style={{
+              marginLeft: 15,
+              borderRadius: 10,
+              height: 30,
+              width: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons
+              name="arrow-back-outline"
+              size={24}
+              color={Colors.black}
+            />
+          </TouchableOpacity>
+
+          <Text style={styles.signINStyle}>Log In</Text>
 
           <View>
             {error && (
@@ -148,13 +134,13 @@ export default function Signin({ route }) {
               flexDirection: "row",
             }}
           >
-            <SuperButton
+            {/* <SuperButton
               text={"Sign In"}
               onPress={() => handleSignin()}
               loading={loading}
               textstyle={[styles.createbuttontext, { color: Colors.primary }]}
               buttonstyle={styles.createbutton}
-            />
+            /> */}
             <SuperButton
               text={"Log In"}
               onPress={() => handleLogin()}

@@ -3,18 +3,15 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 // import Postedmessages from "../../Screens/Tabs/Sub-Tabs/Announce/Postedmess";
 import { Colors } from "../../Features/Colors";
-import { useauth } from "../../BACKEND/Auth";
 
 import { Announces, currentuserReplies } from "../../BACKEND/Announce";
 
 const Tab = createMaterialTopTabNavigator();
 import CommentItem from "../../FlatlistItem/CommentItem";
-import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
-import { useEffect } from "react";
+import { View, FlatList } from "react-native";
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 export default function Header({ useruid }) {
-  const currentuser = useauth();
   const AnnounceData = Announces();
   const currentusercomments = currentuserReplies(useruid);
   const Postedmessages = AnnounceData?.filter(

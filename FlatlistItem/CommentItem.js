@@ -29,7 +29,10 @@ const HomeItem = ({ message, photo, name, icon, time, id, user }) => {
         }
       >
         <View>
-          <Image source={{ uri: icon }} style={styles.profileicon} />
+          <Image
+            source={{ uri: icon ? icon : null }}
+            style={styles.profileicon}
+          />
         </View>
         <View style={styles.Peoplecontainer}>
           <NameText name={name} icon={icon} />
@@ -41,7 +44,7 @@ const HomeItem = ({ message, photo, name, icon, time, id, user }) => {
 
       {photo && (
         <TouchableOpacity style={styles.photocontainer}>
-          <Image source={{ uri: photo }} style={styles.photo} />
+          <Image source={{ uri: photo ? photo : null }} style={styles.photo} />
         </TouchableOpacity>
       )}
       {message && (

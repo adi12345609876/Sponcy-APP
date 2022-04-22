@@ -1,49 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
-  Image,
   TouchableOpacity,
   TextInput,
   ImageBackground,
 } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import button from "../../assets/Icon/EmailSend.png";
 import { Colors } from "../../Features/Colors";
-import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../Features/Styles";
 
-import { UserData, PostAnnounce, AddUnreadUser } from "../../BACKEND/firebase";
+import { PostAnnounce } from "../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../../BACKEND/Auth";
-import {
-  AddUnseenUsers,
-  getUserDetailsCollection,
-} from "../../BACKEND/Announce";
 import { PickImage, showtoast } from "../../Features/Utils";
 import { SuperButton } from "../../components/SuperComp/SuperComp";
 export default function App() {
   const navigation = useNavigation();
   const currentuser = useauth();
-  // const currentUserData = UserData();
-  const userdetails = getUserDetailsCollection(currentuser?.uid);
-
   const [text, settext] = useState();
   const [Photo, setPhoto] = useState();
-  const [Followers, setFollowers] = useState();
   const [loading, setloading] = useState();
   const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(false);
-  useEffect(() => {
-    if (userdetails) {
-      userdetails
-        ?.then((doc) => {
-          setFollowers(doc?.Followers);
-        })
-        .catch((e) => console.log("ERER", e));
-    }
-  }, [userdetails]);
 
   async function handleClick() {
     if (text != undefined) {
@@ -56,15 +35,12 @@ export default function App() {
           currentuser?.displayName,
           currentuser?.photoURL
         );
-        // if (Followers) await AddUnseenUsers(currentuser?.uid, Followers);
         setloading(false);
         navigation.navigate("MyDrawer");
       } else {
-        console.log("NO USER");
       }
     } else {
       setloading(false);
-
       showtoast("Enter some text");
     }
   }
@@ -124,7 +100,7 @@ export default function App() {
           onPress={() => PickImage(setPhoto, setPhotoURL)}
         >
           <ImageBackground
-            source={{ uri: PhotoURL }}
+            source={{ uri: PhotoURL ? PhotoURL : null }}
             resizeMode="cover"
             style={{
               height: 200,

@@ -83,19 +83,36 @@ export function TimestamptoTime(time) {
     })
     .replace(/(:\d{2}| )$/, "");
 
-  return { date: date, time: FormattedTime, normaltime: atTime };
+  // Prepend any date. Use your birthday.
+  const timeString12hr = twelvehrsconvertor(FormattedTime);
+
+  return { date: date, time: timeString12hr, normaltime: atTime };
+}
+function twelvehrsconvertor(time) {
+  // Check correct time format and split into components
+  time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [
+    time,
+  ];
+
+  if (time.length > 1) {
+    // If time format correct
+    time = time.slice(1); // Remove full string match value
+    time[5] = +time[0] < 12 ? "AM" : "PM"; // Set AM/PM
+    time[0] = +time[0] % 12 || 12; // Adjust hours
+  }
+  return time.join(""); // return adjusted time or original string
 }
 export function filterAnnounces(Announce, userdetails) {
-  const [Details, setDetails] = useState();
-  if (userdetails) {
-    userdetails?.then((doc) => {
-      setDetails(doc);
-    });
-  }
-  const m = Details?.Following;
+  // const [Details, setDetails] = useState();
+  // if (userdetails) {
+  //   userdetails?.then((doc) => {
+  //     setDetails(doc);
+  //   });
+  // }
+  // const m = Details?.Following;
   //filter user
   const filtered = Announce?.filter((users) => {
-    const final = m?.includes(users?.currentuser);
+    const final = userdetails?.Following?.includes(users?.currentuser);
     return final;
   });
 

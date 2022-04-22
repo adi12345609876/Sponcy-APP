@@ -5,6 +5,7 @@ import { Divider } from "react-native-elements";
 import { Card } from "react-native-paper";
 import { Colors } from "../../Features/Colors";
 import { styles } from "../../Features/Styles";
+import Constants from "expo-constants";
 
 export default function AssetExample({ visibility, height, width, data }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -19,7 +20,16 @@ export default function AssetExample({ visibility, height, width, data }) {
   return (
     <>
       {visibility && (
-        <Card style={[styles.Card, { height: height, width: width }]}>
+        <Card
+          style={[
+            styles.Card,
+            {
+              height: height,
+              width: width,
+              marginTop: Constants.statusBarHeight,
+            },
+          ]}
+        >
           <View>
             {data.map((item) => (
               <>

@@ -29,6 +29,7 @@ export default function App({ navigation }) {
   const [Photo, setPhoto] = useState();
   const [DisplayName, setDisplayName] = useState();
   const [Bio, setBio] = useState();
+  const [Work, setWork] = useState("");
   const [loading, setloading] = useState();
   // const currentUserData = UserData();
   const [PhotoURL, setPhotoURL] = useState();
@@ -39,7 +40,8 @@ export default function App({ navigation }) {
     await updateUser(
       DisplayName ? DisplayName : currentuser?.displayName,
       Photo ? Photo : currentuser?.photoURL,
-      Bio ? Bio : currentUserData?.Bio,
+      Bio ? Bio : currentUserData?.Biodata,
+      Work ? Work : currentUserData?.Work,
       currentuser
     );
     setloading(false);
@@ -106,20 +108,53 @@ export default function App({ navigation }) {
               }}
               placeholder="Name"
               onChangeText={setDisplayName}
+              maxLength={10}
               value={DisplayName ? DisplayName : currentuser?.displayName}
             />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {DisplayName?.length}/10
+            </Text>
           </View>
-          <TextInput
-            style={{
-              marginLeft: 10,
-              fontFamily: "Roboto",
-              fontSize: 25,
-              fontWeight: "bold",
-            }}
-            placeholder="Your Bio..."
-            onChangeText={setBio}
-            value={Bio ? Bio : currentUserData?.Bio}
-          />
+          <View>
+            <TextInput
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 25,
+                fontWeight: "bold",
+              }}
+              placeholder="Your Bio..."
+              onChangeText={setBio}
+              maxLength={20}
+              value={Bio ? Bio : currentUserData?.Biodata}
+            />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {Bio?.length}/20
+            </Text>
+          </View>
+          <View>
+            <TextInput
+              style={{
+                marginLeft: 10,
+                fontFamily: "Roboto",
+                fontSize: 25,
+                fontWeight: "bold",
+              }}
+              placeholder="Your Work.."
+              onChangeText={setWork}
+              value={Work ? Work : currentUserData?.Work}
+              maxLength={15}
+            />
+            <Text
+              style={[styles.text, { textAlign: "right", color: Colors.grey }]}
+            >
+              {Work?.length}/15
+            </Text>
+          </View>
         </View>
       </View>
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>

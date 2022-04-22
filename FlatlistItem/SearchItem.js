@@ -26,7 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../Hooks/GlobalHooks";
 import { useLoading } from "../Hooks/LoadingContext";
 
-const AnnounceItem = ({
+const SearchItem = ({
   icon,
   message,
   photo,
@@ -36,12 +36,15 @@ const AnnounceItem = ({
   id,
   user,
   LikedUsers,
+  Searchtext,
 }) => {
   const navigation = useNavigation();
   const [threedotvisible, setthreevisible] = useState(false);
   const FormattedLikes = numFormatter(likes);
   const currentuser = useauth();
   const AllUsers = Usersforchat();
+  // const { setshowLoading } = useLoading();
+  // console.log("ICON", icon);
 
   async function DeleteMessage(id) {
     const doclocation = doc(
@@ -69,15 +72,30 @@ const AnnounceItem = ({
   async function Dislikeit(id) {
     Dislikemessage(currentuser?.uid, id);
   }
+  const renderItem = ({ item }) => {
+    const SearchFilter = item?.UserName?.toLowerCase()?.includes(
+      Searchtext?.toLowerCase()
+    );
 
+    return <>{SearchFilter ? <></> : null}</>;
+  };
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        {AllUsers?.map((item) => {
-          <View>
-            <Text>{item.Username}</Text>
-          </View>;
-        })}
+        {Searchtext && (
+          <>
+            {AllUsers?.map((item) => {
+              <View>
+                <Text>{item.Username}</Text>
+              </View>;
+            })}
+            {/* <FlatList
+              data={AllUsers}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            /> */}
+          </>
+        )}
 
         <Image
           source={{ uri: icon ? icon : null }}
@@ -184,4 +202,4 @@ const AnnounceItem = ({
   );
 };
 
-export default AnnounceItem;
+export default SearchItem;

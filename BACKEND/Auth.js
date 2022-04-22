@@ -8,15 +8,23 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   updateProfile,
+  updateEmail,
+  sendPasswordResetEmail,
+  deleteUser,
+  updatePassword,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "./1.Config";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "./firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { ShowAlert } from "../Features/Utils";
-initializeApp(firebaseConfig);
+import { ShowAlert, showtoast } from "../Features/Utils";
+
+if (getApps().length < 1) {
+  initializeApp(firebaseConfig);
+  // Initialize other firebase products here
+}
 
 export const auth = getAuth();
 
@@ -27,7 +35,9 @@ export function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 export function logout() {
-  ShowAlert("Sure to Logout", "Don't worry you can login again", signOut(auth));
+  ShowAlert("Sure to Logout", "Don't worry you can login again", () => {
+    signOut(auth);
+  });
 }
 export function useauth() {
   const [currentuser, setCurrentUser] = useState();
@@ -36,7 +46,6 @@ export function useauth() {
       if (user) {
         setCurrentUser(user);
       } else {
-        console.warn("NO USER");
       }
     });
     return unsub;
@@ -55,18 +64,19 @@ export function Gitlogin() {
   return signInWithPopup(auth, provider);
 }
 //DisplayName,Bio,icon
-export async function updateUser(UserName, Photo, Bio, currentuser) {
+export async function updateUser(UserName, Photo, Bio, Work, currentuser) {
   const doclocation = doc(db, "Users", currentuser?.uid);
   const fileRef = ref(storage, "ProfilePIC/" + currentuser?.uid + ".png");
 
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const PhotoURL = await getDownloadURL(fileRef);
-  const Biodata = Bio ? Bio : null;
+  const Biodata = Bio ? Bio : "";
   const newvalue = {
     UserName,
     PhotoURL,
     Biodata,
+    Work,
     uid: currentuser?.uid,
   };
   try {
@@ -76,35 +86,40 @@ export async function updateUser(UserName, Photo, Bio, currentuser) {
     });
     await updateDoc(doclocation, newvalue);
   } catch (e) {
-    console.log(e);
     await setDoc(doclocation, newvalue);
-    console.log("SETTED");
   }
 }
 //Set Username
 export async function setToken(expoToken, currentuser) {
   try {
-    const Collocation = doc(db, "Users", currentuser);
-
     const doclocation = doc(db, "Users", currentuser);
     const doclocation2 = doc(db, "ExpoTokens", expoToken);
-
-    const newvalue = {
+    //upload name
+    await setDoc(doclocation, {
       UserName: "",
       PhotoURL: "",
-      Bio: "",
+      Biodata: "",
       expoToken: expoToken,
-    };
-    //upload name
-    await setDoc(doclocation, newvalue);
-    await setDoc(Collocation, {
+    });
+    await updateDoc(doclocation, {
       Followers: [],
       Following: [],
-      Sponsorers: [],
-      Sponsoring: [],
     });
     await setDoc(doclocation2, {});
   } catch (error) {
     console.log(error);
   }
+}
+export async function ChangeEmail(currentuser, newEmail) {
+  await updateEmail(currentuser, newEmail);
+  showtoast("Email Changed");
+}
+export async function ChangePassword(currentuser, newPassword) {
+  updatePassword(currentuser, newPassword);
+  showtoast("Password Changed");
+  // await sendPasswordResetEmail(currentuser, currentuser?.email);
+}
+
+export async function SendFeedBack(params) {
+  await deleteUser(currentuser);
 }

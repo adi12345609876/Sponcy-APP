@@ -11,37 +11,28 @@ import {
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import { Colors } from "../../Features/Colors";
 //assets
-import { Usersforchat } from "../../BACKEND/firebase";
-import { getUserDetailsCollection } from "../../BACKEND/Announce";
-import { useauth } from "../../BACKEND/Auth";
-//feautures
+import { UserData, Usersforchat } from "../../BACKEND/firebase";
+//feautres
 import { styles } from "../../Features/Styles";
 
 export default function AssetExample({ navigation }) {
-  const currentuser = useauth();
-  const userdetails = getUserDetailsCollection(currentuser?.uid);
+  const userdetails = UserData();
   const AllUsers = Usersforchat();
+  console.log(userdetails);
   function compare2arrays() {
-    const [Details, setDetails] = useState();
-    if (userdetails) {
-      userdetails?.then((doc) => {
-        setDetails(doc);
-      });
-    }
-
-    const Followers = Details?.Followers;
-    const Following = Details?.Following;
-
     const Dudesid = Followers?.filter((d) => {
-      return Following?.includes(d);
+      return userdetails?.Following?.includes(d);
     });
     //filter user
+
     const FollowersFilter = AllUsers?.filter((users) => {
-      return Followers?.includes(users?.id);
+      return userdetails?.Followers?.includes(users?.id);
     });
+
     const FollowingFilter = AllUsers?.filter((users) => {
-      return Following?.includes(users?.id);
+      return userdetails?.Following?.includes(users?.id);
     });
+
     const DudesFilter = AllUsers?.filter((users) => {
       return Dudesid?.includes(users?.id);
     });
@@ -56,17 +47,9 @@ export default function AssetExample({ navigation }) {
 
   const Followers = DetailsUserData.Followersdata;
   const Following = DetailsUserData.Followingdata;
-  const Dudes = DetailsUserData.Dudesdata; //<--He is the person who follows you and you follow him
+  const Dudes = DetailsUserData.Dudesdata;
 
   const PeopleData = [
-    {
-      title: "Sponsorer",
-      data: [],
-    },
-    {
-      title: "Sponsoring",
-      data: [],
-    },
     {
       title: "Followers",
       data: Followers ? [...Followers] : null,
@@ -126,7 +109,7 @@ export default function AssetExample({ navigation }) {
                     >
                       <Image
                         style={styles.image}
-                        source={{ uri: item?.PhotoURL }}
+                        source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
                       />
                       <Text
                         style={{

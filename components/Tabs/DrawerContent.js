@@ -52,7 +52,11 @@ const CustomDrawer = (props) => {
       >
         <ImageBackground
           source={require("../../assets/Photos/Drawer-bg.jpeg")}
-          style={{ padding: 20 }}
+          style={{
+            padding: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           <TouchableOpacity
             onPress={() =>
@@ -61,22 +65,35 @@ const CustomDrawer = (props) => {
               })
             }
           >
-            <Image
-              source={{ uri: currentuser?.photoURL }}
+            <View
               style={{
                 height: 80,
                 width: 80,
-                borderRadius: 40,
+                borderRadius: 20,
                 marginBottom: 10,
-                borderWidth: 3,
+                borderWidth: 1,
                 borderColor: Colors.black,
               }}
-            />
+            >
+              <Image
+                source={{
+                  uri: currentuser?.photoURL ? currentuser?.photoURL : null,
+                }}
+                style={{
+                  height: 80,
+                  width: 80,
+                  borderRadius: 20,
+                  marginBottom: 10,
+
+                  borderColor: Colors.black,
+                }}
+              />
+            </View>
             <Text
               style={{
                 color: "#fff",
                 fontSize: 18,
-                fontFamily: "Roboto-Medium",
+                fontFamily: "Roboto",
                 marginBottom: 5,
               }}
             >
@@ -97,6 +114,7 @@ const CustomDrawer = (props) => {
             <FontAwesome5 name="coins" size={14} color="#fff" />
           </View> */}
         </ImageBackground>
+
         <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
@@ -111,7 +129,7 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 fontSize: 15,
-                fontFamily: "Roboto-Medium",
+                fontFamily: "Roboto",
                 marginLeft: 5,
               }}
             >
@@ -128,7 +146,7 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 fontSize: 15,
-                fontFamily: "Roboto-Medium",
+                fontFamily: "Roboto",
                 marginLeft: 5,
               }}
             >

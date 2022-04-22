@@ -95,7 +95,10 @@ export default function PostButton() {
             },
           ]}
         >
-          <Image source={{ uri: Homeicon }} style={{ width: 25, height: 25 }} />
+          <Image
+            source={{ uri: Homeicon ? Homeicon : null }}
+            style={{ width: 25, height: 25 }}
+          />
         </Animated.View>
       </TouchableOpacity>
 
@@ -107,7 +110,7 @@ export default function PostButton() {
       >
         <TouchableOpacity>
           <Image
-            source={{ uri: Announceicon }}
+            source={{ uri: Announceicon ? Announceicon : null }}
             style={{ width: 25, height: 25 }}
           />
         </TouchableOpacity>

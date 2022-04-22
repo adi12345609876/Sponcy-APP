@@ -75,7 +75,7 @@ const NotifyItem = ({
           onPress={() => Handleclick()}
         >
           <TouchableOpacity style={styles.imagecontainer}>
-            <Image source={{ uri: icon }} style={styles.image} />
+            <Image source={{ uri: icon ? icon : null }} style={styles.image} />
           </TouchableOpacity>
           <View style={styles.row}>
             <View style={{ maxWidth: 200 }}>
@@ -122,7 +122,7 @@ const NotifyItem = ({
           onPress={() => HandleclickAnnounce()}
         >
           <TouchableOpacity style={styles.imagecontainer}>
-            <Image source={{ uri: icon }} style={styles.image} />
+            <Image source={{ uri: icon ? icon : null }} style={styles.image} />
           </TouchableOpacity>
           <View style={styles.row}>
             <View style={{ maxWidth: 200 }}>

@@ -45,8 +45,8 @@ export default function App({ route }) {
 
   async function handleClick() {
     await EditRoom(docid, text, Photo, [...selectedIds]);
-    navigation.navigate("Tabs", {
-      screen: "Announce",
+    navigation.navigate("MyDrawer", {
+      screen: "Tabs",
     });
   }
   return (
@@ -99,7 +99,7 @@ export default function App({ route }) {
             maxLength={250}
           />
         </View>
-        {/* <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
+        <View style={{ margin: 15, borderRadius: 10, marginTop: 40 }}>
           <TouchableOpacity
             style={{
               height: 100,
@@ -114,7 +114,7 @@ export default function App({ route }) {
           >
             <Text>Add Participants</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
         <TouchableOpacity
           style={{
             margin: 20,

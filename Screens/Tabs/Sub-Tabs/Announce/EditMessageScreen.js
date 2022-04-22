@@ -65,8 +65,8 @@ export default function App({ route }) {
   function handleClick() {
     EditMessage(id);
 
-    navigation.navigate("Tabs", {
-      screen: "Announce",
+    navigation.navigate("MyDrawer", {
+      screen: "Tabs",
     });
   }
   return (

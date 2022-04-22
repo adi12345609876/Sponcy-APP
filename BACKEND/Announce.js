@@ -22,6 +22,12 @@ import { useEffect, useState } from "react";
 import { useauth } from "./Auth";
 import uuid from "react-native-uuid";
 import { db, storage } from "./firebase";
+import { getApps, initializeApp } from "firebase/app";
+import { firebaseConfig } from "./1.Config";
+if (getApps().length < 1) {
+  initializeApp(firebaseConfig);
+  // Initialize other firebase products here
+}
 
 //Get Announce
 export function Announces() {
@@ -157,22 +163,21 @@ export async function Dislikemessage(currentuser, messageid) {
 export async function FollowUser(currentuser, otheruser) {
   //const [Comments, setComments] = useState();
 
-  const Doclocation_array = doc(db, "Users", otheruser);
-  const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(db, "Users", currentuser);
-  const Doccurrentuser_num = doc(db, "Users", currentuser);
+  const Doclocation = doc(db, "Users", otheruser);
+  const Doccurrentuser = doc(db, "Users", currentuser);
+
   //for otheruser
-  const AddUserFollow = await setDoc(Doclocation_array, {
+  await updateDoc(Doclocation, {
     Followers: arrayUnion(currentuser),
   });
-  const increseFollow = await setDoc(Doclocation_num, {
+  await updateDoc(Doclocation, {
     Followers: increment(1),
   });
   //for currentuser
-  await setDoc(Doccurrentuser_array, {
+  await updateDoc(Doccurrentuser, {
     Following: arrayUnion(otheruser),
   });
-  await setDoc(Doccurrentuser_num, {
+  await updateDoc(Doccurrentuser, {
     Following: increment(1),
   });
 }
@@ -270,6 +275,7 @@ export async function AddUnseenUsers(currentuser, Followers) {
 //Add Search History
 export async function AddSearchhistory(currentuser, Searchtext) {
   const Collocation = collection(db, "Users", currentuser, "Search");
+
   addDoc(Collocation, {
     Searchtext,
   });

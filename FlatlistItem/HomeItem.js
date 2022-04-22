@@ -73,7 +73,7 @@ const HomeItem = ({
       onPress={() => Handleclick()}
     >
       <TouchableOpacity style={styles.imagecontainer}>
-        <Image source={{ uri: icon }} style={styles.image} />
+        <Image source={{ uri: icon ? icon : null }} style={styles.image} />
       </TouchableOpacity>
       <View
         style={{

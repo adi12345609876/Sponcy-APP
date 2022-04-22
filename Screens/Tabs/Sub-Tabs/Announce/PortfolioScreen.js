@@ -5,15 +5,17 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
+  Animated,
+  Image,
 } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { SpecifiedUserData } from "../../../../BACKEND/firebase";
 import {
   FollowUser,
   UnFollowUser,
   getUserDetailsCollection,
-  SponsorUser,
+  HireUser,
 } from "../../../../BACKEND/Announce";
 // import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
 import { logout, useauth } from "../../../../BACKEND/Auth";
@@ -23,7 +25,7 @@ import { Colors } from "../../../../Features/Colors";
 import PortfolioTab from "../../../../components/Tabs/PortfolioTab";
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../../../../Hooks/GlobalHooks";
-import { showtoast } from "../../../../Features/Utils";
+import { sendNotification, showtoast } from "../../../../Features/Utils";
 import { styles } from "../../../../Features/Styles";
 import * as Updates from "expo-updates";
 export default function App({ route }) {
@@ -32,25 +34,16 @@ export default function App({ route }) {
   const specificuserdata = SpecifiedUserData(useruid);
   const userdetails = getUserDetailsCollection(useruid);
   const currentuser = useauth();
-
-  //  const FormattedLikes = numFormatter(likes);
-  console.log(specificuserdata?.PhotoURL);
   const [threedotvisible, setthreevisible] = useState();
   const [alreadyfollwing, setalreadyfollwing] = useState();
 
   useEffect(() => {
-    if (userdetails) {
-      userdetails?.then((doc) => {
-        console.log(doc);
-        setalreadyfollwing(doc?.Followers.includes(currentuser?.uid));
-      });
-    }
+    setalreadyfollwing(specificuserdata?.Followers?.includes(currentuser?.uid));
   }, [userdetails]);
 
   async function handleFollow() {
-    showtoast("Following");
-
     FollowUser(currentuser?.uid, specificuserdata?.uid);
+    showtoast("Following");
   }
   async function handleLogout() {
     showtoast("Loged out");
@@ -68,27 +61,32 @@ export default function App({ route }) {
       onechat: true,
     });
   }
-  async function SponsorUsers() {
-    showtoast("Ready to sponsor");
-    SponsorUser(currentuser?.uid, specificuserdata?.uid);
-    navigation.navigate("Chat", {
-      name: specificuserdata?.UserName,
-      icon: specificuserdata?.PhotoURL,
-      id: useruid,
-      onechat: true,
-      Sponsor: true,
-    });
+  async function HireUsers() {
+    sendNotification(
+      specificuserdata?.expoToken,
+      `🚨Hire Offer🚨`,
+      `${currentuser?.displayName} is willing to hire`
+    );
+    showtoast("Ready to Hire");
+    // SponsorUser(currentuser?.uid, specificuserdata?.uid);
+
+    // navigation.navigate("Chat", {
+    //   name: specificuserdata?.UserName,
+    //   icon: specificuserdata?.PhotoURL,
+    //   id: useruid,
+    //   onechat: true,
+    //   Hire: true,
+    // });
   }
   async function UpdateApp() {
     showtoast("Updating....");
-    console.log("Updating....");
 
     try {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
         await Updates.fetchUpdateAsync();
         showtoast("Updating....");
-        console.log("Updating....");
+
         await Updates.reloadAsync();
       } else {
         showtoast("no updates");
@@ -97,10 +95,11 @@ export default function App({ route }) {
       showtoast("An error occured");
     }
   }
+
   return (
     <View
       style={{
-        flex: 1,
+        flex: 0.5,
         paddingTop: Constants.statusBarHeight / 10,
         backgroundColor: Colors.white,
       }}
@@ -110,70 +109,79 @@ export default function App({ route }) {
         backgroundColor={Colors.black}
         barStyle={"light-content"}
       />
-      <ImageBackground
-        source={{ uri: specificuserdata?.PhotoURL }}
-        resizeMode="cover"
+      <View
+        style={{
+          flexDirection: "row",
+
+          height: 25,
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.Searchbox, { marginLeft: 10, position: "absolute" }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back-outline" size={24} color={Colors.black} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.Searchbox,
+            { position: "absolute", marginRight: 10, right: 10 },
+          ]}
+          onPress={() => setthreevisible(!threedotvisible)}
+        >
+          <Entypo name="dots-three-vertical" size={24} color={Colors.black} />
+        </TouchableOpacity>
+      </View>
+      <View
         style={{
           flex: 0.4,
           borderBottomEndRadius: 15,
           borderBottomStartRadius: 15,
           backgroundColor: Colors.white,
         }}
-      >
-        <View style={{ backgroundColor: "", flexDirection: "row" }}>
-          <TouchableOpacity
-            style={[styles.Searchbox, { marginLeft: 10 }]}
-            onPress={() => navigation.goBack()}
+      ></View>
+      <View style={{}}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              height: 130,
+              width: 130,
+              borderRadius: 20,
+              marginBottom: 10,
+              borderWidth: 1,
+              borderColor: Colors.black,
+              // position: "relative",
+            }}
           >
-            <Ionicons
-              name="arrow-back-outline"
-              size={24}
-              color={Colors.black}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.Searchbox,
-              { position: "absolute", marginRight: 10, right: 10 },
-            ]}
-            onPress={() => setthreevisible(!threedotvisible)}
-          >
-            <Entypo name="dots-three-vertical" size={24} color={Colors.black} />
-          </TouchableOpacity>
-          <View style={{ top: 30, position: "absolute", right: 18 }}>
-            <ThreeDots
-              visibility={threedotvisible}
-              height={100}
-              width={200}
-              data={[
-                // {
-                //   text: "Settings",
-                //   icon: "settings-sharp",
-                //   func: () => {},
-                // },
-                {
-                  text: "Logout",
-                  icon: "log-out-outline",
-                  func: () => handleLogout(),
-                },
-                {
-                  text: "Edit",
-                  icon: "pencil",
-                  func: () => navigation.navigate("Edit"),
-                },
-                {
-                  text: "Update",
-                  icon: "cloud-download-outline",
-                  func: () => UpdateApp(),
-                },
-              ]}
+            <Image
+              source={{
+                uri: specificuserdata?.PhotoURL
+                  ? specificuserdata?.PhotoURL
+                  : null,
+              }}
+              style={{
+                height: 130,
+                width: 130,
+                borderRadius: 20,
+                marginBottom: 10,
+                borderColor: Colors.black,
+              }}
             />
           </View>
         </View>
-      </ImageBackground>
-      <View style={{ marginTop: 5 }}>
+
         <View>
-          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-end",
+            }}
+          >
             <Text
               style={{
                 marginLeft: 10,
@@ -219,8 +227,24 @@ export default function App({ route }) {
               color: Colors.grey,
             }}
           >
-            {specificuserdata?.Bio}
+            {specificuserdata?.Biodata}
           </Text>
+          {specificuserdata?.Work && (
+            <View style={{ flexDirection: "row" }}>
+              <MaterialIcons name="work" size={24} color="black" />
+              <Text
+                style={{
+                  marginLeft: 10,
+                  fontFamily: "Roboto",
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: Colors.grey,
+                }}
+              >
+                {specificuserdata?.Work}
+              </Text>
+            </View>
+          )}
         </View>
         <Divider style={{ width: 1000 }} />
         <View style={{ marginTop: 5 }}>
@@ -241,7 +265,7 @@ export default function App({ route }) {
               {numFormatter(specificuserdata?.Followers)}
             </Text>
 
-            <View
+            {/* <View
               style={{
                 position: "absolute",
                 right: 10,
@@ -257,147 +281,156 @@ export default function App({ route }) {
                   color: Colors.black,
                 }}
               >
-                Sponsoring
+                Hireing
               </Text>
               <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-                {numFormatter(specificuserdata?.Sponsoring)}
+                {numFormatter(specificuserdata?.Hireing)}
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
-        {/* {useruid != currentuser?.uid && ( */}
-        <>
-          <View style={{ marginTop: 15 }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ marginLeft: 5 }}>
-                {alreadyfollwing ? (
-                  <>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: Colors.grey,
-                        height: 40,
-                        width: 150,
-                        borderRadius: 15,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignSelf: "center",
-                        elevation: 3,
-                      }}
-                      onPress={() => handleUnFollow()}
-                    >
-                      <Text
+        {currentuser?.uid && (
+          <>
+            <View style={{ marginTop: 15 }}>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ marginLeft: 5 }}>
+                  {alreadyfollwing ? (
+                    <>
+                      <TouchableOpacity
                         style={{
-                          fontFamily: "Roboto",
-                          fontSize: 16,
-                          fontWeight: "700",
-                          fontStyle: "normal",
-                          color: Colors.white,
+                          backgroundColor: Colors.grey,
+                          height: 40,
+                          width: 150,
+                          borderRadius: 15,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          alignSelf: "center",
+                          elevation: 3,
                         }}
+                        onPress={() => handleUnFollow()}
                       >
-                        UnFollow
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                ) : (
-                  <>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: Colors.primary,
-                        height: 40,
-                        width: 150,
-                        borderRadius: 15,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignSelf: "center",
-                        elevation: 3,
-                      }}
-                      onPress={() => handleFollow()}
-                    >
-                      <Text
+                        <Text
+                          style={{
+                            fontFamily: "Roboto",
+                            fontSize: 16,
+                            fontWeight: "700",
+                            fontStyle: "normal",
+                            color: Colors.white,
+                          }}
+                        >
+                          UnFollow
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TouchableOpacity
                         style={{
-                          fontFamily: "Roboto",
-                          fontSize: 16,
-                          fontWeight: "700",
-                          fontStyle: "normal",
-                          color: Colors.white,
+                          backgroundColor: Colors.primary,
+                          height: 40,
+                          width: 150,
+                          borderRadius: 15,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          alignSelf: "center",
+                          elevation: 3,
                         }}
+                        onPress={() => handleFollow()}
                       >
-                        Follow
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                )}
-              </View>
-              <View style={{ position: "absolute", right: 5 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: Colors.secondary,
-                    height: 40,
-                    width: 150,
-                    borderRadius: 15,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    elevation: 3,
-                  }}
-                  onPress={() => SponsorUsers()}
-                >
-                  <Text
+                        <Text
+                          style={{
+                            fontFamily: "Roboto",
+                            fontSize: 16,
+                            fontWeight: "700",
+                            fontStyle: "normal",
+                            color: Colors.white,
+                          }}
+                        >
+                          Follow
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
+                <View style={{ position: "absolute", right: 5 }}>
+                  <TouchableOpacity
                     style={{
-                      fontFamily: "Roboto",
-                      fontSize: 16,
-                      fontWeight: "700",
-                      fontStyle: "normal",
-
-                      color: Colors.white,
+                      backgroundColor: Colors.secondary,
+                      height: 40,
+                      width: 150,
+                      borderRadius: 15,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      elevation: 3,
                     }}
+                    onPress={() => HireUsers()}
                   >
-                    Sponsor
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: "Roboto",
+                        fontSize: 16,
+                        fontWeight: "700",
+                        fontStyle: "normal",
+
+                        color: Colors.white,
+                      }}
+                    >
+                      Hire
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-          <TouchableOpacity
-            style={{ marginTop: 10 }}
-            onPress={() => TalkPrivately()}
-          >
-            <Text
-              style={{
-                marginLeft: 10,
-                color: Colors.secondary,
-                fontSize: 17,
-              }}
+            <TouchableOpacity
+              style={{ marginTop: 10 }}
+              onPress={() => TalkPrivately()}
             >
-              Talk to him?
-            </Text>
-          </TouchableOpacity>
-        </>
-        {/* )} */}
+              <Text
+                style={{
+                  marginLeft: 10,
+                  color: Colors.secondary,
+                  fontSize: 17,
+                }}
+              >
+                Talk to him?
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
 
         <Divider style={{ width: 1000 }} />
       </View>
-
-      {/* <Tab.Navigator
-        tabBarOptions={{
-          inactiveTintColor: Colors.grey,
-
-          indicatorStyle: {
-            backgroundColor: Colors.primary,
-          },
-          labelStyle: {
-            fontSize: 9,
-          },
-          style: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-        }}
-      >
-        <Tab.Screen name="Posts" component={AnnounceScreen} />
-        <Tab.Screen name="Reply" component={AnnounceScreen} />
-      </Tab.Navigator> */}
       <PortfolioTab useruid={useruid} />
+      <View style={{ top: 30, position: "absolute", right: 18 }}>
+        <ThreeDots
+          visibility={threedotvisible}
+          height={100}
+          width={200}
+          data={[
+            // {
+            //   text: "Settings",
+            //   icon: "settings-sharp",
+            //   func: () => {},
+            // },
+            {
+              text: "Logout",
+              icon: "log-out-outline",
+              func: () => handleLogout(),
+            },
+            {
+              text: "Edit",
+              icon: "pencil",
+              func: () => navigation.navigate("Edit"),
+            },
+            {
+              text: "Update",
+              icon: "cloud-download-outline",
+              func: () => UpdateApp(),
+            },
+          ]}
+        />
+      </View>
     </View>
   );
 }

@@ -6,6 +6,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 //components
 import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
@@ -53,66 +54,29 @@ export default function AnnounceScreen({ route }) {
 
   const data = SubScreen == "Following" ? FollowingAnnounce : RawAnnounces;
 
-  const ads = [];
-  const alternate = 5;
-
-  // const data = AnnounceData?.reduce((acc, curr, i) => {
-  //   if ((i + 1) % alternate === 0) {
-  //     const adIndex = Math.floor(i / alternate) % ads.length;
-  //     return [...acc, curr, { ...ads[adIndex], IsAds: true }];
-  //   }
-
-  //   return [...acc, curr];
-  // }, []);
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
 
-    const SearchFilter =
-      item?.message
-        ?.toLowerCase()
-        ?.includes(route?.params?.Searchtext?.toLowerCase()) ||
-      item?.UserName?.toLowerCase()?.includes(
-        route?.params?.Searchtext?.toLowerCase()
-      );
-
     return (
       <>
-        {SearchFilter ? (
-          <AnnounceItem
-            icon={item?.UserPhoto}
-            message={item.message}
-            photo={item.PhotoURL}
-            name={item.UserName}
-            // checked={item.checked}
-            likes={item.Like}
-            time={Time.time}
-            id={item.id}
-            user={item.currentuser}
-            LikedUsers={item.LikedUser}
-            Searchtext={route?.params?.Searchtext}
-            // Type={item.Type}
-          />
-        ) : route?.params?.Searchtext == undefined ? (
-          <AnnounceItem
-            icon={item?.UserPhoto}
-            message={item.message}
-            photo={item.PhotoURL}
-            name={item.UserName}
-            // checked={item.checked}
-            likes={item.Like}
-            time={Time.time}
-            id={item.id}
-            user={item.currentuser}
-            LikedUsers={item.LikedUser}
-            Searchtext={route?.params?.Searchtext}
-          />
-        ) : null}
+        <AnnounceItem
+          icon={item?.UserPhoto}
+          message={item.message}
+          photo={item.PhotoURL}
+          name={item.UserName}
+          // checked={item.checked}
+          likes={item.Like}
+          time={Time.time}
+          id={item.id}
+          user={item.currentuser}
+          LikedUsers={item.LikedUser}
+        />
       </>
     );
   };
   return (
     <AnimatedScroolView>
-      <View style={styles.announcecontainer}>
+      <SafeAreaView style={styles.announcecontainer}>
         <View
           style={{
             flexDirection: "row",
@@ -149,9 +113,9 @@ export default function AnnounceScreen({ route }) {
             </TouchableOpacity>
           </View>
         </View>
-        <View>
+        <View style={{ height: 100, borderRadius: 20 }}>
           <AdMobBanner
-            bannerSize="banner"
+            bannerSize="largeBanner"
             adUnitID="ca-app-pub-2241821858793323/8713857097"
           />
         </View>
@@ -161,7 +125,7 @@ export default function AnnounceScreen({ route }) {
           keyExtractor={(item, index) => index}
           ItemSeparatorComponent={renderSeparator}
         />
-      </View>
+      </SafeAreaView>
     </AnimatedScroolView>
   );
 }

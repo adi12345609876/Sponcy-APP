@@ -18,9 +18,14 @@ import {
 import { useEffect, useState } from "react";
 import { useauth } from "./Auth";
 import uuid from "react-native-uuid";
-import { getApp } from "firebase/app";
-const firebaseApp = getApp();
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { firebaseConfig } from "./1.Config";
+if (getApps().length < 1) {
+  initializeApp(firebaseConfig);
+  // Initialize other firebase products here
+}
 
+const firebaseApp = getApp();
 export const storage = getStorage(firebaseApp, "gs://sponcy-7003f.appspot.com");
 export const db = getFirestore();
 
@@ -544,4 +549,15 @@ export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
       }
     }
   });
+}
+export async function updateTheme(Theme) {
+  const doclocation = doc(db, "Users", currentuser?.uid);
+
+  try {
+    await updateDoc(doclocation, {
+      Theme,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }

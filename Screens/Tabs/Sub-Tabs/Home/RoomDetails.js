@@ -10,6 +10,7 @@ import { async } from "@firebase/util";
 import { useauth } from "../../../../BACKEND/Auth";
 import { styles } from "../../../../Features/Styles";
 import NameText from "../../../../components/SuperComp/Name";
+import Constants from "expo-constants";
 
 export default function AssetExample({ route }) {
   const currentuser = useauth();
@@ -28,9 +29,9 @@ export default function AssetExample({ route }) {
     await CreatePosting(id, Useruid, "Leader");
   }
   return (
-    <View>
+    <View style={{ marginTop: Constants.statusBarHeight }}>
       <TouchableOpacity
-        style={{ marginLeft: 10 }}
+        style={[styles.Searchbox, { width: 40, marginLeft: 10 }]}
         onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back-outline" size={24} color={Colors.black} />
@@ -52,7 +53,7 @@ export default function AssetExample({ route }) {
       <Text style={{ fontWeight: "bold", fontsize: 15 }}>Participants:</Text>
       {participantsdetails?.map((item) => (
         <View>
-          <View>
+          <View style={{ marginBottom: 10 }}>
             <TouchableOpacity
               style={{
                 top: 10,
@@ -74,7 +75,11 @@ export default function AssetExample({ route }) {
               {item?.uid == owner ? (
                 <Text style={[styles.Smalltext, { color: "red" }]}>Owner</Text>
               ) : (
-                Leaders.includes(item?.uid) && <Text>Leader</Text>
+                Leaders?.includes(item?.uid) && (
+                  <Text style={[styles.Smalltext, { color: "green" }]}>
+                    Leader
+                  </Text>
+                )
               )}
             </TouchableOpacity>
           </View>
