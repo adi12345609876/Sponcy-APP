@@ -63,7 +63,7 @@ export default function Header({ navigation }) {
     >
       <TouchableOpacity
         style={{
-          top: 10,
+          top: 0,
           borderRadius: 200,
           borderWidth: 2,
           backgroundColor: Colors.grey,
@@ -79,7 +79,11 @@ export default function Header({ navigation }) {
           source={{
             uri: currentuser?.photoURL ? currentuser?.photoURL : null,
           }}
-          style={{ width: 50, height: 50, borderRadius: 200 }}
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 200,
+          }}
         />
       </TouchableOpacity>
       {/* <Button title="Open drawer" onPress={() => navigation.openDrawer()} /> */}
@@ -88,6 +92,7 @@ export default function Header({ navigation }) {
           height: 10,
           justifyContent: "center",
           alignItems: "center",
+          top: 0,
         }}
         onPress={() =>
           navigation.navigate("MyDrawer", {
@@ -115,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: Colors.white,
     width: "100%",
-    height: 90,
+    height: 70,
     elevation: 2,
     borderRadius: 10,
     marginTop: Constants.statusBarHeight - 10,

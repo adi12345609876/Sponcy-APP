@@ -114,8 +114,8 @@ export async function HandleShare() {
     await Share.share({
       title: "I recommend Sponcy",
       message:
-        "I recommend Sponcy || Sponcy is an App that helps youn to show your Skill to the World, AppLink:https://radinath098.wixsite.com/sponcy ",
-      url: "https://radinath098.wixsite.com/sponcy",
+        "I recommend Sponcy || Sponcy is an App that helps youn to show your Skill to the World, Applink:https://play.google.com/store/apps/details?id=com.adinathr.Sponcy ",
+      url: "https://play.google.com/store/apps/details?id=com.adinathr.Sponcy",
     });
   } catch (error) {
     alert(error.message);

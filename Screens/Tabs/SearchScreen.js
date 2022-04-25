@@ -18,6 +18,7 @@ import { TimestamptoTime } from "../../Hooks/GlobalHooks";
 import SearchItem from "../../FlatlistItem/SearchItem";
 import { Avatar, Card } from "react-native-paper";
 import { AdMobBanner } from "expo-ads-admob";
+import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 
 export default function App({ route }) {
   const AnnounceData = Announces();
@@ -133,7 +134,7 @@ export default function App({ route }) {
         </Text>
 
         <FlatList data={AllUsers} renderItem={renderUsers} horizontal />
-        <FlatList data={AnnounceData} renderItem={renderMesages} />
+        <AnimatedFlatList data={AnnounceData} renderItem={renderMesages} />
       </View>
     </>
   );

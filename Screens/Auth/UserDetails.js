@@ -42,7 +42,8 @@ export default function App() {
       Photo ? Photo : nullPhoto,
       Bio,
       Work,
-      currentuser
+      currentuser,
+      false
     );
     setloading(false);
     setLogedIn("SignedIN");

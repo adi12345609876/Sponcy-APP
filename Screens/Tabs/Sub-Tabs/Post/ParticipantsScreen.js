@@ -53,7 +53,7 @@ export default function AssetExample() {
   );
 
   return (
-    <AnimatedScroolView>
+    <View>
       <View
         style={{
           marginBottom: 100,
@@ -73,6 +73,6 @@ export default function AssetExample() {
           <Text style={{ fontWeight: "bold", color: Colors.black }}>Done</Text>
         </TouchableOpacity>
       </View>
-    </AnimatedScroolView>
+    </View>
   );
 }

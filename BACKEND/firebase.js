@@ -6,6 +6,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
   orderBy,
@@ -191,7 +192,7 @@ export async function setUser(uid) {
     Bio: "",
     Followers: 0,
     Following: 0,
-    Sponsoring: 0,
+
     Status: "",
     checked: false,
     uid: uid,
@@ -201,8 +202,6 @@ export async function setUser(uid) {
   await setDoc(doclocation2, {
     Followers: [],
     Following: [],
-    Sponsorers: [],
-    Sponsoring: [],
   });
 }
 
@@ -389,13 +388,14 @@ export async function PostPrivateChats(
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
+  const invite = Invite ? Invite : null;
+  const forwarded = Forwarded ? Forwarded : null;
   const newvalue = Invite
     ? {
         From,
         text,
-        Forwarded: Forwarded,
-        // seen: false,
         time: serverTimestamp(),
+        Forwarded: Forwarded,
         Invite: Invite,
         Invitationid: InvitationData?.id,
       }
@@ -550,14 +550,57 @@ export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
     }
   });
 }
-export async function updateTheme(Theme) {
-  const doclocation = doc(db, "Users", currentuser?.uid);
+//Notifies
+export function getNotifies(currentuser) {
+  const [Notifies, setNotifies] = useState();
 
-  try {
-    await updateDoc(doclocation, {
-      Theme,
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  useEffect(() => {
+    if (currentuser) {
+      const Collocation = collection(db, "Users", currentuser, "Notify");
+      const q = query(Collocation, orderBy("time"));
+      onSnapshot(
+        q,
+        (snapshot) => {
+          if (!snapshot.empty) {
+            setNotifies(
+              snapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+              }))
+            );
+          }
+        },
+        []
+      );
+    }
+  }, [currentuser]);
+
+  return Notifies;
+}
+
+export async function sendNotifies(useruid, message, url, Type) {
+  const Collocation = collection(db, "Users", useruid, "Notify");
+
+  const newvalue = {
+    message,
+    url,
+    Type,
+    Seen: false,
+    time: serverTimestamp(),
+  };
+  await addDoc(Collocation, newvalue);
+}
+export async function MakeNotifiesSeen(useruid, messageid) {
+  const Doclocation = doc(db, "Users", useruid, "Notify", messageid);
+
+  updateDoc(Doclocation, {
+    Seen: true,
+  });
+}
+export async function Hiredoc(currentuser, useruid) {
+  const Doclocation = doc(db, "Users", useruid);
+
+  await updateDoc(Doclocation, {
+    Hire: arrayUnion(currentuser),
+  });
 }

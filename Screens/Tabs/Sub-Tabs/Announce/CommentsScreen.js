@@ -73,7 +73,7 @@ const HomeItem = ({ navigation, route }) => {
 
   return (
     <>
-      <ScrollView style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginBottom: 100 }}>
         <View style={styles.originalmessage}>
           <View style={styles.topcontainer}>
             <TouchableOpacity>
@@ -127,7 +127,7 @@ const HomeItem = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
       <SafeAreaView style={styles.bottomcontainer}>
         <Customtextinput
           settext={settext}

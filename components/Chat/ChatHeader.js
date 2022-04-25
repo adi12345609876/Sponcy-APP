@@ -5,7 +5,7 @@ import { Colors } from "../../Features/Colors";
 import Name from "../SuperComp/Name";
 import { useNavigation } from "@react-navigation/native";
 import ThreeDots from "../../components/SuperComp/3dotComp";
-import { LeaveRoom, EditRoom } from "../../BACKEND/firebase";
+import { LeaveRoom, EditRoom, sendNotifies } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import { styles } from "../../Features/Styles";
 

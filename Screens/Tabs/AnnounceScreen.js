@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableOpacity,
   SafeAreaView,
+  Animated,
 } from "react-native";
 //components
 import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
@@ -14,7 +15,7 @@ import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import renderSeparator from "../../components/SuperComp/Separator";
 
 import { Announces, getUserDetailsCollection } from "../../BACKEND/Announce";
-
+import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 import { Colors } from "../../Features/Colors";
 import { styles } from "../../Features/Styles";
 
@@ -23,6 +24,7 @@ import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { doc, onSnapshot } from "firebase/firestore";
 import { filterAnnounces, TimestamptoTime } from "../../Hooks/GlobalHooks";
 import { useauth } from "../../BACKEND/Auth";
+import { useTabBar } from "../../Hooks/TabBarprovider";
 //ADMOB
 //Banner Android: ca-app-pub-2241821858793323/8713857097
 //Interstitle Android:ca-app-pub-2241821858793323/9318978865
@@ -53,8 +55,27 @@ export default function AnnounceScreen({ route }) {
   const FollowingAnnounce = filterAnnounces(RawAnnounces, userdetails);
 
   const data = SubScreen == "Following" ? FollowingAnnounce : RawAnnounces;
-
-  const renderItem = ({ item }) => {
+  const animation = useRef(new Animated.Value(0)).current;
+  const { showTabBar } = useTabBar();
+  const toggleTabBarAnimation = () => {
+    if (showTabBar) {
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(animation, {
+        toValue: -200,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+  useEffect(() => {
+    toggleTabBarAnimation();
+  }, [showTabBar]);
+  const renderItem = ({ item, index }) => {
     const Time = TimestamptoTime(item?.time);
 
     return (
@@ -74,14 +95,14 @@ export default function AnnounceScreen({ route }) {
       </>
     );
   };
-  return (
-    <AnimatedScroolView>
-      <SafeAreaView style={styles.announcecontainer}>
+  const renderHeader = () => {
+    return (
+      <>
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
+            // justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <View style={{ paddingHorizontal: 10 }}>
@@ -119,13 +140,21 @@ export default function AnnounceScreen({ route }) {
             adUnitID="ca-app-pub-2241821858793323/8713857097"
           />
         </View>
-        <FlatList
+      </>
+    );
+  };
+
+  return (
+    <View>
+      <SafeAreaView style={styles.announcecontainer}>
+        <AnimatedFlatList
+          TopofList={renderHeader}
           data={data}
           renderItem={renderItem}
           keyExtractor={(item, index) => index}
           ItemSeparatorComponent={renderSeparator}
         />
       </SafeAreaView>
-    </AnimatedScroolView>
+    </View>
   );
 }

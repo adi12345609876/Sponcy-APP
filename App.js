@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, SafeAreaView, View } from "react-native";
 
 //BACKEND
 //navigation
@@ -7,7 +7,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-
 const Drawer = createDrawerNavigator();
 //Hooks
 import TabBarprovider from "./Hooks/TabBarprovider";
@@ -15,7 +14,7 @@ import { useauth } from "./BACKEND/Auth";
 //components
 import TabBar from "./components/Tabs/BottomTab";
 import Header from "./components/Tabs/HeaderTab";
-
+import { styles } from "./Features/Styles";
 //screens
 import SignINScreen from "./Screens/Auth/SignIN";
 import HomeChatScreen from "./Screens/Tabs/HomeChatScreen";
@@ -38,12 +37,14 @@ import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
 import SettingsScreen from "./Screens/Drawer/Settings";
 import ReAuthScreen from "./Screens/Auth/ReAuth";
 import SearchResultsScreen from "./Screens/Tabs/Sub-Tabs/Search/SearchResults";
+import MaintainScreen from "./Screens/MaintainScreen";
 
 import LoadingProvider from "./Hooks/LoadingContext";
 import ThemeProvider from "./Hooks/ThemeContext";
 import DrawerContent from "./components/Tabs/DrawerContent";
 import StateContext, { UseState } from "./Hooks/StateContext";
 import { getUserDetailsCollection } from "./BACKEND/Announce";
+import { Colors } from "./Features/Colors";
 //icons
 const Homeicon = require("./assets/Icon/Home.png");
 const Announceicon = require("./assets/Icon/Announce.png");
@@ -63,6 +64,14 @@ const Tab = createBottomTabNavigator();
 //Banner ios:ca-app-pub-2241821858793323/4471359754
 //Interstitle ios:ca-app-pub-2241821858793323/7835889699
 
+//Sentry
+// Sentry.Native.captureException("message");
+// Sentry.init({
+//   dsn: "https://100bd28d309f4371952946d4448bdb09@o1217326.ingest.sentry.io/6359368",
+//   enableInExpoDevelopment: true,
+//   debug: true,
+// });
+
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -77,7 +86,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Home"
-        component={HomeChatScreen}
+        component={MaintainScreen}
         initialParams={{ icon: Homeicon, iconX: HomeiconX }}
       />
       <Tab.Screen
@@ -114,7 +123,11 @@ function MyStack() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <View style={styles.centeredView}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
   }
   return (
     <>
@@ -282,15 +295,13 @@ function MyDrawer() {
 export default function App() {
   return (
     <StateContext>
-      <ThemeProvider>
-        <LoadingProvider>
-          <TabBarprovider>
-            <NavigationContainer>
-              <MyStack />
-            </NavigationContainer>
-          </TabBarprovider>
-        </LoadingProvider>
-      </ThemeProvider>
+      <LoadingProvider>
+        <TabBarprovider>
+          <NavigationContainer>
+            <MyStack />
+          </NavigationContainer>
+        </TabBarprovider>
+      </LoadingProvider>
     </StateContext>
   );
 }

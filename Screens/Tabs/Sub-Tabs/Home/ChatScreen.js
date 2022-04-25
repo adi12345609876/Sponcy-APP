@@ -47,15 +47,15 @@ export default function AssetExample({ route }) {
         Leaders={Leaders}
       />
 
-      <ScrollView style={{ marginBottom: 50 }}>
-        <ChatCenter
-          messages={messages}
-          roomid={id}
-          Type={Type}
-          Invite={Invite}
-          owner={owner}
-        />
-      </ScrollView>
+      {/* <ScrollView style={{ marginBottom: 50 }}> */}
+      <ChatCenter
+        messages={messages}
+        roomid={id}
+        Type={Type}
+        Invite={Invite}
+        owner={owner}
+      />
+      {/* </ScrollView> */}
 
       <SafeAreaView
         style={{

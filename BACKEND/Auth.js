@@ -9,14 +9,14 @@ import {
   GoogleAuthProvider,
   updateProfile,
   updateEmail,
-  sendPasswordResetEmail,
   deleteUser,
   updatePassword,
 } from "firebase/auth";
+
 import { useEffect, useState } from "react";
 import { getApps, initializeApp } from "firebase/app";
 import { firebaseConfig } from "./1.Config";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "./firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ShowAlert, showtoast } from "../Features/Utils";
@@ -64,29 +64,42 @@ export function Gitlogin() {
   return signInWithPopup(auth, provider);
 }
 //DisplayName,Bio,icon
-export async function updateUser(UserName, Photo, Bio, Work, currentuser) {
+export async function updateUser(
+  UserName,
+  Photo,
+  Bio,
+  work,
+  currentuser,
+  IsDocsExist
+) {
   const doclocation = doc(db, "Users", currentuser?.uid);
   const fileRef = ref(storage, "ProfilePIC/" + currentuser?.uid + ".png");
 
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const PhotoURL = await getDownloadURL(fileRef);
-  const Biodata = Bio ? Bio : "";
-  const newvalue = {
-    UserName,
-    PhotoURL,
-    Biodata,
-    Work,
-    uid: currentuser?.uid,
-  };
-  try {
-    await updateProfile(currentuser, {
-      displayName: UserName,
-      photoURL: PhotoURL,
+  const Biodata = Bio ? Bio : null;
+  const Work = work ? work : null;
+
+  await updateProfile(currentuser, {
+    displayName: UserName,
+    photoURL: PhotoURL,
+  });
+  if (IsDocsExist) {
+    await updateDoc(doclocation, {
+      UserName,
+      PhotoURL,
+      Biodata,
+      Work,
+      uid: currentuser?.uid,
     });
-    await updateDoc(doclocation, newvalue);
-  } catch (e) {
-    await setDoc(doclocation, newvalue);
+  } else {
+    await setDoc(doclocation, {
+      UserName,
+      PhotoURL,
+      Biodata,
+      Work,
+    });
   }
 }
 //Set Username
@@ -101,10 +114,7 @@ export async function setToken(expoToken, currentuser) {
       Biodata: "",
       expoToken: expoToken,
     });
-    await updateDoc(doclocation, {
-      Followers: [],
-      Following: [],
-    });
+
     await setDoc(doclocation2, {});
   } catch (error) {
     console.log(error);

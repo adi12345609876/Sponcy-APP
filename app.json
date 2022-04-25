@@ -2,16 +2,17 @@
   "expo": {
     "name": "Sponcy",
     "slug": "Sponcy",
-    "version": "1.0.4",
+    "version": "1.4.0",
     "orientation": "portrait",
-    "icon": "./assets/SponcyIcon.png",
+    "icon": "./assets/SponcyIcon512.png",
+
     "splash": {
       "image": "./assets/Splash2.png",
       "resizeMode": "contain",
       "backgroundColor": "#FC8800"
     },
     "updates": {
-      "fallbackToCacheTimeout": 6000
+      "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -26,14 +27,15 @@
         "googleMobileAdsAppId": "ca-app-pub-2241821858793323~2272270500"
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/SponcyIcon.png",
+        "foregroundImage": "./assets/SponcyIcon512.png",
         "backgroundColor": "#FC8800"
       },
       "package": "com.adinathr.Sponcy",
       "versionCode": 5
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/SponcyIcon512.png"
+    },
+    "description": "Show your talents To the World"
   }
 }

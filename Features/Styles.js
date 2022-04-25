@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 100,
+    // marginBottom: 10,
   },
   homecontainer: {
     backgroundColor: Colors.white,
@@ -93,6 +93,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 10,
     marginHorizontal: 5,
+    backgroundColor: Colors.white,
   },
   headercontainer: {
     paddingHorizontal: 12,
@@ -105,7 +106,7 @@ export const styles = StyleSheet.create({
     elevation: 2,
   },
   container: {
-    paddingVertical: 12,
+    // paddingVertical: 1,
     flexDirection: "row",
     alignItems: "flex-start",
     backgroundColor: Colors.white,
@@ -468,7 +469,6 @@ export const styles = StyleSheet.create({
     bottom: 0,
   },
   previousmessage: {
-    fontFamily: "Red Hat Display",
     fontSize: 13,
     fontWeight: "400",
     fontStyle: "normal",

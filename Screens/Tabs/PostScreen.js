@@ -72,7 +72,7 @@ export default function App() {
                 marginRight: 14,
                 marginBottom: 10,
                 fontWeight: "bold",
-                color: "Colors.white",
+                color: Colors.white,
               }}
               buttonstyle={styles.submitbutton}
             />

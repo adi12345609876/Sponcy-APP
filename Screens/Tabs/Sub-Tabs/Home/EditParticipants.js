@@ -117,7 +117,7 @@ export default function AssetExample({ route }) {
   let filteredX = Users?.filter((itemX) => yFilter?.includes(itemX.id));
 
   return (
-    <AnimatedScroolView>
+    <View>
       <View
         style={{
           marginBottom: 100,
@@ -174,6 +174,6 @@ export default function AssetExample({ route }) {
           <Text style={{ fontWeight: "bold", color: Colors.black }}>Done</Text>
         </TouchableOpacity> */}
       </View>
-    </AnimatedScroolView>
+    </View>
   );
 }

@@ -98,7 +98,7 @@ export default function App({ route }) {
                 marginRight: 14,
                 marginBottom: 10,
                 fontWeight: "bold",
-                color: "Colors.white",
+                color: Colors.white,
               }}
             >
               Announce

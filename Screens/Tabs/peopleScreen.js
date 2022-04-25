@@ -18,7 +18,7 @@ import { styles } from "../../Features/Styles";
 export default function AssetExample({ navigation }) {
   const userdetails = UserData();
   const AllUsers = Usersforchat();
-  console.log(userdetails);
+
   function compare2arrays() {
     const Dudesid = Followers?.filter((d) => {
       return userdetails?.Following?.includes(d);
@@ -65,7 +65,7 @@ export default function AssetExample({ navigation }) {
   ];
 
   return (
-    <AnimatedScroolView>
+    <>
       {Followers ? (
         <View style={styles.Peoplecontainer}>
           <FlatList
@@ -75,7 +75,6 @@ export default function AssetExample({ navigation }) {
                 <View
                   style={{
                     padding: 10,
-                    backgroundColor: Colors.white,
                   }}
                 >
                   <Text
@@ -127,6 +126,6 @@ export default function AssetExample({ navigation }) {
           />
         </View>
       ) : null}
-    </AnimatedScroolView>
+    </>
   );
 }

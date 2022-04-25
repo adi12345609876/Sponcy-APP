@@ -42,7 +42,8 @@ export default function App({ navigation }) {
       Photo ? Photo : currentuser?.photoURL,
       Bio ? Bio : currentUserData?.Biodata,
       Work ? Work : currentUserData?.Work,
-      currentuser
+      currentuser,
+      true
     );
     setloading(false);
 

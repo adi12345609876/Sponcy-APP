@@ -12,6 +12,7 @@ import { useauth } from "../../BACKEND/Auth";
 import { styles } from "../../Features/Styles";
 import { color } from "react-native-elements/dist/helpers";
 import { Colors } from "../../Features/Colors";
+import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 //features
 
 export default function AssetExample({ route }) {
@@ -64,31 +65,28 @@ export default function AssetExample({ route }) {
       </>
     );
   };
+
   return (
-    <AnimatedScroolView>
+    <View>
       <View
         style={{
           marginBottom: 100,
         }}
       >
-        <Text style={[styles.Smalltext, { textAlign: "left" }]}>
-          Organisations
-        </Text>
-        <FlatList
+        <AnimatedFlatList
           data={Rooms}
           renderItem={RoomsrenderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
         />
-        <Text style={[styles.Smalltext, { textAlign: "left" }]}>Peoples</Text>
 
-        <FlatList
+        <AnimatedFlatList
           data={OnetoOne}
           renderItem={UsersrenderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
         />
       </View>
-    </AnimatedScroolView>
+    </View>
   );
 }

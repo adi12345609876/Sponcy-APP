@@ -169,67 +169,53 @@ export async function FollowUser(currentuser, otheruser) {
   //for otheruser
   await updateDoc(Doclocation, {
     Followers: arrayUnion(currentuser),
+    FollowerCount: increment(1),
   });
-  await updateDoc(Doclocation, {
-    Followers: increment(1),
-  });
+
   //for currentuser
   await updateDoc(Doccurrentuser, {
     Following: arrayUnion(otheruser),
-  });
-  await updateDoc(Doccurrentuser, {
-    Following: increment(1),
+    FollowingCount: increment(1),
   });
 }
-export async function SponsorUser(currentuser, otheruser) {
-  //const [Comments, setComments] = useState();
+// export async function SponsorUser(currentuser, otheruser) {
+//   //const [Comments, setComments] = useState();
 
-  const Doclocation_array = doc(db, "Users", otheruser);
-  const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(db, "Users", currentuser);
-  const Doccurrentuser_num = doc(db, "Users", currentuser);
-  //for otheruser
-  const AddUserFollow = await updateDoc(Doclocation_array, {
-    Sponsorers: arrayUnion(currentuser),
-  });
-  const increseFollow = await updateDoc(Doclocation_num, {
-    Sponsorers: increment(1),
-  });
-  //for currentuser
-  await updateDoc(Doccurrentuser_array, {
-    Sponsoring: arrayUnion(otheruser),
-  });
-  await updateDoc(Doccurrentuser_num, {
-    Sponsoring: increment(1),
-  });
-}
+//   const Doclocation_array = doc(db, "Users", otheruser);
+//   const Doclocation_num = doc(db, "Users", otheruser);
+//   const Doccurrentuser_array = doc(db, "Users", currentuser);
+//   const Doccurrentuser_num = doc(db, "Users", currentuser);
+//   //for otheruser
+//   const AddUserFollow = await updateDoc(Doclocation_array, {
+//     Sponsorers: arrayUnion(currentuser),
+//   });
+//   const increseFollow = await updateDoc(Doclocation_num, {
+//     Sponsorers: increment(1),
+//   });
+//   //for currentuser
+//   await updateDoc(Doccurrentuser_array, {
+//     Sponsoring: arrayUnion(otheruser),
+//   });
+//   await updateDoc(Doccurrentuser_num, {
+//     Sponsoring: increment(1),
+//   });
+// }
 //UnFollow
 export async function UnFollowUser(currentuser, otheruser) {
-  // const [AnnounceData, setAnnounceData] = useState();
+  const Doclocation = doc(db, "Users", otheruser);
+  const Doccurrentuser = doc(db, "Users", currentuser);
 
-  const Doclocation_array = doc(db, "Users", otheruser);
-  const Doclocation_num = doc(db, "Users", otheruser);
-  const Doccurrentuser_array = doc(db, "Users", currentuser);
-  const Doccurrentuser_num = doc(db, "Users", currentuser);
-  const get = await getDoc(Doclocation_num).then((doc) => doc.data());
   //for otheruser
-  const RemoveUserFollow = await updateDoc(Doclocation_array, {
+  await updateDoc(Doclocation, {
     Followers: arrayRemove(currentuser),
+    FollowerCount: increment(-1),
   });
-  // if (get.Like != 0) {
-  await updateDoc(Doclocation_num, {
-    Followers: increment(-1),
-  });
-  // }
-  //for currentuserReplies
-  await updateDoc(Doccurrentuser_array, {
+
+  //for currentuser
+  await updateDoc(Doccurrentuser, {
     Following: arrayRemove(otheruser),
+    FollowingCount: increment(-1),
   });
-  // if (get.Like != 0) {
-  await updateDoc(Doccurrentuser_num, {
-    Following: increment(-1),
-  });
-  // }
 }
 //Add Comments
 export async function PostComments(
