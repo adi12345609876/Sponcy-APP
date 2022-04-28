@@ -121,43 +121,15 @@ export async function getUserDetailsCollection(otheruser) {
 }
 //Like
 export async function Likemessage(currentuser, messageid) {
-  const Doclocation2 = doc(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    messageid
-  );
-  const AddUserLIked = updateDoc(Doclocation2, {
+  updateDoc(doc(db, "Announce", "LltxTedBAbKMuN07tX6j", "Message", messageid), {
     LikedUser: arrayUnion(currentuser),
-  });
-
-  const increseliked = updateDoc(Doclocation2, {
-    Like: increment(1),
   });
 }
 //Unlike
 export async function Dislikemessage(currentuser, messageid) {
-  // const [AnnounceData, setAnnounceData] = useState();
-
-  const Doclocation2 = doc(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    messageid
-  );
-
-  // await deleteDoc(Doclocation)
-  const RemoveUserLIked = updateDoc(Doclocation2, {
+  updateDoc(doc(db, "Announce", "LltxTedBAbKMuN07tX6j", "Message", messageid), {
     LikedUser: arrayRemove(currentuser),
   });
-
-  // if (get.Like != 0) {
-  updateDoc(Doclocation2, {
-    Like: increment(-1),
-  });
-  // }
 }
 //Follow
 export async function FollowUser(currentuser, otheruser) {

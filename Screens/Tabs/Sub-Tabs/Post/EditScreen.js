@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../../../Features/Styles";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { BlurView } from "expo-blur";
+
 import { TextInput } from "react-native-paper";
 import { UserData } from "../../../../BACKEND/firebase";
 import { updateUser } from "../../../../BACKEND/Auth";
@@ -82,7 +82,7 @@ export default function App({ navigation }) {
               borderRadius: 20,
             }}
           >
-            <BlurView
+            <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -93,7 +93,7 @@ export default function App({ navigation }) {
               intensity={10}
             >
               <Ionicons name="pencil" size={24} color="black" />
-            </BlurView>
+            </View>
           </ImageBackground>
         </TouchableOpacity>
       </View>

@@ -24,9 +24,11 @@ import { UserData } from "../../../../BACKEND/firebase";
 import { getComments, PostComments } from "../../../../BACKEND/Announce";
 import { FontAwesome } from "@expo/vector-icons";
 import { useauth } from "../../../../BACKEND/Auth";
-import { TimestamptoTime } from "../../../../Hooks/GlobalHooks";
+import { TimestamptoTime, relativetime } from "../../../../Hooks/GlobalHooks";
 // import { ParticularUser } from "../../../../Hooks/GlobalHooks";
 import { styles } from "../../../../Features/Styles";
+import { Avatar } from "react-native-paper";
+import AnimatedFlatList from "../../../../components/Animation/AnimatedFlatList";
 
 const HomeItem = ({ navigation, route }) => {
   const { message, photo, name, icon, checked, time, id } = route.params;
@@ -55,7 +57,7 @@ const HomeItem = ({ navigation, route }) => {
     setheight(23);
   }
   const renderItem = ({ item }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
 
     return (
       <CommentItem
@@ -64,7 +66,7 @@ const HomeItem = ({ navigation, route }) => {
         name={item.UserName}
         icon={item.UserPhoto}
         // checked={item.checked}
-        time={Time.time}
+        time={Time}
         id={item.id}
         user={item.user}
       />
@@ -73,59 +75,57 @@ const HomeItem = ({ navigation, route }) => {
 
   return (
     <>
-      <View style={{ flex: 1, marginBottom: 100 }}>
-        <View style={styles.originalmessage}>
-          <View style={styles.topcontainer}>
-            <TouchableOpacity>
-              <Image source={{ uri: icon }} style={styles.profileicon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.namecontainer}>
-              <NameText name={name} />
-            </TouchableOpacity>
-            <View style={styles.timecontainer}>
-              <Time time={time} />
-            </View>
-          </View>
-          <View style={styles.messagecontainer}>
-            {message && <Text style={styles.message}>{message}</Text>}
-          </View>
-          {photo && (
-            <TouchableOpacity style={styles.photocontainer}>
-              <Image source={{ uri: photo }} style={styles.photo} />
-            </TouchableOpacity>
-          )}
-        </View>
+      <View
+        style={{ flex: 1, marginBottom: 100, backgroundColor: Colors.white }}
+      >
         <View style={styles.comments}>
-          <View style={{}}>
-            <Text
-              style={{
-                borderTopColor: Colors.grey,
-                borderBottomColor: Colors.grey,
-                borderWidth: 0.5,
-                textAlign: "center",
-                marginVertical: 10,
-                fontSize: 15,
-                fontWeight: "bold",
-                color: Colors.grey,
-              }}
-            >
-              Comments
-            </Text>
-          </View>
-          <View style={{ alignItems: "flex-start" }}>
-            <View
-              style={{
-                marginLeft: 20,
-                marginBottom: 10,
-              }}
-            >
-              <FlatList
-                data={Comments}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          </View>
+          <FlatList
+            ListHeaderComponent={
+              <View style={styles.originalmessage}>
+                <View style={styles.topcontainer}>
+                  <TouchableOpacity>
+                    <Avatar.Image
+                      size={50}
+                      source={{ uri: icon ? icon : null }}
+                      style={{ backgroundColor: "grey" }}
+                    />
+                    {/* <Image source={{ uri: icon }} style={styles.profileicon} /> */}
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.namecontainer}>
+                    <NameText name={name} />
+                  </TouchableOpacity>
+                  <View style={styles.timecontainer}>
+                    <Time time={time} />
+                  </View>
+                </View>
+                <View style={styles.messagecontainer}>
+                  {message && <Text style={styles.message}>{message}</Text>}
+                </View>
+                {photo && (
+                  <TouchableOpacity style={styles.photocontainer}>
+                    <Image source={{ uri: photo }} style={styles.photo} />
+                  </TouchableOpacity>
+                )}
+                <Text
+                  style={{
+                    borderTopColor: Colors.grey,
+                    borderBottomColor: Colors.grey,
+                    borderWidth: 0.5,
+                    textAlign: "center",
+                    marginVertical: 10,
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    color: Colors.grey,
+                  }}
+                >
+                  Comments
+                </Text>
+              </View>
+            }
+            data={Comments}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
         </View>
       </View>
       <SafeAreaView style={styles.bottomcontainer}>

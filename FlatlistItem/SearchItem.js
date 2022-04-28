@@ -25,6 +25,7 @@ import { useauth } from "../BACKEND/Auth";
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../Hooks/GlobalHooks";
 import { useLoading } from "../Hooks/LoadingContext";
+import { Avatar } from "react-native-paper";
 
 const SearchItem = ({
   icon,
@@ -97,10 +98,6 @@ const SearchItem = ({
           </>
         )}
 
-        <Image
-          source={{ uri: icon ? icon : null }}
-          style={styles.profileicon}
-        />
         <TouchableOpacity
           style={{ flexDirection: "row" }}
           onPress={() =>
@@ -109,6 +106,12 @@ const SearchItem = ({
             })
           }
         >
+          <Avatar.Image
+            size={50}
+            source={{ uri: icon ? icon : null }}
+            style={{ backgroundColor: "grey" }}
+          />
+
           <View style={styles.namecontainer}>
             <NameText name={name} />
           </View>
@@ -117,35 +120,6 @@ const SearchItem = ({
         <View style={styles.timecontainer}>
           <Time time={time} />
         </View>
-        {user == currentuser?.uid && (
-          <>
-            <TouchableOpacity
-              style={{ top: 10 }}
-              onPress={() => setthreevisible(!threedotvisible)}
-            >
-              <Entypo name="dots-three-vertical" size={20} color="black" />
-            </TouchableOpacity>
-            <View style={{ top: 75, position: "absolute", right: 15 }}>
-              <ThreeDots
-                visibility={threedotvisible}
-                height={100}
-                width={200}
-                data={[
-                  {
-                    text: "Edit",
-                    icon: "pencil-outline",
-                    func: () => Editmessage(id),
-                  },
-                  {
-                    text: "Delete",
-                    icon: "trash-outline",
-                    func: () => DeleteMessage(id),
-                  },
-                ]}
-              />
-            </View>
-          </>
-        )}
       </View>
       <View style={styles.messagecontainer}>
         {message && <Text style={styles.message}>{message}</Text>}

@@ -11,6 +11,8 @@ import {
   updateEmail,
   deleteUser,
   updatePassword,
+  signInWithCredential,
+  signInWithRedirect,
 } from "firebase/auth";
 
 import { useEffect, useState } from "react";
@@ -37,6 +39,7 @@ export function login(email, password) {
 export function logout() {
   ShowAlert("Sure to Logout", "Don't worry you can login again", () => {
     signOut(auth);
+    showtoast("Loged Out Successfully");
   });
 }
 export function useauth() {
@@ -60,8 +63,10 @@ export function Glogin() {
 }
 //Github login
 export function Gitlogin() {
-  const provider = new GithubAuthProvider();
-  return signInWithPopup(auth, provider);
+  const provider = new GithubAuthProvider().providerId;
+  // return signInWithPopup(auth, provider);
+  // return signInWithRedirect(auth, provider);
+  return signInWithCredential(auth, provider);
 }
 //DisplayName,Bio,icon
 export async function updateUser(

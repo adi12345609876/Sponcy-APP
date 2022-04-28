@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sponcy",
     "slug": "Sponcy",
-    "version": "1.4.0",
+    "version": "1.6.0",
     "orientation": "portrait",
     "icon": "./assets/SponcyIcon512.png",
 
@@ -22,6 +22,8 @@
       "supportsTablet": true
     },
     "android": {
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.adinathr.Sponcy",
+      "permissions": [],
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2241821858793323~2272270500"
@@ -31,11 +33,11 @@
         "backgroundColor": "#FC8800"
       },
       "package": "com.adinathr.Sponcy",
-      "versionCode": 5
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/SponcyIcon512.png"
     },
-    "description": "Show your talents To the World"
+    "description": "Show your Skills To the World"
   }
 }

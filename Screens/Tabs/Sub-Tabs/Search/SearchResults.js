@@ -25,7 +25,7 @@ import { useauth } from "../../../../BACKEND/Auth";
 import { useLoading } from "../../../../Hooks/LoadingContext";
 import { styles } from "../../../../Features/Styles";
 import { showtoast } from "../../../../Features/Utils";
-import { TimestamptoTime } from "../../../../Hooks/GlobalHooks";
+import { relativetime, TimestamptoTime } from "../../../../Hooks/GlobalHooks";
 import SearchItem from "../../../../FlatlistItem/SearchItem";
 import { AdMobBanner } from "expo-ads-admob";
 
@@ -39,7 +39,7 @@ export default function App({ route }) {
     setSearchtext(previousSearchtext);
   }, []);
   const renderItem = ({ item }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
 
     const SearchFilter =
       item?.message
@@ -59,7 +59,7 @@ export default function App({ route }) {
             name={item.UserName}
             // checked={item.checked}
             likes={item.Like}
-            time={Time.time}
+            time={Time}
             id={item.id}
             user={item.currentuser}
             LikedUsers={item.LikedUser}

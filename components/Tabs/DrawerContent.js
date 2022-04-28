@@ -86,6 +86,7 @@ const CustomDrawer = (props) => {
                   marginBottom: 10,
 
                   borderColor: Colors.black,
+                  backgroundColor: Colors.grey,
                 }}
               />
             </View>

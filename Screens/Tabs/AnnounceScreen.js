@@ -14,7 +14,12 @@ import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
 import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import renderSeparator from "../../components/SuperComp/Separator";
 
-import { Announces, getUserDetailsCollection } from "../../BACKEND/Announce";
+import {
+  Announces,
+  Dislikemessage,
+  getUserDetailsCollection,
+  Likemessage,
+} from "../../BACKEND/Announce";
 import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 import { Colors } from "../../Features/Colors";
 import { styles } from "../../Features/Styles";
@@ -22,9 +27,15 @@ import { styles } from "../../Features/Styles";
 //screen
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { doc, onSnapshot } from "firebase/firestore";
-import { filterAnnounces, TimestamptoTime } from "../../Hooks/GlobalHooks";
+import {
+  filterAnnounces,
+  relativeDays,
+  relativetime,
+  TimestamptoTime,
+} from "../../Hooks/GlobalHooks";
 import { useauth } from "../../BACKEND/Auth";
 import { useTabBar } from "../../Hooks/TabBarprovider";
+import moment from "moment";
 //ADMOB
 //Banner Android: ca-app-pub-2241821858793323/8713857097
 //Interstitle Android:ca-app-pub-2241821858793323/9318978865
@@ -51,7 +62,17 @@ export default function AnnounceScreen({ route }) {
   const RawAnnounces = Announces();
   const currentuser = useauth();
   const userdetails = getUserDetailsCollection(currentuser?.uid);
+  const [selected, setSelected] = React.useState(new Map());
+  const onSelect = React.useCallback(
+    (id) => {
+      const newSelected = new Map(selected);
+      newSelected.set(id, !selected.get(id));
 
+      console.log(selected.get(id));
+      setSelected(newSelected);
+    },
+    [selected]
+  );
   const FollowingAnnounce = filterAnnounces(RawAnnounces, userdetails);
 
   const data = SubScreen == "Following" ? FollowingAnnounce : RawAnnounces;
@@ -75,8 +96,9 @@ export default function AnnounceScreen({ route }) {
   useEffect(() => {
     toggleTabBarAnimation();
   }, [showTabBar]);
+
   const renderItem = ({ item, index }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
 
     return (
       <>
@@ -85,12 +107,13 @@ export default function AnnounceScreen({ route }) {
           message={item.message}
           photo={item.PhotoURL}
           name={item.UserName}
-          // checked={item.checked}
-          likes={item.Like}
-          time={Time.time}
+          likes={item.LikedUser?.length}
+          time={Time}
           id={item.id}
           user={item.currentuser}
           LikedUsers={item.LikedUser}
+          selected={selected != undefined ? selected.get(item?.id) : null}
+          onSelect={onSelect}
         />
       </>
     );
@@ -101,7 +124,6 @@ export default function AnnounceScreen({ route }) {
         <View
           style={{
             flexDirection: "row",
-            // justifyContent: "center",
             alignItems: "center",
           }}
         >
@@ -134,12 +156,12 @@ export default function AnnounceScreen({ route }) {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ height: 100, borderRadius: 20 }}>
-          <AdMobBanner
-            bannerSize="largeBanner"
-            adUnitID="ca-app-pub-2241821858793323/8713857097"
-          />
-        </View>
+        {/* <View style={{ height: 100, borderRadius: 20 }}> */}
+        <AdMobBanner
+          bannerSize="banner"
+          adUnitID="ca-app-pub-2241821858793323/8713857097"
+        />
+        {/* </View> */}
       </>
     );
   };
@@ -151,8 +173,9 @@ export default function AnnounceScreen({ route }) {
           TopofList={renderHeader}
           data={data}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => item.id}
           ItemSeparatorComponent={renderSeparator}
+          extraData={selected}
         />
       </SafeAreaView>
     </View>

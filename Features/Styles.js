@@ -10,9 +10,8 @@ export const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight + 15,
   },
   timecontainer: {
-    width: deviceWidth / 2,
-    justifyContent: "center",
-    alignItems: "flex-end",
+    position: "absolute",
+    right: 10,
   },
   titleContainer: {
     marginVertical: 8,
@@ -32,26 +31,20 @@ export const styles = StyleSheet.create({
   messagecontainer: {
     maxWidth: deviceWidth - 100,
     marginLeft: 60,
-    marginBottom: 10,
+    // marginBottom: 5,
     justifyContent: "center",
     textAlign: "center",
   },
   photocontainer: {
     width: deviceWidth,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
+
+    alignItems: "flex-start",
+    marginLeft: 45,
   },
   imagecontainer: {
     justifyContent: "flex-end",
     borderRadius: 10,
     marginRight: 10,
-  },
-  iconcontainer: {
-    flexDirection: "row",
-    width: 340,
-    justifyContent: "space-evenly",
-    marginVertical: 30,
   },
 
   container1: {
@@ -106,10 +99,11 @@ export const styles = StyleSheet.create({
     elevation: 2,
   },
   container: {
-    // paddingVertical: 1,
+    margin: 5,
     flexDirection: "row",
     alignItems: "flex-start",
     backgroundColor: Colors.white,
+    flex: 1,
   },
   UsersHomecontainer: {
     flex: 1,
@@ -283,18 +277,10 @@ export const styles = StyleSheet.create({
   },
   comments: {},
   originalmessage: {},
-  profileicon: {
-    width: 60,
-    height: 60,
-    borderRadius: 200,
-    marginHorizontal: 5,
-    borderColor: Colors.black,
-    borderWidth: 2,
-  },
 
   photo: {
-    width: 250,
-    height: 200,
+    width: 200,
+    height: 150,
     borderRadius: 20,
     borderColor: Colors.white,
     borderWidth: 2,
@@ -305,10 +291,9 @@ export const styles = StyleSheet.create({
   message: {
     fontFamily: "Roboto",
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "900",
     fontStyle: "normal",
     color: Colors.black,
-    letterSpacing: 1,
   },
 
   //verifySscreen
@@ -378,11 +363,12 @@ export const styles = StyleSheet.create({
   signINStyle: {
     //done
     textAlign: "center",
-    fontFamily: "Roboto",
-    fontSize: deviceWidth / 5,
+    fontSize: deviceWidth / 8,
     fontWeight: "700",
     fontStyle: "normal",
-    padding: 5,
+    marginTop: 20,
+
+    color: Colors.black,
   },
   emailtext: {
     //done
@@ -395,16 +381,18 @@ export const styles = StyleSheet.create({
   },
 
   emailInput: {
-    borderRadius: 28,
+    borderRadius: 10,
     backgroundColor: "white",
-    borderStyle: "solid",
-    borderWidth: 1,
+    // borderStyle: "solid",
+    // borderWidth: 3,
     borderColor: "black",
     marginLeft: 3,
     marginRight: 3,
-    width: "100%",
+    width: "90%",
     justifyContent: "center",
     padding: 15,
+    elevation: 20,
+    shadowColor: Colors.grey,
   },
 
   // or: {
@@ -431,9 +419,9 @@ export const styles = StyleSheet.create({
     padding: 5,
   },
   createbutton: {
-    width: 150,
+    width: "90%",
     height: 70,
-    borderRadius: 23,
+    borderRadius: 15,
     backgroundColor: Colors.black,
     justifyContent: "center",
     alignItems: "center",
@@ -533,25 +521,6 @@ export const styles = StyleSheet.create({
 
   //comments
 
-  photo: {
-    width: 250,
-    height: 200,
-    borderRadius: 20,
-    borderColor: Colors.white,
-    borderWidth: 2,
-    // elevation: 2,
-    marginLeft: 10,
-  },
-
-  message: {
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "700",
-    fontStyle: "normal",
-    color: Colors.black,
-    letterSpacing: 1,
-  },
-
   //chatitem
   sending: {
     padding: 18,
@@ -600,24 +569,19 @@ export const styles = StyleSheet.create({
     color: Colors.grey,
     fontWeight: "600",
   },
-  //Announce
 
-  photo: {
-    width: 250,
-    height: 200,
-    borderRadius: 20,
-    borderColor: Colors.white,
-    borderWidth: 2,
-    // elevation: 2,
-    marginLeft: 10,
+  Lottieheart: {
+    width: 50,
+    height: 50,
+    justifyContent: "flex-end",
+    backgroundColor: "yellow",
+    alignItems: "baseline",
   },
-
-  message: {
-    fontFamily: "Roboto",
-    fontSize: 15,
-    fontWeight: "700",
-    fontStyle: "normal",
-    color: Colors.black,
-    letterSpacing: 1,
+  iconcontainer: {
+    flexDirection: "row",
+    width: 340,
+    justifyContent: "space-evenly",
+    marginVertical: 30,
+    backgroundColor: "green",
   },
 });

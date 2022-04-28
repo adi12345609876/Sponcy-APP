@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../BACKEND/Auth";
 import { DeleteUnreadUser } from "../BACKEND/firebase";
 import { styles } from "../Features/Styles";
+import { Avatar } from "react-native-paper";
 
 //features
 
@@ -73,7 +74,12 @@ const HomeItem = ({
       onPress={() => Handleclick()}
     >
       <TouchableOpacity style={styles.imagecontainer}>
-        <Image source={{ uri: icon ? icon : null }} style={styles.image} />
+        <Avatar.Image
+          size={50}
+          source={{ uri: icon ? icon : null }}
+          style={{ backgroundColor: "grey" }}
+        />
+        {/* <Image source={{ uri: icon ? icon : null }} style={styles.image} /> */}
       </TouchableOpacity>
       <View
         style={{

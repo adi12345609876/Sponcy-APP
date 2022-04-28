@@ -14,6 +14,7 @@ import { Colors } from "../../Features/Colors";
 import { UserData, Usersforchat } from "../../BACKEND/firebase";
 //feautres
 import { styles } from "../../Features/Styles";
+import { Avatar } from "react-native-paper";
 
 export default function AssetExample({ navigation }) {
   const userdetails = UserData();
@@ -106,10 +107,15 @@ export default function AssetExample({ navigation }) {
                         })
                       }
                     >
-                      <Image
+                      <Avatar.Image
+                        size={50}
+                        source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
+                        style={{ backgroundColor: "grey" }}
+                      />
+                      {/* <Image
                         style={styles.image}
                         source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
-                      />
+                      /> */}
                       <Text
                         style={{
                           fontSize: 18,

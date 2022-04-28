@@ -72,9 +72,9 @@ export async function sendNotification(expoPushToken, Title, Body, Data) {
 export async function GoogleLogin() {
   await Glogin();
 }
-export async function GithubLogin() {
-  await Gitlogin();
-}
+// export async function GithubLogin() {
+//   await Gitlogin();
+// }
 export async function PickImage(setPhoto, setPhotoURL) {
   // No permissions request is necessary for launching the image library
   let result = await ImagePicker.launchImageLibraryAsync({

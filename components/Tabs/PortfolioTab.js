@@ -10,7 +10,7 @@ const Tab = createMaterialTopTabNavigator();
 import CommentItem from "../../FlatlistItem/CommentItem";
 import { View, FlatList } from "react-native";
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
-import { TimestamptoTime } from "../../Hooks/GlobalHooks";
+import { relativetime, TimestamptoTime } from "../../Hooks/GlobalHooks";
 export default function Header({ useruid }) {
   const AnnounceData = Announces();
   const currentusercomments = currentuserReplies(useruid);
@@ -18,7 +18,7 @@ export default function Header({ useruid }) {
     (item) => item?.currentuser == useruid
   );
   const renderItem = ({ item }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
 
     return (
       <CommentItem
@@ -27,13 +27,13 @@ export default function Header({ useruid }) {
         name={item.UserName}
         icon={item.UserPhoto}
         // checked={item.checked}
-        time={Time.time}
+        time={Time}
         id={item.id}
       />
     );
   };
   const PostedItem = ({ item }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
 
     return (
       <AnnounceItem
@@ -43,7 +43,7 @@ export default function Header({ useruid }) {
         icon={item.UserPhoto}
         // checked={item.checked}
         likes={item.Like}
-        time={Time.time}
+        time={Time}
         id={item.id}
         user={item.currentuser}
         LikedUsers={item.LikedUser}

@@ -190,6 +190,7 @@ export default function App({ route }) {
                   borderRadius: 20,
                   marginBottom: 10,
                   borderColor: Colors.black,
+                  backgroundColor: Colors.grey,
                 }}
               />
             </View>

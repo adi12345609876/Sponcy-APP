@@ -2,7 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { ActivityIndicator, View, Image } from "react-native";
 
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { Colors, SocilaColors } from "../../Features/Colors";
 
 export function SuperButton(props) {
@@ -62,42 +62,45 @@ export function SuperButton(props) {
     </TouchableOpacity>
   );
 }
+export function SuperContainerImage(props) {
+  //props:
+  return (
+    <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            ></Pressable>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+}
 
 export default class SocialIcon extends React.Component {
   render() {
-    const { name, color, ...props } = this.props;
+    const { name, color, onPress, ...props } = this.props;
 
     return (
-      <FontAwesome {...props} color={color || SocilaColors[name]} name={name} />
+      <TouchableOpacity onPress={() => onPress()}>
+        <FontAwesome
+          {...props}
+          color={color || SocilaColors[name]}
+          name={name}
+        />
+      </TouchableOpacity>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  textInputStyle: {
-    maxHeight: 100,
-    width: "60%",
-    borderRadius: 10,
-    // alignSelf: 'center',
-    // justifyContent: 'center',
-    fontSize: 15,
-    fontWeight: "400",
-  },
-  container: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    backgroundColor: Colors.tertiary,
-    width: "100%",
-  },
-  sectionStyle: {
-    backgroundColor: Colors.white,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    borderRadius: 10,
-    margin: 10,
-    maxHeight: 100,
-    alignSelf: "flex-start",
-  },
-});

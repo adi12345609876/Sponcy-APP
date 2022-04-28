@@ -25,6 +25,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { Avatar } from "react-native-paper";
 const Notifyicon = require("../../assets/Icon/Notify.png");
 // const NotifyiconX = require("./assets/Icon/NotifyX.png");
 const LOGO_HEIGHT = 50;
@@ -75,7 +76,14 @@ export default function Header({ navigation }) {
         //   })
         // }
       >
-        <Image
+        <Avatar.Image
+          size={50}
+          source={{
+            uri: currentuser?.photoURL ? currentuser?.photoURL : null,
+          }}
+          style={{ backgroundColor: "grey" }}
+        />
+        {/* <Image
           source={{
             uri: currentuser?.photoURL ? currentuser?.photoURL : null,
           }}
@@ -84,7 +92,7 @@ export default function Header({ navigation }) {
             height: 50,
             borderRadius: 200,
           }}
-        />
+        /> */}
       </TouchableOpacity>
       {/* <Button title="Open drawer" onPress={() => navigation.openDrawer()} /> */}
       <TouchableOpacity

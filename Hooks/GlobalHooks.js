@@ -1,6 +1,7 @@
+import { isMoment } from "moment";
 import React, { useState, useEffect } from "react";
 import { Usersforchat } from "../BACKEND/firebase";
-
+import moment from "moment";
 //Generate uid
 export function generateUUID() {
   // Public Domain/MIT
@@ -86,8 +87,18 @@ export function TimestamptoTime(time) {
   // Prepend any date. Use your birthday.
   const timeString12hr = twelvehrsconvertor(FormattedTime);
 
-  return { date: date, time: timeString12hr, normaltime: atTime };
+  return {
+    date: date,
+    time: timeString12hr,
+    normaltime: atTime,
+  };
 }
+export function relativetime(time) {
+  const millisec = time.toMillis();
+  const Time = moment(new Date(millisec)).fromNow();
+  return Time;
+}
+
 function twelvehrsconvertor(time) {
   // Check correct time format and split into components
   time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [

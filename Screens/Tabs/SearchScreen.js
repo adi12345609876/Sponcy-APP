@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Announces } from "../../BACKEND/Announce";
 import { Usersforchat } from "../../BACKEND/firebase";
 import { styles } from "../../Features/Styles";
-import { TimestamptoTime } from "../../Hooks/GlobalHooks";
+import { relativetime, TimestamptoTime } from "../../Hooks/GlobalHooks";
 import SearchItem from "../../FlatlistItem/SearchItem";
 import { Avatar, Card } from "react-native-paper";
 import { AdMobBanner } from "expo-ads-admob";
@@ -27,7 +27,7 @@ export default function App({ route }) {
   const [Searchtext, setSearchtext] = useState("");
 
   const renderMesages = ({ item }) => {
-    const Time = TimestamptoTime(item?.time);
+    const Time = relativetime(item?.time);
     const SearchFilter =
       item?.message?.toLowerCase()?.includes(Searchtext?.toLowerCase()) ||
       item?.UserName?.toLowerCase()?.includes(Searchtext?.toLowerCase());
@@ -41,7 +41,7 @@ export default function App({ route }) {
               photo={item.PhotoURL}
               name={item.UserName}
               likes={item.Like}
-              time={Time.time}
+              time={Time}
               id={item.id}
               user={item.currentuser}
               LikedUsers={item.LikedUser}
@@ -59,7 +59,16 @@ export default function App({ route }) {
     return (
       <>
         {SearchFilter && (
-          <Card style={{ width: 200, height: 200, marginRight: 10 }}>
+          <Card
+            style={{
+              width: 200,
+              height: 100,
+              marginRight: 10,
+              backgroundColor: Colors.white,
+              elevation: 2,
+              marginVertical: 20,
+            }}
+          >
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Portfolio", {
@@ -85,56 +94,63 @@ export default function App({ route }) {
   return (
     <>
       <View style={styles.container1}>
-        <View style={styles.sectionStyle}>
-          <TouchableOpacity
-            style={{
-              marginLeft: 15,
-              borderRadius: 10,
-              height: 30,
-              width: 30,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons
-              name="arrow-back-outline"
-              size={24}
-              color={Colors.black}
-            />
-          </TouchableOpacity>
-          <TextInput
-            style={styles.Searchinput}
-            placeholder="Search"
-            underlineColorAndroid="transparent"
-            textAlign="left"
-            clearButtonMode="always"
-            onChangeText={setSearchtext}
-            value={Searchtext}
-          />
-          {Searchtext != "" && (
-            <TouchableOpacity
-              style={[styles.Searchbox, { marginRight: 20 }]}
-              onPress={() => setSearchtext("")}
-            >
-              <Entypo name="cross" size={24} color="black" />
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={{ height: 50, alignItems: "center" }}>
-          <AdMobBanner
-            bannerSize="banner"
-            adUnitID="ca-app-pub-2241821858793323/8713857097"
-          />
-        </View>
-        <Text
-          style={[styles.Smalltext, { textAlign: "left", paddingLeft: 20 }]}
-        >
-          recommendation
-        </Text>
+        <AnimatedFlatList
+          data={AnnounceData}
+          renderItem={renderMesages}
+          TopofList={() => (
+            <>
+              <View style={[styles.sectionStyle, { elevation: 5 }]}>
+                <TouchableOpacity
+                  style={{
+                    marginLeft: 15,
+                    borderRadius: 10,
+                    height: 30,
+                    width: 40,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={() => navigation.goBack()}
+                >
+                  <Ionicons
+                    name="arrow-back-outline"
+                    size={24}
+                    color={Colors.black}
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.Searchinput}
+                  placeholder="Search"
+                  underlineColorAndroid="transparent"
+                  textAlign="left"
+                  clearButtonMode="always"
+                  onChangeText={setSearchtext}
+                  value={Searchtext}
+                />
+                {Searchtext != "" && (
+                  <TouchableOpacity
+                    style={[styles.Searchbox, { marginRight: 20 }]}
+                    onPress={() => setSearchtext("")}
+                  >
+                    <Entypo name="cross" size={24} color="black" />
+                  </TouchableOpacity>
+                )}
+              </View>
 
-        <FlatList data={AllUsers} renderItem={renderUsers} horizontal />
-        <AnimatedFlatList data={AnnounceData} renderItem={renderMesages} />
+              <View style={{ height: 50, alignItems: "center" }}>
+                <AdMobBanner
+                  bannerSize="banner"
+                  adUnitID="ca-app-pub-2241821858793323/8713857097"
+                />
+              </View>
+              <FlatList
+                data={AllUsers}
+                renderItem={renderUsers}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </>
+          )}
+        />
       </View>
     </>
   );

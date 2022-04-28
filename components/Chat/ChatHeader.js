@@ -8,6 +8,7 @@ import ThreeDots from "../../components/SuperComp/3dotComp";
 import { LeaveRoom, EditRoom, sendNotifies } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import { styles } from "../../Features/Styles";
+import { Avatar } from "react-native-paper";
 
 export default function ChatHeader({
   name,
@@ -58,10 +59,15 @@ export default function ChatHeader({
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 10 }}>
-            <Image
+            <Avatar.Image
+              size={50}
+              source={{ uri: icon ? icon : null }}
+              style={{ backgroundColor: "grey" }}
+            />
+            {/* <Image
               source={{ uri: icon ? icon : null }}
               style={{ width: 50, height: 50, borderRadius: 200 }}
-            />
+            /> */}
           </TouchableOpacity>
           <View style={{ justifyContent: "center" }}>
             <TouchableOpacity
