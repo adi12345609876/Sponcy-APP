@@ -21,11 +21,11 @@ import { Colors } from "../../Features/Colors";
 import { Divider } from "react-native-elements";
 // import { MailComposerStatus, MailComposerOptions } from "expo-mail-composer";
 import { updateEmail, updatePassword } from "firebase/auth";
-import { sendEmail } from "../../Features/Utils";
-import { SuperButton } from "../../components/SuperComp/SuperComp";
+import { Feedbacksender, sendEmail } from "../../Features/Utils";
+import { SuperButton, SuperIcons } from "../../components/SuperComp/SuperComp";
 import { UseState } from "../../Hooks/StateContext";
 
-const CustomDrawer = (props) => {
+const CustomDrawer = () => {
   const { setLogedIn } = UseState();
 
   const [isEnabled, setIsEnabled] = useState(false);
@@ -33,7 +33,6 @@ const CustomDrawer = (props) => {
   const [Password, setPassword] = useState();
   const [Email, setEmail] = useState();
   const [Type, setType] = useState();
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const currentuser = useauth();
   const navigation = useNavigation();
   function ChangeEmailAsync() {
@@ -60,7 +59,7 @@ const CustomDrawer = (props) => {
           style={{ paddingVertical: 15 }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <MaterialIcons name={props.icon} size={32} />
+            <SuperIcons name={props.icon} size={40} />
             <Text style={styles.Mediumtext}>{props.text}</Text>
           </View>
         </TouchableOpacity>
@@ -93,19 +92,12 @@ const CustomDrawer = (props) => {
   //   );
   // }
 
-  function Feedbacksender(params) {
-    sendEmail(
-      "perfectsmooth22@gmail.com",
-      `feedback From ${currentuser?.displayName}`,
-      "feedback"
-    );
-  }
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.sectionStyle}>
         <TouchableOpacity
           style={{
-            marginLeft: 15,
+            marginHorizontal: 10,
             borderRadius: 10,
             height: 30,
             width: 30,
@@ -114,7 +106,7 @@ const CustomDrawer = (props) => {
           }}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back-outline" size={24} color={Colors.black} />
+          <SuperIcons name="Back-Arrow" size={35} color={Colors.black} />
         </TouchableOpacity>
         <Text style={styles.Mediumtext}>Settings</Text>
       </View>
@@ -161,7 +153,7 @@ const CustomDrawer = (props) => {
               setModalVisible(true);
               setType("password");
             }}
-            icon="supervised-user-circle"
+            icon="lock"
           />
 
           <SettingsList
@@ -170,13 +162,14 @@ const CustomDrawer = (props) => {
               setModalVisible(true);
               setType("email");
             }}
-            icon="alternate-email"
+            icon="at"
           />
           <SettingsList
             text={"feedback"}
             func={() => Feedbacksender()}
-            icon="feedback"
+            icon="Edit"
           />
+
           <View
             style={{
               alignItems: "flex-start",

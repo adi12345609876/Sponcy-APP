@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import Constants from "expo-constants";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text, View, Image, TouchableOpacity, TextInput } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import button from "../../../../assets/Icon/EmailSend.png";
 import { Colors } from "../../../../Features/Colors";
-import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../../../Features/Styles";
 
-import { UserData, PostAnnounce, db } from "../../../../BACKEND/firebase";
+import { db } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useauth } from "../../../../BACKEND/Auth";
@@ -33,8 +24,7 @@ export default function App({ route }) {
     const doclocation = doc(
       db,
       "Announce",
-      "LltxTedBAbKMuN07tX6j",
-      "Message",
+
       id
     );
     const newvalue = {

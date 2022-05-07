@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, View } from "react-native";
-
-//BACKEND
-//navigation
+import { ActivityIndicator, View } from "react-native";
+import * as Notifications from "expo-notifications";
+//react-navigation
+import { useNavigation } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-const Drawer = createDrawerNavigator();
+//Backend
+import { useauth } from "./BACKEND/Auth";
+import { getUserDetailsCollection } from "./BACKEND/Announce";
 //Hooks
 import TabBarprovider from "./Hooks/TabBarprovider";
-import { useauth } from "./BACKEND/Auth";
+import LoadingProvider from "./Hooks/LoadingContext";
+import StateContext, { UseState } from "./Hooks/StateContext";
 //components
 import TabBar from "./components/Tabs/BottomTab";
 import Header from "./components/Tabs/HeaderTab";
+import DrawerContent from "./components/Tabs/DrawerContent";
 import { styles } from "./Features/Styles";
+import { Colors } from "./Features/Colors";
+import {
+  SuperContainerImage,
+  SuperFAB,
+  SuperIcons,
+} from "./components/SuperComp/SuperComp";
 //screens
 import SignINScreen from "./Screens/Auth/SignIN";
 import HomeChatScreen from "./Screens/Tabs/HomeChatScreen";
@@ -37,69 +47,78 @@ import RoomDetailsScreen from "./Screens/Tabs/Sub-Tabs/Home/RoomDetails";
 import SettingsScreen from "./Screens/Drawer/Settings";
 import ReAuthScreen from "./Screens/Auth/ReAuth";
 import SearchResultsScreen from "./Screens/Tabs/Sub-Tabs/Search/SearchResults";
-import MaintainScreen from "./Screens/MaintainScreen";
 
-import LoadingProvider from "./Hooks/LoadingContext";
-import ThemeProvider from "./Hooks/ThemeContext";
-import DrawerContent from "./components/Tabs/DrawerContent";
-import StateContext, { UseState } from "./Hooks/StateContext";
-import { getUserDetailsCollection } from "./BACKEND/Announce";
-import { Colors } from "./Features/Colors";
+//navigation providers
+const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 //icons
-const Homeicon = require("./assets/Icon/Home.png");
+const Homeicon = require("./assets/Icon/Chat.png");
 const Announceicon = require("./assets/Icon/Announce.png");
 const Searchicon = require("./assets/Icon/Search.png");
 const Peopleicon = require("./assets/Icon/Person.png");
-const HomeiconX = require("./assets/Icon/HomeX.png");
-const AnnounceiconX = require("./assets/Icon/AnnounceX.png");
-const SearchiconX = require("./assets/Icon/SearchX.png");
-const PeopleiconX = require("./assets/Icon/PersonX.png");
-//features
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-//ADMOB
-//Banner Android: ca-app-pub-2241821858793323/8713857097
-//Interstitle Android:ca-app-pub-2241821858793323/9318978865
-
-//Banner ios:ca-app-pub-2241821858793323/4471359754
-//Interstitle ios:ca-app-pub-2241821858793323/7835889699
-
-//Sentry
-// Sentry.Native.captureException("message");
-// Sentry.init({
-//   dsn: "https://100bd28d309f4371952946d4448bdb09@o1217326.ingest.sentry.io/6359368",
-//   enableInExpoDevelopment: true,
-//   debug: true,
-// });
+// * Notification Settings
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 function MyTabs() {
+  const navigation = useNavigation();
+
   return (
-    <Tab.Navigator
-      initialRouteName="Announce"
-      tabBar={(props) => <TabBar {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
-      <Tab.Screen
-        name="Announce"
-        component={AnnounceScreen}
-        initialParams={{ icon: Announceicon, iconX: AnnounceiconX }}
+    <>
+      <Tab.Navigator
+        initialRouteName="Announce"
+        tabBar={(props) => <TabBar {...props} />}
+        screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen
+          name="Announce"
+          component={AnnounceScreen}
+          initialParams={{ icon: Announceicon }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeChatScreen}
+          initialParams={{ icon: Homeicon }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={SearchScreen}
+          initialParams={{ icon: Searchicon }}
+        />
+        <Tab.Screen
+          name="People"
+          component={PeopleScreen}
+          initialParams={{ icon: Peopleicon }}
+        />
+      </Tab.Navigator>
+
+      <SuperFAB
+        Subbuttons={[
+          {
+            icon: Homeicon,
+            onPress: () => navigation.navigate("CreateRooms"),
+            bgc: Colors.white,
+
+            number: 2,
+            text: "Create Rooms",
+          },
+          {
+            icon: Announceicon,
+            number: 1,
+            onPress: () => navigation.navigate("Post"),
+            bgc: Colors.white,
+
+            text: "Announce",
+          },
+        ]}
       />
-      <Tab.Screen
-        name="Home"
-        component={MaintainScreen}
-        initialParams={{ icon: Homeicon, iconX: HomeiconX }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        initialParams={{ icon: Searchicon, iconX: SearchiconX }}
-      />
-      <Tab.Screen
-        name="People"
-        component={PeopleScreen}
-        initialParams={{ icon: Peopleicon, iconX: PeopleiconX }}
-      />
-    </Tab.Navigator>
+    </>
   );
 }
 
@@ -107,6 +126,7 @@ function MyStack() {
   const currentuser = useauth();
   const [loading, setloading] = useState(true);
   const { LogedIn, setLogedIn } = UseState();
+  //* This Code sets whether the user is loged or not
   useEffect(() => {
     if (currentuser == undefined) {
       setLogedIn("NoUser");
@@ -116,12 +136,13 @@ function MyStack() {
       setLogedIn("SignedIN");
     }
   }, [currentuser]);
+  //* gives a 2 seconds time for the above code to lode
   useEffect(() => {
     setTimeout(() => {
       setloading(false);
     }, 2000);
   }, []);
-
+  //* loading screen
   if (loading) {
     return (
       <View style={styles.centeredView}>
@@ -131,7 +152,7 @@ function MyStack() {
   }
   return (
     <>
-      <Stack.Navigator initialRouteName="">
+      <Stack.Navigator>
         {LogedIn == "SignedIN" ? (
           <>
             <Stack.Screen
@@ -148,6 +169,12 @@ function MyStack() {
               name="ReAuth"
               component={ReAuthScreen}
               options={{ headerShown: false }}
+            />
+      
+            <Stack.Screen
+              name="SuperContainerImage"
+              component={SuperContainerImage}
+              options={{ headerShown: false, animation: "fade" }}
             />
             <Stack.Screen
               name="SearchResults"
@@ -256,22 +283,10 @@ function MyStack() {
     </>
   );
 }
-//!currentuser && !currentUserData?.array?.UserName ?
 
 function MyDrawer() {
-  const [Followers, setFollowers] = useState();
-  const currentuser = useauth();
-  const userdetails = getUserDetailsCollection(currentuser?.uid);
 
-  useEffect(() => {
-    if (userdetails) {
-      userdetails
-        ?.then((doc) => {
-          setFollowers(doc?.Followers);
-        })
-        .catch((e) => console.log("ERER", e));
-    }
-  }, [userdetails]);
+
 
   return (
     <Drawer.Navigator
@@ -279,14 +294,37 @@ function MyDrawer() {
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{
         header: (props) => <Header {...props} />,
+        activeBackgroundColor: "#000",
+        activeTintColor: "#ffffff",
       }}
-      initialRouteName=""
+
     >
-      <Drawer.Screen name="Tabs" component={MyTabs} />
+      <Drawer.Screen
+        name="Tabs"
+        component={MyTabs}
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <SuperIcons
+              name="Dashboard"
+              size={size}
+              color={focused ? Colors.black : Colors.black}
+            />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          drawerIcon: ({ focused, size }) => (
+            <SuperIcons
+              name="Settings"
+              size={size}
+              color={focused ? Colors.black : Colors.black}
+            />
+          ),
+        }}
       />
     </Drawer.Navigator>
   );

@@ -21,24 +21,6 @@ const HomeItem = ({ name, icon, id, index, selected, onUpdateValue }) => {
         style={styles.checkbox}
       />
     </View>
-    // <TouchableOpacity style={styles.container} onPress={() => Handleclick()}>
-    //   <TouchableOpacity style={styles.imagecontainer}>
-    //     <Image
-    //       source={icon ? icon : Nullprofile("name")}
-    //       style={styles.image}
-    //     />
-    //   </TouchableOpacity>
-    //   <View
-    //     style={{
-    //       flexDirection: "row",
-    //     }}
-    //   >
-    //     <View style={{ maxWidth: 200 }}>
-    //       <NameText name={name} />
-    //     </View>
-    //   </View>
-    //   <View style={styles.right}></View>
-    // </TouchableOpacity>
   );
 };
 

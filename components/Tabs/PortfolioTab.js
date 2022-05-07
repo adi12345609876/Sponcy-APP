@@ -11,12 +11,14 @@ import CommentItem from "../../FlatlistItem/CommentItem";
 import { View, FlatList } from "react-native";
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
 import { relativetime, TimestamptoTime } from "../../Hooks/GlobalHooks";
-export default function Header({ useruid }) {
+import Header from "./HeaderTab";
+export default function header({ useruid }) {
   const AnnounceData = Announces();
   const currentusercomments = currentuserReplies(useruid);
   const Postedmessages = AnnounceData?.filter(
     (item) => item?.currentuser == useruid
   );
+
   const renderItem = ({ item }) => {
     const Time = relativetime(item?.time);
 

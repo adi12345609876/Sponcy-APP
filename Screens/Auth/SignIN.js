@@ -1,83 +1,31 @@
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Linking,
-} from "react-native";
-let deviceWidth = Dimensions.get("screen").width;
-import { LinearGradient } from "expo-linear-gradient";
-import * as Notifications from "expo-notifications";
+import { Card, Title } from "react-native-paper";
+import React, { useState } from "react";
+import { Text, View, TextInput, TouchableOpacity, Linking } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../Features/Colors";
-import {
-  registerForPushNotificationsAsync,
-  GithubLogin,
-  GoogleLogin,
-  showtoast,
-  ShowAlert,
-} from "../../Features/Utils";
-import {
-  useauth,
-  login,
-  signup,
-  Glogin,
-  Gitlogin,
-  setToken,
-} from "../../BACKEND/Auth";
-import { sendEmailVerification } from "firebase/auth";
-import { useLoading } from "../../Hooks/LoadingContext";
+import { showtoast, ShowAlert } from "../../Features/Utils";
+import { login, signup } from "../../BACKEND/Auth";
 import { styles } from "../../Features/Styles";
-import SocialIcon, { SuperButton } from "../../components/SuperComp/SuperComp";
+import { SuperButton } from "../../components/SuperComp/SuperComp";
 import Checkbox from "expo-checkbox";
 import AnimatedLinearGradient, {
   presetColors,
 } from "react-native-animated-linear-gradient";
-if (Platform.OS != "web") {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
-}
-
 export default function Signin() {
-  const GRADIENT1 = "#ec9f05";
-  const GRADIENT2 = "#ff4e00";
-  const navigation = useNavigation();
   const [email, setemail] = useState();
   const [password, setpassword] = useState();
   // const [UserName, setUserName] = useState();
-  const [expoPushToken, setExpoPushToken] = useState("");
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(false);
   const [dontShowPassword, setdontShowPassword] = useState(true);
   const [accepted1, setaccepted1] = useState(false);
   const [accepted2, setaccepted2] = useState(false);
 
-  useEffect(() => {
-    //setToken
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
-  }, [expoPushToken]);
   async function handleSignin() {
     if (password.length > 9) {
       try {
         setloading(true);
-        await signup(email, password).then((user) => {
-          setToken(expoPushToken, user?.user?.uid).then(
-            navigation.navigate("UserDetails")
-          );
-        });
+        await signup(email, password);
         setloading(false);
       } catch (e) {
         setloading(false);
@@ -113,15 +61,6 @@ export default function Signin() {
         speed={2000}
         points={10}
       >
-        {/* <LinearGradient
-        colors={[GRADIENT1, GRADIENT2]}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          backgroundColor: Colors.white,
-          padding: 8,
-        }}
-      > */}
         <Text style={styles.signINStyle}>Welcome To Sponcy</Text>
         <Card style={{ elevation: 10 }}>
           <Card.Content>

@@ -1,26 +1,17 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, FlatList } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { Colors } from "../../Features/Colors";
-
-// or any pure javascript modules available in npm
 import { useNavigation } from "@react-navigation/native";
 import { Announces } from "../../BACKEND/Announce";
 import { Usersforchat } from "../../BACKEND/firebase";
 import { styles } from "../../Features/Styles";
-import { relativetime, TimestamptoTime } from "../../Hooks/GlobalHooks";
+import { relativetime } from "../../Hooks/GlobalHooks";
 import SearchItem from "../../FlatlistItem/SearchItem";
 import { Avatar, Card } from "react-native-paper";
 import { AdMobBanner } from "expo-ads-admob";
 import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
-
-export default function App({ route }) {
+export default function SearchScreen() {
   const AnnounceData = Announces();
   const AllUsers = Usersforchat();
   const navigation = useNavigation();
@@ -31,6 +22,7 @@ export default function App({ route }) {
     const SearchFilter =
       item?.message?.toLowerCase()?.includes(Searchtext?.toLowerCase()) ||
       item?.UserName?.toLowerCase()?.includes(Searchtext?.toLowerCase());
+
     return (
       <>
         {SearchFilter && (
@@ -72,7 +64,7 @@ export default function App({ route }) {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Portfolio", {
-                  useruid: item?.uid,
+                  useruid: item?.id,
                 })
               }
             >
@@ -81,7 +73,11 @@ export default function App({ route }) {
                 subtitle={item?.Biodata}
                 titleStyle={{ maxWidth: 100 }}
                 left={() => (
-                  <Avatar.Image size={50} source={{ uri: item?.PhotoURL }} />
+                  <Avatar.Image
+                    size={50}
+                    source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
+                    style={{ backgroundColor: Colors.grey }}
+                  />
                 )}
               />
             </TouchableOpacity>

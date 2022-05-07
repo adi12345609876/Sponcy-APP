@@ -2,35 +2,27 @@ import React, { useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   Image,
   TouchableOpacity,
   TextInput,
   ImageBackground,
 } from "react-native";
-import Constants from "expo-constants";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import button from "../../../../assets/Icon/EmailSend.png";
 import { Colors } from "../../../../Features/Colors";
-import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../../../Features/Styles";
 
-import {
-  UserData,
-  PostAnnounce,
-  AddRooms,
-  EditRoom,
-} from "../../../../BACKEND/firebase";
+import { EditRoom } from "../../../../BACKEND/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { useauth } from "../../../../BACKEND/Auth";
 import { PickImage } from "../../../../Features/Utils";
+import { SuperIcons } from "../../../../components/SuperComp/SuperComp";
 
 export default function App({ route }) {
   const { selectedIds } = route.params;
   const { name, icon, id, participants } = route.params;
 
   const navigation = useNavigation();
-  const currentuser = useauth();
 
   const [text, settext] = useState(name);
   const [docid, setdocid] = useState(id);
@@ -60,11 +52,7 @@ export default function App({ route }) {
         >
           <View style={{ marginLeft: 10 }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons
-                name="arrow-back-outline"
-                size={30}
-                color={Colors.black}
-              />
+              <SuperIcons name={"Back-Arrow"} size={50} color={Colors.black} />
             </TouchableOpacity>
           </View>
           <View style={{ position: "absolute", right: 10 }}>

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
-  StyleSheet,
   FlatList,
   Dimensions,
   Text,
@@ -9,9 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 //components
-import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import NotifyItem from "../../FlatlistItem/NotifyItem";
-import renderSeparator from "../../components/SuperComp/Separator";
 import {
   ChatRooms,
   getNotifies,
@@ -21,6 +18,8 @@ import {
 import { useauth } from "../../BACKEND/Auth";
 import { getUserDetailsCollection } from "../../BACKEND/Announce";
 //assets
+import LottieView from "lottie-react-native";
+
 import { styles } from "../../Features/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../Features/Colors";
@@ -118,8 +117,22 @@ export default function AssetExample({ navigation }) {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={() => (
-          <View>
-            <Text style={styles.Bigtext}>No Notification</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "space-between",
+              alignItems: "center",
+              height: deviceHeight / 2,
+            }}
+          >
+            <LottieView
+              autoPlay
+              loop
+              source={require("../../assets/Lottie/No_Notify.json")}
+            />
+            <Text style={[styles.Mediumtext, { color: Colors.primary }]}>
+              No Notifications yet
+            </Text>
           </View>
         )}
       />

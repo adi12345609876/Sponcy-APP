@@ -1,12 +1,17 @@
 export const Colors = {
   primary: "#FA8334",
+  //ffa100
   secondary: "#4630eb",
   tertiary: "#FFEFD6",
-  black: "#25292e",
+  black: "#101820FF",
   white: "#f8f7ff",
-  grey: "#D0D1D4",
-  red: "#A7171A",
+  grey: "#f5e8df",
+  darkgrey: "#D0D1D4",
+  lightgrey: "#eeeeee",
+  red: "#FF0000",
   link: "#0000EE",
+  peach: "#FCEDDA",
+  green: "#00FF00",
 };
 export const SocilaColors = {
   link: "#517fa4",

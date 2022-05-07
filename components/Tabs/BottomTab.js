@@ -16,8 +16,8 @@ const TabBar = ({ state, navigation }) => {
   const { routes } = state;
   const renderColor = (currentTab) =>
     currentTab === selected ? Colors.primary : Colors.black;
-  const renderIcon = (route) =>
-    route.name === selected ? route.params.iconX : route.params.icon;
+  // const renderIcon = (route) =>
+  //   route.name === selected ? route.params.iconX : route.params.icon;
 
   const { showTabBar } = useTabBar();
 
@@ -58,13 +58,12 @@ const TabBar = ({ state, navigation }) => {
         {routes.map((route, index) => (
           <Tabs
             tab={route}
-            icon={renderIcon(route)}
+            icon={route.params.icon}
             onPress={() => handlePress(route.name, index)}
             color={renderColor(route.name)}
             key={route.key}
           />
         ))}
-        <PostButton />
       </Animated.View>
     </View>
   );

@@ -1,17 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import {
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from "react-native";
+import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { Avatar } from "react-native-paper";
 //components
-import NameText from "../components/SuperComp/Name";
 import Time from "../components/SuperComp/time";
 import { Colors } from "../Features/Colors";
 //assets
@@ -33,7 +24,7 @@ const HomeItem = ({ message, photo, name, icon, time, id, user }) => {
         <Avatar.Image
           size={50}
           source={{ uri: icon ? icon : null }}
-          style={{ backgroundColor: "grey" }}
+          style={{ backgroundColor: Colors.grey }}
         />
 
         <TouchableOpacity

@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   Image,
   FlatList,
   Dimensions,
   TouchableOpacity,
   SafeAreaView,
-  ScrollView,
 } from "react-native";
 //components
 import NameText from "../../../../components/SuperComp/Name";
@@ -17,21 +15,17 @@ import Customtextinput from "../../../../components/SuperComp/Textinput";
 //assets
 import CommentItem from "../../../../FlatlistItem/CommentItem";
 //features
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
 import { Colors } from "../../../../Features/Colors";
-import { UserData } from "../../../../BACKEND/firebase";
 import { getComments, PostComments } from "../../../../BACKEND/Announce";
 import { FontAwesome } from "@expo/vector-icons";
 import { useauth } from "../../../../BACKEND/Auth";
-import { TimestamptoTime, relativetime } from "../../../../Hooks/GlobalHooks";
+import { relativetime } from "../../../../Hooks/GlobalHooks";
 // import { ParticularUser } from "../../../../Hooks/GlobalHooks";
 import { styles } from "../../../../Features/Styles";
 import { Avatar } from "react-native-paper";
-import AnimatedFlatList from "../../../../components/Animation/AnimatedFlatList";
 
-const HomeItem = ({ navigation, route }) => {
-  const { message, photo, name, icon, checked, time, id } = route.params;
+const HomeItem = ({ route }) => {
+  const { message, photo, name, icon, time, id } = route.params;
   const Comments = getComments(id);
   const currentuser = useauth();
   // const currentUserData = UserData();
@@ -87,7 +81,7 @@ const HomeItem = ({ navigation, route }) => {
                     <Avatar.Image
                       size={50}
                       source={{ uri: icon ? icon : null }}
-                      style={{ backgroundColor: "grey" }}
+                      style={{ backgroundColor: Colors.grey }}
                     />
                     {/* <Image source={{ uri: icon }} style={styles.profileicon} /> */}
                   </TouchableOpacity>
@@ -136,6 +130,7 @@ const HomeItem = ({ navigation, route }) => {
           setheight={setheight}
           setPhoto={setPhoto}
           setPhotoURL={setPhotoURL}
+          PhotoURL={PhotoURL}
         >
           <TouchableOpacity
             onPress={() => Submit()}

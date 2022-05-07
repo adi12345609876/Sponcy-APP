@@ -1,38 +1,25 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  Text,
-  TextInput,
-} from "react-native";
+import { View, FlatList, Dimensions, TextInput } from "react-native";
 //expo
 //components
-import AnimatedScroolView from "../../../../components/Animation/AnimatedScroolTab";
 
-import renderSeparator from "../../../../components/SuperComp/Separator";
 //assets
 import { styles } from "../../../../Features/Styles";
-import { Ionicons, EvilIcons, Entypo } from "@expo/vector-icons";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
-import { ChatRooms, Usersforchat } from "../../../../BACKEND/firebase";
+import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Avatar, Card } from "react-native-paper";
+import { Usersforchat } from "../../../../BACKEND/firebase";
 import { useauth } from "../../../../BACKEND/Auth";
-import ParticipantsItem from "../../../../FlatlistItem/ParticipantsItem";
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { Colors } from "../../../../Features/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { SuperButton } from "../../../../components/SuperComp/SuperComp";
 //features
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
 
 export default function AssetExample({ route }) {
   const { SelectedId } = route.params;
   const navigation = useNavigation();
 
-  const currentuser = useauth();
   var userdata = Usersforchat();
 
   const [Users, setuserdata] = useState(userdata);
@@ -42,7 +29,7 @@ export default function AssetExample({ route }) {
   }, [userdata]);
 
   useEffect(() => {}, []);
-  const onUpdateValue = (index, value, id) => {
+  const onUpdateValue = (index, value) => {
     Users[index].selected = value;
 
     return setuserdata([...Users]);
@@ -66,7 +53,6 @@ export default function AssetExample({ route }) {
     const SearchFilter = item?.UserName?.toLowerCase()?.includes(
       Searchtext?.toLowerCase()
     );
-    const IsSelected = selectedIds?.includes(item?.id);
 
     return (
       <>
@@ -92,7 +78,11 @@ export default function AssetExample({ route }) {
                 subtitle={item?.Biodata}
                 titleStyle={{ maxWidth: 100 }}
                 left={() => (
-                  <Avatar.Image size={50} source={{ uri: item?.PhotoURL }} />
+                  <Avatar.Image
+                    size={50}
+                    source={{ uri: item?.PhotoURL }}
+                    style={{ backgroundColor: Colors.grey }}
+                  />
                 )}
               />
             </TouchableOpacity>
@@ -108,13 +98,6 @@ export default function AssetExample({ route }) {
   let yFilter = SelectedId.map((itemY) => {
     return itemY;
   });
-
-  let ind = Users?.filter((itemX, index) => {
-    yFilter?.includes(itemX.id);
-    return index;
-  });
-
-  let filteredX = Users?.filter((itemX) => yFilter?.includes(itemX.id));
 
   return (
     <View>

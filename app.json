@@ -4,15 +4,21 @@
     "slug": "Sponcy",
     "version": "1.6.0",
     "orientation": "portrait",
-    "icon": "./assets/SponcyIcon512.png",
-
+    "icon": "./assets/adaptive-icon.png",
+    "notification": {
+      "icon": "./assets/Notificationicon.png",
+      "color": "#311b92",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Updates from Colab.notes",
+      "iosDisplayInForeground": true
+    },
     "splash": {
-      "image": "./assets/Splash2.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FC8800"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 6000
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -29,15 +35,16 @@
         "googleMobileAdsAppId": "ca-app-pub-2241821858793323~2272270500"
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/SponcyIcon512.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FC8800"
       },
       "package": "com.adinathr.Sponcy",
       "versionCode": 7
     },
     "web": {
-      "favicon": "./assets/SponcyIcon512.png"
+      "favicon": "./assets/adaptive-icon.png"
     },
+
     "description": "Show your Skills To the World"
   }
 }

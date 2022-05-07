@@ -1,61 +1,50 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  StatusBar,
-  TouchableOpacity,
-  ImageBackground,
-  Animated,
-  Image,
-} from "react-native";
+import { Text, View, StatusBar, TouchableOpacity, Image } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
+  AddRooms,
   Hiredoc,
   sendNotifies,
   SpecifiedUserData,
 } from "../../../../BACKEND/firebase";
-import {
-  FollowUser,
-  UnFollowUser,
-  getUserDetailsCollection,
-  HireUser,
-} from "../../../../BACKEND/Announce";
-// import checkcircle from "../../../../assets/Photos/icons/CheckCircle.png";
+import { FollowUser, UnFollowUser } from "../../../../BACKEND/Announce";
+
 import { logout, useauth } from "../../../../BACKEND/Auth";
 import { Divider } from "react-native-elements";
 import ThreeDots from "../../../../components/SuperComp/3dotComp";
-import { Colors } from "../../../../Features/Colors";
+import { Colors, SocilaColors } from "../../../../Features/Colors";
 import PortfolioTab from "../../../../components/Tabs/PortfolioTab";
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../../../../Hooks/GlobalHooks";
 import { sendNotification, showtoast } from "../../../../Features/Utils";
 import { styles } from "../../../../Features/Styles";
 import * as Updates from "expo-updates";
-import { UseState } from "../../../../Hooks/StateContext";
-import { useLoading } from "../../../../Hooks/LoadingContext";
+import { SuperIcons } from "../../../../components/SuperComp/SuperComp";
 export default function App({ route }) {
   const navigation = useNavigation();
   const { useruid } = route.params;
   const specificuserdata = SpecifiedUserData(useruid);
-  const userdetails = getUserDetailsCollection(useruid);
+
   const currentuser = useauth();
-  const [threedotvisible, setthreevisible] = useState();
+  const [threedotvisible, setthreevisible] = useState(false);
   const [alreadyfollwing, setalreadyfollwing] = useState();
   const [alreadyHiring, setalreadyHiring] = useState();
   const [loading, setloading] = useState(false);
+  const [SkillLines, setSkillLines] = useState(1);
+  const [BioLines, setBioLines] = useState(1);
 
   useEffect(() => {
     setalreadyfollwing(specificuserdata?.Followers?.includes(currentuser?.uid));
     setalreadyHiring(specificuserdata?.Hire?.includes(currentuser?.uid));
     console.log("alreadyfollwing", alreadyfollwing);
   }, [specificuserdata]);
-
+  console.log("specificuserdata", specificuserdata);
   async function handleFollow() {
     setloading(true);
-    await FollowUser(currentuser?.uid, specificuserdata?.uid);
+    await FollowUser(currentuser?.uid, useruid);
     setloading(false);
-    alreadyfollwing(true);
+
     showtoast("Following");
   }
   async function handleLogout() {
@@ -65,18 +54,19 @@ export default function App({ route }) {
   }
   async function handleUnFollow() {
     setloading(true);
-    await UnFollowUser(currentuser?.uid, specificuserdata?.uid);
+    await UnFollowUser(currentuser?.uid, useruid);
     setloading(false);
-    alreadyfollwing(false);
+
     showtoast("UnFollowed");
   }
-  function TalkPrivately() {
-    navigation.navigate("Chat", {
-      name: specificuserdata?.UserName,
-      icon: specificuserdata?.PhotoURL,
-      id: useruid,
-      onechat: true,
-    });
+  async function TalkPrivately() {
+    await AddRooms(
+      specificuserdata?.PhotoURL,
+      `${specificuserdata?.UserName} && ${currentuser?.displayName}`,
+      [currentuser?.uid, useruid],
+      currentuser?.uid
+    );
+    navigation.navigate("Home");
   }
   async function HireUsers() {
     await Hiredoc(currentuser?.uid, useruid);
@@ -111,7 +101,12 @@ export default function App({ route }) {
       showtoast("An error occured");
     }
   }
-
+  const TotalFollowers = specificuserdata?.Followers?.filter((item) => {
+    return item?.Seen == false;
+  }).length;
+  const TotalFollowing = specificuserdata?.Following?.filter((item) => {
+    return item?.Seen == false;
+  }).length;
   return (
     <>
       <View
@@ -149,7 +144,13 @@ export default function App({ route }) {
             ]}
             onPress={() => setthreevisible(!threedotvisible)}
           >
-            <Entypo name="dots-three-vertical" size={24} color={Colors.black} />
+            <SuperIcons
+              name={threedotvisible ? "ThreeDots" : "ThreeDots-Fill"}
+              size={30}
+              color={Colors.black}
+            />
+
+            {/* <SuperIcons name="ThreeDots-Fill" size={30} color={Colors.black} /> */}
           </TouchableOpacity>
         </View>
         <View
@@ -245,26 +246,57 @@ export default function App({ route }) {
                 fontFamily: "Roboto",
                 fontSize: 15,
                 fontWeight: "normal",
-                color: Colors.grey,
+                color: Colors.darkgrey,
               }}
+              numberOfLines={2}
             >
               {specificuserdata?.Biodata}
             </Text>
+            {specificuserdata?.Biodata?.length > 25 && (
+              <Text
+                style={{
+                  marginLeft: 35,
+                  fontWeight: "bold",
+                  color: SocilaColors.link,
+                }}
+                onPress={() => (BioLines > 1 ? setBioLines(1) : setBioLines(2))}
+              >
+                {BioLines > 1 ? "show less" : "show More"}
+              </Text>
+            )}
+
             {specificuserdata?.Work && (
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons name="work" size={24} color="black" />
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    fontFamily: "Roboto",
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    color: Colors.grey,
-                  }}
-                >
-                  {specificuserdata?.Work}
-                </Text>
-              </View>
+              <>
+                <View style={{ flexDirection: "row" }}>
+                  <MaterialIcons name="work" size={24} color="black" />
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      fontFamily: "Roboto",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                      color: Colors.darkgrey,
+                    }}
+                    numberOfLines={SkillLines}
+                  >
+                    {specificuserdata?.Work}
+                  </Text>
+                </View>
+                {specificuserdata?.Work?.length > 25 && (
+                  <Text
+                    style={{
+                      marginLeft: 35,
+                      fontWeight: "bold",
+                      color: SocilaColors.link,
+                    }}
+                    onPress={() =>
+                      SkillLines > 1 ? setSkillLines(1) : setSkillLines(2)
+                    }
+                  >
+                    {SkillLines > 1 ? "show less" : "show More"}
+                  </Text>
+                )}
+              </>
             )}
           </View>
           <Divider style={{ width: 1000 }} />
@@ -310,7 +342,7 @@ export default function App({ route }) {
               </View>
             </View>
           </View>
-          {currentuser?.uid && (
+          {currentuser?.uid != useruid && (
             <>
               <View style={{ marginTop: 15 }}>
                 <View style={{ flexDirection: "row" }}>
@@ -319,7 +351,7 @@ export default function App({ route }) {
                       style={{
                         backgroundColor:
                           loading || alreadyfollwing
-                            ? Colors.grey
+                            ? Colors.darkgrey
                             : Colors.primary,
                         height: 40,
                         width: 150,
@@ -360,11 +392,11 @@ export default function App({ route }) {
                         alignSelf: "center",
                         elevation: 3,
                       }}
-                      onPress={() =>
+                      onPress={() => {
                         alreadyHiring
-                          ? showtoast("Your request sent")
-                          : HireUsers()
-                      }
+                          ? showtoast("Your request already sent")
+                          : HireUsers();
+                      }}
                     >
                       <Text
                         style={{
@@ -398,11 +430,11 @@ export default function App({ route }) {
               </TouchableOpacity>
             </>
           )}
-
           <Divider style={{ width: 1000 }} />
         </View>
         <View style={{ top: 30, position: "absolute", right: 18 }}>
           <ThreeDots
+            setvisibility={setthreevisible}
             visibility={threedotvisible}
             height={100}
             width={200}
@@ -410,21 +442,23 @@ export default function App({ route }) {
               // {
               //   text: "Settings",
               //   icon: "settings-sharp",
-              //   func: () => {},
+              //   func: () => {
+              //     navigation.navigate("Settings");
+              //   },
               // },
               {
                 text: "Logout",
-                icon: "log-out-outline",
+                icon: "Logout",
                 func: () => handleLogout(),
               },
               {
                 text: "Edit",
-                icon: "pencil",
+                icon: "Pencil-Edit",
                 func: () => navigation.navigate("Edit"),
               },
               {
                 text: "Update",
-                icon: "cloud-download-outline",
+                icon: "Cloud_Download",
                 func: () => UpdateApp(),
               },
             ]}

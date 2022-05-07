@@ -1,31 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  Image,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, FlatList } from "react-native";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Colors } from "../../../../Features/Colors";
 // or any pure javascript modules available in npm
 import Constants from "expo-constants";
 
 import { useNavigation } from "@react-navigation/native";
-import {
-  AddSearchhistory,
-  Announces,
-  GetSearchhistory,
-} from "../../../../BACKEND/Announce";
-import { Usersforchat } from "../../../../BACKEND/firebase";
+import { Announces } from "../../../../BACKEND/Announce";
 import { useauth } from "../../../../BACKEND/Auth";
-import { useLoading } from "../../../../Hooks/LoadingContext";
 import { styles } from "../../../../Features/Styles";
-import { showtoast } from "../../../../Features/Utils";
-import { relativetime, TimestamptoTime } from "../../../../Hooks/GlobalHooks";
+import { relativetime } from "../../../../Hooks/GlobalHooks";
 import SearchItem from "../../../../FlatlistItem/SearchItem";
 import { AdMobBanner } from "expo-ads-admob";
 

@@ -94,7 +94,7 @@ export function TimestamptoTime(time) {
   };
 }
 export function relativetime(time) {
-  const millisec = time.toMillis();
+  const millisec = time?.toMillis();
   const Time = moment(new Date(millisec)).fromNow();
   return Time;
 }

@@ -1,3 +1,4 @@
+//!this screen is used if there is any error occurs or if there is any bug in any screen
 import * as React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 

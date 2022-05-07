@@ -1,77 +1,43 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  StyleSheet,
-  FlatList,
   Text,
-  Platform,
   TouchableOpacity,
   SafeAreaView,
   Animated,
 } from "react-native";
 //components
-import { AdMobBanner, AdMobInterstitial } from "expo-ads-admob";
-import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
+import { AdMobBanner } from "expo-ads-admob";
 import renderSeparator from "../../components/SuperComp/Separator";
 
-import {
-  Announces,
-  Dislikemessage,
-  getUserDetailsCollection,
-  Likemessage,
-} from "../../BACKEND/Announce";
+import { Announces, getUserDetailsCollection } from "../../BACKEND/Announce";
 import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 import { Colors } from "../../Features/Colors";
-import { styles } from "../../Features/Styles";
+import { deviceWidth, styles } from "../../Features/Styles";
 
 //screen
 import AnnounceItem from "../../FlatlistItem/AnnounceItem";
-import { doc, onSnapshot } from "firebase/firestore";
-import {
-  filterAnnounces,
-  relativeDays,
-  relativetime,
-  TimestamptoTime,
-} from "../../Hooks/GlobalHooks";
+import { filterAnnounces, relativetime } from "../../Hooks/GlobalHooks";
 import { useauth } from "../../BACKEND/Auth";
 import { useTabBar } from "../../Hooks/TabBarprovider";
-import moment from "moment";
+import { Banner_Android } from "../../Features/GlobalConsts";
 //ADMOB
-//Banner Android: ca-app-pub-2241821858793323/8713857097
-//Interstitle Android:ca-app-pub-2241821858793323/9318978865
-//TEST:ca-app-pub-3940256099942544/6300978111
-//Banner ios:ca-app-pub-2241821858793323/4471359754
-//Interstitle ios:ca-app-pub-2241821858793323/7835889699
 
-export default function AnnounceScreen({ route }) {
-  // const Adref = useRef();
-  // const BannerAppid =
-  //   Platform.OS === "ios"
-  //     ? "ca-app-pub-2241821858793323/4471359754"
-  //     : "ca-app-pub-2241821858793323/8713857097";
-  // const InterstitleAppid =
-  //   Platform.OS === "ios"
-  //     ? "ca-app-pub-2241821858793323/7835889699"
-  //     : "ca-app-pub-2241821858793323/9318978865";
-  // useEffect(async () => {
-  //   AdMobInterstitial.setAdUnitID(InterstitleAppid);
-  //   await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: false });
-  //   await AdMobInterstitial.showAdAsync();
-  // });
+export default function AnnounceScreen() {
   const [SubScreen, setSubScreen] = useState("Announces");
   const RawAnnounces = Announces();
   const currentuser = useauth();
   const userdetails = getUserDetailsCollection(currentuser?.uid);
-  const [selected, setSelected] = React.useState(new Map());
-  const onSelect = React.useCallback(
+  const [Like, setLike] = React.useState(new Map());
+  const onLike = React.useCallback(
     (id) => {
-      const newSelected = new Map(selected);
-      newSelected.set(id, !selected.get(id));
+      const newLike = new Map(Like);
+      newLike.set(id, !Like.get(id));
 
-      console.log(selected.get(id));
-      setSelected(newSelected);
+      console.log(Like.get(id));
+      setLike(newLike);
     },
-    [selected]
+    [Like]
   );
   const FollowingAnnounce = filterAnnounces(RawAnnounces, userdetails);
 
@@ -97,7 +63,7 @@ export default function AnnounceScreen({ route }) {
     toggleTabBarAnimation();
   }, [showTabBar]);
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     const Time = relativetime(item?.time);
 
     return (
@@ -112,8 +78,8 @@ export default function AnnounceScreen({ route }) {
           id={item.id}
           user={item.currentuser}
           LikedUsers={item.LikedUser}
-          selected={selected != undefined ? selected.get(item?.id) : null}
-          onSelect={onSelect}
+          Like={Like != undefined ? Like.get(item?.id) : null}
+          onLike={onLike}
         />
       </>
     );
@@ -125,20 +91,34 @@ export default function AnnounceScreen({ route }) {
           style={{
             flexDirection: "row",
             alignItems: "center",
+            marginVertical: 10,
+            justifyContent: "space-around",
+            width: deviceWidth,
           }}
         >
-          <View style={{ paddingHorizontal: 10 }}>
+          <View style={{ paddingHorizontal: 5 }}>
             <TouchableOpacity
               style={[
                 styles.Searchbox,
                 {
+                  borderRadius: 5,
                   backgroundColor:
                     SubScreen == "Following" ? Colors.primary : Colors.grey,
                 },
               ]}
               onPress={() => setSubScreen("Following")}
             >
-              <Text style={styles.Smalltext}>Following</Text>
+              <Text
+                style={[
+                  styles.Smalltext,
+                  {
+                    color:
+                      SubScreen == "Following" ? Colors.white : Colors.black,
+                  },
+                ]}
+              >
+                Following
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={{ paddingHorizontal: 10 }}>
@@ -146,21 +126,29 @@ export default function AnnounceScreen({ route }) {
               style={[
                 styles.Searchbox,
                 {
+                  borderRadius: 5,
                   backgroundColor:
                     SubScreen == "Announces" ? Colors.primary : Colors.grey,
                 },
               ]}
               onPress={() => setSubScreen("Announces")}
             >
-              <Text style={styles.Smalltext}>All Announces</Text>
+              <Text
+                style={[
+                  styles.Smalltext,
+                  {
+                    color:
+                      SubScreen == "Announces" ? Colors.white : Colors.black,
+                  },
+                ]}
+              >
+                All Announces
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
         {/* <View style={{ height: 100, borderRadius: 20 }}> */}
-        <AdMobBanner
-          bannerSize="banner"
-          adUnitID="ca-app-pub-2241821858793323/8713857097"
-        />
+        <AdMobBanner bannerSize="banner" adUnitID={Banner_Android} />
         {/* </View> */}
       </>
     );
@@ -173,9 +161,9 @@ export default function AnnounceScreen({ route }) {
           TopofList={renderHeader}
           data={data}
           renderItem={renderItem}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
-          extraData={selected}
+          extraData={Like}
         />
       </SafeAreaView>
     </View>

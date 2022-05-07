@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList, Dimensions, Text } from "react-native";
+import { View, FlatList, Text } from "react-native";
 //expo
 //components
-import AnimatedScroolView from "../../../../components/Animation/AnimatedScroolTab";
 
 import renderSeparator from "../../../../components/SuperComp/Separator";
 //assets
-import { ChatRooms, Usersforchat } from "../../../../BACKEND/firebase";
-import { useauth } from "../../../../BACKEND/Auth";
+import { Usersforchat } from "../../../../BACKEND/firebase";
 import ParticipantsItem from "../../../../FlatlistItem/ParticipantsItem";
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { Colors } from "../../../../Features/Colors";
 import { useNavigation } from "@react-navigation/native";
-import { styles } from "../../../../Features/Styles";
 
 //features
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
 
 export default function AssetExample() {
   const navigation = useNavigation();
 
-  const currentuser = useauth();
   var userdata = Usersforchat();
 
   const [Users, setuserdata] = useState(userdata);

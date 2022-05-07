@@ -32,12 +32,7 @@ if (getApps().length < 1) {
 //Get Announce
 export function Announces() {
   const [Announce, setAnnounce] = useState();
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message"
-  );
+  const Collocation = collection(db, "Announce");
   useEffect(() => {
     const q = query(Collocation, orderBy("time", "desc"));
     onSnapshot(q, (snapshot) => {
@@ -57,14 +52,7 @@ export function Announces() {
 //Get Comments
 export function getComments(docid) {
   const [Comments, setComments] = useState();
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    docid,
-    "Comments"
-  );
+  const Collocation = collection(db, "Announce", docid, "Comments");
   const q = query(Collocation, orderBy("time"));
   useEffect(() => {
     onSnapshot(q, (snapshot) => {
@@ -121,33 +109,27 @@ export async function getUserDetailsCollection(otheruser) {
 }
 //Like
 export async function Likemessage(currentuser, messageid) {
-  updateDoc(doc(db, "Announce", "LltxTedBAbKMuN07tX6j", "Message", messageid), {
+  updateDoc(doc(db, "Announce", messageid), {
     LikedUser: arrayUnion(currentuser),
   });
 }
 //Unlike
 export async function Dislikemessage(currentuser, messageid) {
-  updateDoc(doc(db, "Announce", "LltxTedBAbKMuN07tX6j", "Message", messageid), {
+  updateDoc(doc(db, "Announce", messageid), {
     LikedUser: arrayRemove(currentuser),
   });
 }
 //Follow
 export async function FollowUser(currentuser, otheruser) {
-  //const [Comments, setComments] = useState();
-
   const Doclocation = doc(db, "Users", otheruser);
   const Doccurrentuser = doc(db, "Users", currentuser);
-
   //for otheruser
   await updateDoc(Doclocation, {
     Followers: arrayUnion(currentuser),
-    FollowerCount: increment(1),
   });
-
   //for currentuser
   await updateDoc(Doccurrentuser, {
     Following: arrayUnion(otheruser),
-    FollowingCount: increment(1),
   });
 }
 // export async function SponsorUser(currentuser, otheruser) {
@@ -178,16 +160,18 @@ export async function UnFollowUser(currentuser, otheruser) {
   const Doccurrentuser = doc(db, "Users", currentuser);
 
   //for otheruser
-  await updateDoc(Doclocation, {
-    Followers: arrayRemove(currentuser),
-    FollowerCount: increment(-1),
-  });
+  if (currentuser) {
+    await updateDoc(Doclocation, {
+      Followers: arrayRemove(currentuser),
+    });
+  }
 
   //for currentuser
-  await updateDoc(Doccurrentuser, {
-    Following: arrayRemove(otheruser),
-    FollowingCount: increment(-1),
-  });
+  if (otheruser) {
+    await updateDoc(Doccurrentuser, {
+      Following: arrayRemove(otheruser),
+    });
+  }
 }
 //Add Comments
 export async function PostComments(
@@ -198,14 +182,7 @@ export async function PostComments(
   UserName,
   UserPhoto
 ) {
-  const Collocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message",
-    docid,
-    "Comments"
-  );
+  const Collocation = collection(db, "Announce", docid, "Comments");
   const fileRef = ref(storage, "CommentsPIC/" + uuid.v4() + ".png");
 
   //upload image

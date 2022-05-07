@@ -5,7 +5,14 @@
 import React, { useEffect, useState } from "react";
 
 //import all the components we are going to use
-import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Colors";
 import {
@@ -21,19 +28,7 @@ import { styles } from "../../Features/Styles";
 import { SuperButton } from "../SuperComp/SuperComp";
 import { showtoast } from "../../Features/Utils";
 
-export function ChatBottom({
-  roomid,
-  participants,
-  name,
-  icon,
-  onechat,
-  Type,
-  Mess,
-  Forwarded,
-  Invite,
-  InvitationData,
-  Sponsor,
-}) {
+export function ChatBottom({ roomid, participants }) {
   const currentUser = useauth();
 
   const otheruserdata = SpecifiedUserData(roomid);
@@ -41,60 +36,20 @@ export function ChatBottom({
   const [text, settext] = useState();
 
   const [Photo, setPhoto] = useState();
+  const [PhotoURL, setPhotoURL] = useState();
   const [PhotoDetails, setPhotoDetails] = useState();
   const [loading, setloading] = useState();
 
-  useEffect(() => {
-    if (Invite) {
-      settext(
-        `You have been Invited by your dear friend to this group.I request you to join`,
-        name
-      );
-    } else if (Sponsor) {
-      settext(`I am is willing to sponsor you.what do you say?`);
-    }
-  }, [Invite, Sponsor]);
-  useEffect(() => {
-    if (Mess) {
-      settext(Mess);
-    }
-  }, [Mess]);
-
   async function onSubmit() {
-    const forwarded = Forwarded ? true : false;
     if (text != undefined) {
-      if (!onechat) {
-        await PostPrivateChats(
-          roomid,
-          currentUser?.uid,
-          text,
-          participants,
-          name,
-          icon,
-          Forwarded,
-          Invite,
-          InvitationData,
-          Photo,
-          PhotoDetails
-        );
-        AddUnreadUser(roomid, participants);
-      } else {
-        await PostOnetoOnechat(
-          roomid,
-          currentUser?.uid,
-          text,
-          currentUser?.displayName,
-          currentUser?.photoURL,
-          forwarded,
-          Invite,
-          InvitationData,
-          Photo,
-          PhotoDetails,
-          Sponsor,
-          otheruserdata
-        );
-      }
-
+      await PostPrivateChats(
+        roomid,
+        currentUser?.uid,
+        text,
+        participants,
+        Photo
+      );
+      AddUnreadUser(roomid, participants);
       setheight(23);
       settext("");
     } else {
@@ -102,48 +57,21 @@ export function ChatBottom({
     }
   }
 
-  // <Text>{senttext}</Text>
   return (
     <View style={styles.container}>
       <View style={[styles.sectionStyle, { height: Math.max(35, height) }]}>
-        {/* <TextInput
-          style={[styles.textInputStyle, { height: Math.max(35, height) }]}
-          placeholder="Type Thoughts"
-          underlineColorAndroid="transparent"
-          multiline
-          onContentSizeChange={(event) => {
-            setheight(event.nativeEvent.contentSize.height);
-          }}
-          onChangeText={settext}
-          autoComplete
-          textAlign="left"
-          // onSubmitEditing={(e) => onSubmit(e)}
-          value={text}
-          clearButtonMode="always"
-        /> */}
         <Customtextinput
           settext={settext}
           text={text}
           height={height}
           setheight={setheight}
           setPhoto={setPhoto}
+          PhotoURL={PhotoURL}
+          setPhotoURL={setPhotoURL}
           setPhotoDetails={setPhotoDetails}
         />
       </View>
 
-      {/* <TouchableOpacity
-        onPress={onSubmit}
-        style={{
-          backgroundColor: Colors.primary,
-          borderRadius: 20,
-          bottom: 10,
-          position: "absolute",
-          right: 10,
-          padding: 10,
-        }}
-      >
-        <FontAwesome name="send-o" size={20} color="white" />
-      </TouchableOpacity> */}
       <SuperButton
         onPress={() => onSubmit()}
         loading={loading}

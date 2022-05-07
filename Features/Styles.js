@@ -1,13 +1,23 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { Colors } from "./Colors";
-let deviceWidth = Dimensions.get("screen").width;
-let deviceHeight = Dimensions.get("screen").height;
+export const deviceWidth = Dimensions.get("screen").width;
+export const deviceHeight = Dimensions.get("screen").height;
+export const StatusBar_Height = Constants.statusBarHeight;
 import Constants from "expo-constants";
+import { announce_image_size } from "./GlobalConsts";
 
 export const styles = StyleSheet.create({
   //container
   Postcontainer: {
     paddingTop: Constants.statusBarHeight + 15,
+  },
+  iOSBackdrop: {
+    backgroundColor: "#000000",
+    opacity: 0.3,
+  },
+  androidBackdrop: {
+    backgroundColor: "#232f34",
+    opacity: 0.32,
   },
   timecontainer: {
     position: "absolute",
@@ -31,15 +41,35 @@ export const styles = StyleSheet.create({
   messagecontainer: {
     maxWidth: deviceWidth - 100,
     marginLeft: 60,
-    // marginBottom: 5,
+    marginBottom: 3,
     justifyContent: "center",
     textAlign: "center",
   },
   photocontainer: {
-    width: deviceWidth,
-
+    width: deviceWidth / 2 + 20,
     alignItems: "flex-start",
     marginLeft: 45,
+  },
+  text_header: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  text_footer: {
+    color: "#05375a",
+    fontSize: 18,
+  },
+  action: {
+    flexDirection: "row",
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.black,
+    paddingBottom: 5,
+  },
+  textInput: {
+    flex: 1,
+    marginTop: Platform.OS === "ios" ? 0 : -12,
+    paddingLeft: 10,
   },
   imagecontainer: {
     justifyContent: "flex-end",
@@ -60,6 +90,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: "center",
     justifyContent: "center",
+    maxWidth: deviceWidth,
     // marginBottom: 10,
   },
   homecontainer: {
@@ -127,16 +158,17 @@ export const styles = StyleSheet.create({
   },
   Smalltext: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: "normal",
     textAlign: "center",
     color: Colors.black,
+    fontFamily: "sans-serif",
   },
   Searchbox: {
     borderRadius: 10,
-    backgroundColor: Colors.grey,
+    backgroundColor: Colors.lightgrey,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: Colors.black,
+    borderColor: Colors.lightgrey,
     borderWidth: 0.5,
     elevation: 2,
   },
@@ -171,9 +203,10 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   Card: {
-    backgroundColor: Colors.tertiary,
+    backgroundColor: Colors.lightgrey,
     alignSelf: "flex-start",
     zIndex: 1,
+    elevation: 20,
   },
   recent: {
     marginLeft: 15,
@@ -196,25 +229,6 @@ export const styles = StyleSheet.create({
 
   //1
 
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
-  input: {
-    maxHeight: 200,
-    height: 200,
-    textAlignVertical: "top",
-    borderColor: Colors.grey,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-  },
-
   peopleimage: {
     width: 70,
     height: 70,
@@ -227,15 +241,6 @@ export const styles = StyleSheet.create({
 
   //createroom
 
-  submitbutton: {
-    backgroundColor: Colors.primary,
-    width: 140,
-    height: 45,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    flexDirection: "row",
-  },
   input: {
     maxHeight: 200,
     height: 200,
@@ -279,13 +284,22 @@ export const styles = StyleSheet.create({
   originalmessage: {},
 
   photo: {
-    width: 200,
-    height: 150,
+    width: announce_image_size * 5,
+    height: announce_image_size * 4,
     borderRadius: 20,
     borderColor: Colors.white,
     borderWidth: 2,
     // elevation: 2,
     marginLeft: 10,
+  },
+  containerphoto: {
+    // width: deviceWidth - 100,
+    // height: deviceHeight / 2,
+    borderRadius: 5,
+    borderWidth: 2,
+    width: 300,
+    height: 300,
+    marginBottom: 50,
   },
 
   message: {
@@ -323,7 +337,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    // marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -434,12 +448,13 @@ export const styles = StyleSheet.create({
   },
   createbuttontext: {
     fontFamily: "Roboto",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "700",
-    fontStyle: "normal",
-    textAlign: "center",
+    // fontStyle: "normal",
+    // textAlign: "center",
     //textAlignVertical:"center"
-    padding: 10,
+    // padding: 10,
+    color: Colors.white,
   },
   alreadyhave: {
     fontFamily: "Roboto",
@@ -571,17 +586,15 @@ export const styles = StyleSheet.create({
   },
 
   Lottieheart: {
-    width: 50,
-    height: 50,
-    justifyContent: "flex-end",
-    backgroundColor: "yellow",
-    alignItems: "baseline",
+    width: 55,
+    height: 55,
+
+    position: "absolute",
+    top: -5,
   },
   iconcontainer: {
     flexDirection: "row",
-    width: 340,
     justifyContent: "space-evenly",
-    marginVertical: 30,
-    backgroundColor: "green",
+    marginVertical: 10,
   },
 });

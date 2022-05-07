@@ -3,29 +3,25 @@ import React, { useState } from "react";
 import {
   Text,
   View,
-  Dimensions,
   TouchableOpacity,
   SafeAreaView,
-  FlatList,
   Image,
 } from "react-native";
-import { MaterialCommunityIcons, Entypo, AntDesign } from "@expo/vector-icons";
-import ThreeDots from "../components/SuperComp/3dotComp";
 //components
 import { styles } from "../Features/Styles";
 
 import NameText from "../components/SuperComp/Name";
 import Time from "../components/SuperComp/time";
 //assets
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { db, Usersforchat } from "../BACKEND/firebase";
 import { Dislikemessage, Likemessage } from "../BACKEND/Announce";
 import { useauth } from "../BACKEND/Auth";
 //features
 import { useNavigation } from "@react-navigation/native";
 import { numFormatter } from "../Hooks/GlobalHooks";
-import { useLoading } from "../Hooks/LoadingContext";
 import { Avatar } from "react-native-paper";
+import { Colors } from "../Features/Colors";
 
 const SearchItem = ({
   icon,
@@ -51,8 +47,7 @@ const SearchItem = ({
     const doclocation = doc(
       db,
       "Announce",
-      "LltxTedBAbKMuN07tX6j",
-      "Message",
+
       id
     );
     await deleteDoc(doclocation);
@@ -82,54 +77,66 @@ const SearchItem = ({
   };
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        {Searchtext && (
-          <>
-            {AllUsers?.map((item) => {
-              <View>
-                <Text>{item.Username}</Text>
-              </View>;
-            })}
-            {/* <FlatList
-              data={AllUsers}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-            /> */}
-          </>
-        )}
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Comments", {
+            message,
+            photo,
+            name,
+            icon,
+            time,
+            id,
+            user,
+          })
+        }
+      >
+        <View style={styles.container}>
+          {Searchtext && (
+            <>
+              {AllUsers?.map((item) => {
+                <View>
+                  <Text>{item.Username}</Text>
+                </View>;
+              })}
+            </>
+          )}
 
-        <TouchableOpacity
-          style={{ flexDirection: "row" }}
-          onPress={() =>
-            navigation.navigate("Portfolio", {
-              useruid: user,
-            })
-          }
-        >
-          <Avatar.Image
-            size={50}
-            source={{ uri: icon ? icon : null }}
-            style={{ backgroundColor: "grey" }}
-          />
+          <TouchableOpacity
+            style={{ flexDirection: "row" }}
+            onPress={() =>
+              navigation.navigate("Portfolio", {
+                useruid: user,
+              })
+            }
+          >
+            <Avatar.Image
+              size={50}
+              source={{ uri: icon ? icon : null }}
+              style={{ backgroundColor: Colors.grey }}
+            />
 
-          <View style={styles.namecontainer}>
-            <NameText name={name} />
+            <View style={styles.namecontainer}>
+              <NameText name={name} />
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.timecontainer}>
+            <Time time={time} />
           </View>
-        </TouchableOpacity>
-
-        <View style={styles.timecontainer}>
-          <Time time={time} />
         </View>
-      </View>
-      <View style={styles.messagecontainer}>
-        {message && <Text style={styles.message}>{message}</Text>}
-      </View>
-      {photo && (
-        <TouchableOpacity style={styles.photocontainer}>
-          <Image source={{ uri: photo ? photo : null }} style={styles.photo} />
-        </TouchableOpacity>
-      )}
-      <View style={styles.iconcontainer}>
+        <View style={styles.messagecontainer}>
+          {message && <Text style={styles.message}>{message}</Text>}
+        </View>
+        {photo && (
+          <TouchableOpacity style={styles.photocontainer}>
+            <Image
+              source={{ uri: photo ? photo : null }}
+              style={styles.photo}
+            />
+          </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+      {/* <View style={styles.iconcontainer}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Comments", {
@@ -170,8 +177,8 @@ const SearchItem = ({
         </TouchableOpacity>
         <TouchableOpacity>
           <Entypo name="share" size={15} color="black" />
-        </TouchableOpacity> */}
-      </View>
+        </TouchableOpacity> 
+      </View> */}
     </SafeAreaView>
   );
 };

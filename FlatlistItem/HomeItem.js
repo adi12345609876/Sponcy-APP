@@ -17,56 +17,33 @@ import { Avatar } from "react-native-paper";
 
 const HomeItem = ({
   name,
-  previousmessage,
-  pinned,
   icon,
+  previousmessage,
   id,
   participants,
   UnreadUsers,
-  Type,
   Seen,
   Mess,
-  Forwarded,
-  Invite,
-  InvitationData,
   owner,
   Leaders,
 }) => {
   const curerntuser = useauth();
   const navigation = useNavigation();
-  // const messages = OneOneChats(id);
 
-  const notify =
-    Type == "OneToOne" ? !Seen : UnreadUsers?.includes(curerntuser?.uid);
+  const notify = UnreadUsers?.includes(curerntuser?.uid);
 
   function Handleclick() {
-    if (Type == "OneToOne") {
-      navigation.navigate("Chat", {
-        name,
-        icon,
-        id,
-        onechat: true,
-        Type,
-        Mess,
-        Forwarded,
-        Invite,
-        InvitationData,
-      });
-    } else {
-      navigation.navigate("Chat", {
-        name,
-        icon,
-        id,
-        participants,
-        Mess,
-        Forwarded,
-        Invite,
-        InvitationData,
-        owner,
-        Leaders,
-      });
-    }
-    DeleteUnreadUser(id, curerntuser?.uid, Type);
+    navigation.navigate("Chat", {
+      name,
+      icon,
+      id,
+      participants,
+      Mess,
+      owner,
+      Leaders,
+    });
+
+    DeleteUnreadUser(id, curerntuser?.uid);
   }
   return (
     <TouchableOpacity
@@ -77,9 +54,8 @@ const HomeItem = ({
         <Avatar.Image
           size={50}
           source={{ uri: icon ? icon : null }}
-          style={{ backgroundColor: "grey" }}
+          style={{ backgroundColor: Colors.grey }}
         />
-        {/* <Image source={{ uri: icon ? icon : null }} style={styles.image} /> */}
       </TouchableOpacity>
       <View
         style={{
@@ -100,9 +76,6 @@ const HomeItem = ({
             <Notificationbutton />
           </View>
         )}
-        <TouchableOpacity style={styles.end}>
-          {pinned && <Octicons name="pin" size={15} color={Colors.grey} />}
-        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );

@@ -4,36 +4,30 @@ import ChatItem from "../../FlatlistItem/ChatItem";
 import { useauth } from "../../BACKEND/Auth";
 import { DeleteUnreadUserOnMess } from "../../BACKEND/firebase";
 import { TimestamptoTime } from "../../Hooks/GlobalHooks";
-import { styles } from "../../Features/Styles";
+import { TouchableWithoutFeedback } from "react-native";
+import { Keyboard } from "react-native";
 
-export default function App({ messages, roomid, Type, Invite, owner }) {
+export default function App({ messages, roomid, owner }) {
   const ScroolRef = useRef();
   const currentuser = useauth();
   const renderItem = ({ item }) => {
     const Time = TimestamptoTime(item?.time);
-    // const Time = TimestamptoTime(item?.time);
 
     return (
       <ChatItem
         message={item.text}
         From={item.From}
-        Forwarded={item.Forwarded}
         time={Time?.time}
         id={item.id}
         roomid={roomid}
-        Type={Type}
-        Invite={item.Invite}
-        Invitationid={item.Invitationid}
-        DocType={item.Type}
-        PhotoURL={item.PhotoURL}
         Name={item.Name}
-        Size={item.Size}
+        PhotoURL={item.PhotoURL}
         owner={owner}
       />
     );
   };
   useEffect(() => {
-    DeleteUnreadUserOnMess(roomid, currentuser?.uid, Type);
+    DeleteUnreadUserOnMess(roomid, currentuser?.uid);
     setTimeout(() => {
       try {
         ScroolRef.current.scrollIntoView({
@@ -48,11 +42,13 @@ export default function App({ messages, roomid, Type, Invite, owner }) {
 
   return (
     <View>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
+      </TouchableWithoutFeedback>
       <View ref={ScroolRef}></View>
     </View>
   );

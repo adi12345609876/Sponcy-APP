@@ -116,24 +116,25 @@ export default function ChatItem({
       </TouchableOpacity>
       <View style={{ top: 50, position: "absolute", right: 20 }}>
         <ThreeDots
+          setvisibility={setthreevisible}
           visibility={threedotvisible}
           height={100}
           width={200}
           data={[
             {
               text: "Forward",
-              icon: "md-return-up-forward-outline",
+              icon: "Forward",
               func: () => ForwardMessage(),
             },
             currentuser?.uid == owner
               ? {
                   text: "Delete",
-                  icon: "trash-outline",
+                  icon: "Trash",
                   func: () => DeleteMessage(id),
                 }
               : currentuser?.uid == From && {
                   text: "Delete",
-                  icon: "trash-outline",
+                  icon: "Trash",
                   func: () => DeleteMessage(id),
                 },
           ]}

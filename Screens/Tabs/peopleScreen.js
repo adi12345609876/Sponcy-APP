@@ -1,14 +1,6 @@
-import React, { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import React from "react";
+import { Text, View, FlatList, TouchableOpacity } from "react-native";
 //components
-import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import { Colors } from "../../Features/Colors";
 //assets
 import { UserData, Usersforchat } from "../../BACKEND/firebase";
@@ -19,7 +11,10 @@ import { Avatar } from "react-native-paper";
 export default function AssetExample({ navigation }) {
   const userdetails = UserData();
   const AllUsers = Usersforchat();
-
+  const DetailsUserData = compare2arrays();
+  const Followers = DetailsUserData.Followersdata;
+  const Following = DetailsUserData.Followingdata;
+  const Dudes = DetailsUserData.Dudesdata;
   function compare2arrays() {
     const Dudesid = Followers?.filter((d) => {
       return userdetails?.Following?.includes(d);
@@ -44,24 +39,22 @@ export default function AssetExample({ navigation }) {
       Dudesdata: DudesFilter,
     };
   }
-  const DetailsUserData = compare2arrays();
-
-  const Followers = DetailsUserData.Followersdata;
-  const Following = DetailsUserData.Followingdata;
-  const Dudes = DetailsUserData.Dudesdata;
 
   const PeopleData = [
     {
       title: "Followers",
       data: Followers ? [...Followers] : null,
+      id: 1,
     },
     {
       title: "Following",
       data: Following ? [...Following] : null,
+      id: 2,
     },
     {
       title: "Dudes",
       data: Dudes ? [...Dudes] : null,
+      id: 3,
     },
   ];
 
@@ -71,6 +64,7 @@ export default function AssetExample({ navigation }) {
         <View style={styles.Peoplecontainer}>
           <FlatList
             data={PeopleData}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View>
                 <View
@@ -110,12 +104,9 @@ export default function AssetExample({ navigation }) {
                       <Avatar.Image
                         size={50}
                         source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
-                        style={{ backgroundColor: "grey" }}
+                        style={{ backgroundColor: Colors.grey }}
                       />
-                      {/* <Image
-                        style={styles.image}
-                        source={{ uri: item?.PhotoURL ? item?.PhotoURL : null }}
-                      /> */}
+
                       <Text
                         style={{
                           fontSize: 18,

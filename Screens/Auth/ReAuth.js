@@ -1,38 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   Dimensions,
   TextInput,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 let deviceWidth = Dimensions.get("screen").width;
 import { LinearGradient } from "expo-linear-gradient";
-import * as Notifications from "expo-notifications";
 
 import { Colors } from "../../Features/Colors";
-import {
-  registerForPushNotificationsAsync,
-  GithubLogin,
-  GoogleLogin,
-  showtoast,
-} from "../../Features/Utils";
-import {
-  useauth,
-  login,
-  signup,
-  Glogin,
-  Gitlogin,
-  setToken,
-  ChangeEmail,
-} from "../../BACKEND/Auth";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { GithubLogin, showtoast } from "../../Features/Utils";
+import { login, ChangeEmail } from "../../BACKEND/Auth";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-import { sendEmailVerification } from "firebase/auth";
-import { useLoading } from "../../Hooks/LoadingContext";
 import { styles } from "../../Features/Styles";
 import { SuperButton } from "../../components/SuperComp/SuperComp";
 import { Card } from "react-native-paper";

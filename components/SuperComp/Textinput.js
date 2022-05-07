@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 
-import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Colors } from "../../Features/Colors";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import { PickImage } from "../../Features/Utils";
+import { PickImage, TakeCameraPhoto } from "../../Features/Utils";
+import { SuperIcons } from "./SuperComp";
 
 export default function SuperTextInput(props) {
   const pickDocument = async () => {
@@ -42,16 +49,24 @@ export default function SuperTextInput(props) {
           value={props.text}
           clearButtonMode="always"
         />
-
+        {props.PhotoURL && (
+          <Image
+            source={{ uri: props.PhotoURL ? props.PhotoURL : null }}
+            style={{ height: 20, width: 20, borderRadius: 5 }}
+          />
+        )}
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ marginLeft: 12 }} onPress={pickDocument}>
-            <Entypo name="circle" size={24} color="black" />
-          </TouchableOpacity>
           <TouchableOpacity
             style={{ marginLeft: 12 }}
             onPress={() => PickImage(props.setPhoto, props.setPhotoURL)}
           >
-            <Ionicons name="camera" size={24} color="black" />
+            <SuperIcons name="Gallery" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginLeft: 12 }}
+            onPress={() => TakeCameraPhoto(props.setPhoto, props.setPhotoURL)}
+          >
+            <SuperIcons name="Camera" size={30} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -71,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   container: {
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flexDirection: "row",
     backgroundColor: Colors.tertiary,
     width: "100%",

@@ -1,42 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
-  View,
   StyleSheet,
   TouchableOpacity,
   Animated,
   Image,
-  Button,
-  SafeAreaView,
+  Text,
+  View,
 } from "react-native";
 import { useTabBar } from "../../Hooks/TabBarprovider";
-import { Entypo, EvilIcons } from "@expo/vector-icons";
-import ThreeDots from "../../components/SuperComp/3dotComp";
 import { Colors } from "../../Features/Colors";
 import Constants from "expo-constants";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { UserData } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
 import { useRoute } from "@react-navigation/native";
 import SponcyImage from "../../assets/Sponcy.png";
 
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from "@react-navigation/drawer";
 import { Avatar } from "react-native-paper";
+import { LOGO_HEIGHT, statusBarHeight } from "../../Features/GlobalConsts";
+import { getNotifies } from "../../BACKEND/firebase";
+import Notificationbutton from "../SuperComp/NotificationButton";
 const Notifyicon = require("../../assets/Icon/Notify.png");
 // const NotifyiconX = require("./assets/Icon/NotifyX.png");
-const LOGO_HEIGHT = 50;
+
 export default function Header({ navigation }) {
   const route = useRoute();
   const currentuser = useauth();
+  const Notifies = getNotifies(currentuser?.uid);
+  const [NotifiesCount, setNotifiesCount] = React.useState();
   // const currentUserData = UserData();
   // const navigation = useNavigation();
   const animation = useRef(new Animated.Value(0)).current;
   const { showTabBar } = useTabBar();
-  const [threedotvisible, setthreevisible] = useState(false);
+
   const toggleTabBarAnimation = () => {
     if (showTabBar) {
       Animated.timing(animation, {
@@ -44,20 +38,25 @@ export default function Header({ navigation }) {
         duration: 200,
         useNativeDriver: true,
       }).start();
-      setthreevisible(false);
     } else {
       Animated.timing(animation, {
         toValue: -100,
         duration: 200,
         useNativeDriver: true,
       }).start();
-      setthreevisible(false);
     }
   };
 
   useEffect(() => {
     toggleTabBarAnimation();
   }, [showTabBar]);
+  useEffect(() => {
+    const TotalNotifies = Notifies?.filter((item) => {
+      return item?.Seen == false;
+    }).length;
+    setNotifiesCount(TotalNotifies);
+  }, [Notifies]);
+
   return (
     <Animated.View
       style={[styles.container, { transform: [{ translateY: animation }] }]}
@@ -81,7 +80,7 @@ export default function Header({ navigation }) {
           source={{
             uri: currentuser?.photoURL ? currentuser?.photoURL : null,
           }}
-          style={{ backgroundColor: "grey" }}
+          style={{ backgroundColor: Colors.grey }}
         />
         {/* <Image
           source={{
@@ -111,11 +110,16 @@ export default function Header({ navigation }) {
         <Image source={SponcyImage} resizeMode="cover" style={styles.logo} />
       </TouchableOpacity>
       <TouchableOpacity
-        style={{ top: 10 }}
+        style={{ top: 5 }}
         onPress={() => navigation.navigate("NotifyScreen")}
       >
         <Image source={Notifyicon} style={{ width: 30, height: 30 }} />
       </TouchableOpacity>
+      {NotifiesCount != 0 && (
+        <View style={{ position: "absolute", right: 0, top: 10 }}>
+          <Notificationbutton number={NotifiesCount} />
+        </View>
+      )}
     </Animated.View>
   );
 }
@@ -131,10 +135,10 @@ const styles = StyleSheet.create({
     height: 70,
     elevation: 2,
     borderRadius: 10,
-    marginTop: Constants.statusBarHeight - 10,
+    marginTop: statusBarHeight - 10,
   },
   logo: {
-    paddingTop: Constants.statusBarHeight + 40,
+    paddingTop: statusBarHeight + 40,
     paddingBottom: 0,
     //width = 3*height
     height: LOGO_HEIGHT,

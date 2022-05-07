@@ -1,12 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
-import { onAuthStateChanged, sendEmailVerification } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import { sendEmailVerification } from "firebase/auth";
+import React, { useEffect } from "react";
 import { Text, View, SafeAreaView, TouchableOpacity } from "react-native";
-import { auth, useauth } from "../../BACKEND/Auth";
+import { useauth } from "../../BACKEND/Auth";
 import { Colors } from "../../Features/Colors";
 import { styles } from "../../Features/Styles";
 
-import { useLoading } from "../../Hooks/LoadingContext";
 // import { Colors } from "./Features/Features";
 
 export default function AssetExample({ route }) {

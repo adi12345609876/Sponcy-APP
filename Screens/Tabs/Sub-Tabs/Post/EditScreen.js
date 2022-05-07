@@ -1,47 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+import {
+  FontAwesome,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { styles } from "../../../../Features/Styles";
 
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-
-import { TextInput } from "react-native-paper";
-import { UserData } from "../../../../BACKEND/firebase";
+import { SpecifiedUserData } from "../../../../BACKEND/firebase";
 import { updateUser } from "../../../../BACKEND/Auth";
 import { useauth } from "../../../../BACKEND/Auth";
 import { Colors } from "../../../../Features/Colors";
 import { PickImage } from "../../../../Features/Utils";
 import { SuperButton } from "../../../../components/SuperComp/SuperComp";
-const Tab = createMaterialTopTabNavigator();
 
 export default function App({ navigation }) {
   const currentuser = useauth();
-  const currentUserData = UserData();
+
+  const specificuserdata = SpecifiedUserData(currentuser?.uid);
   const [Photo, setPhoto] = useState();
   const [DisplayName, setDisplayName] = useState();
   const [Bio, setBio] = useState();
   const [Work, setWork] = useState("");
   const [loading, setloading] = useState();
-  // const currentUserData = UserData();
-  const [PhotoURL, setPhotoURL] = useState();
-  const [done, setdone] = useState(true);
+  // const specificuserdata = UserData();
+  const [PhotoURL, setPhotoURL] = useState("");
 
   async function handleClick() {
+    console.log("Photo", Photo);
     setloading(true);
     await updateUser(
       DisplayName ? DisplayName : currentuser?.displayName,
-      Photo ? Photo : currentuser?.photoURL,
-      Bio ? Bio : currentUserData?.Biodata,
-      Work ? Work : currentUserData?.Work,
+      Photo,
+      Bio ? Bio : specificuserdata?.Biodata,
+      Work ? Work : specificuserdata?.Work,
       currentuser,
       true
     );
@@ -73,12 +74,14 @@ export default function App({ navigation }) {
         <TouchableOpacity onPress={() => PickImage(setPhoto, setPhotoURL)}>
           <ImageBackground
             source={{
-              uri: PhotoURL ? PhotoURL : currentuser?.PhotoURL,
+              uri: PhotoURL != "" ? PhotoURL : specificuserdata?.PhotoURL,
             }}
             resizeMode="cover"
             style={{
               height: 100,
               width: 100,
+              borderRadius: 20,
+              backgroundColor: Colors.grey,
               borderRadius: 20,
             }}
           >
@@ -98,8 +101,39 @@ export default function App({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={{ marginTop: 5 }}>
-        <View>
-          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+        <>
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                color: Colors.black,
+                marginTop: 20,
+              },
+            ]}
+          >
+            Username*
+          </Text>
+          <View style={styles.action}>
+            <FontAwesome name="user-o" color={Colors.black} size={20} />
+            <TextInput
+              placeholder="Your Username"
+              placeholderTextColor={Colors.grey}
+              onChangeText={setDisplayName}
+              maxLength={15}
+              value={DisplayName ? DisplayName : currentuser?.displayName}
+              style={[
+                styles.textInput,
+                {
+                  color: Colors.black,
+                  fontWeight: "bold",
+                },
+              ]}
+            />
+            <Text style={{ fontSize: 10, color: Colors.grey }}>
+              {DisplayName?.length}/15
+            </Text>
+          </View>
+          {/* <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
             <TextInput
               style={{
                 marginLeft: 10,
@@ -109,16 +143,93 @@ export default function App({ navigation }) {
               }}
               placeholder="Name"
               onChangeText={setDisplayName}
-              maxLength={10}
+              maxLength={15}
               value={DisplayName ? DisplayName : currentuser?.displayName}
             />
             <Text
               style={[styles.text, { textAlign: "right", color: Colors.grey }]}
             >
-              {DisplayName?.length}/10
+              {DisplayName?.length}/15
             </Text>
-          </View>
-          <View>
+          </View> */}
+          <>
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  color: Colors.black,
+                  marginTop: 20,
+                },
+              ]}
+            >
+              Your Skills*
+            </Text>
+            <View style={styles.action}>
+              <MaterialIcons
+                name="work-outline"
+                color={Colors.black}
+                size={20}
+              />
+              <TextInput
+                placeholderTextColor={Colors.grey}
+                placeholder="Your Skills.."
+                multiline
+                onChangeText={setWork}
+                maxLength={60}
+                value={Work ? Work : specificuserdata?.Work}
+                style={[
+                  styles.textInput,
+                  {
+                    color: Colors.black,
+                    fontWeight: "bold",
+                  },
+                ]}
+              />
+              <Text style={{ fontSize: 10, color: Colors.grey }}>
+                {Work?.length}/60
+              </Text>
+            </View>
+          </>
+          <>
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  color: Colors.black,
+                  marginTop: 20,
+                },
+              ]}
+            >
+              Your Bio
+            </Text>
+            <View style={styles.action}>
+              <MaterialCommunityIcons
+                name="newspaper-variant-outline"
+                size={24}
+                color="black"
+              />
+              <TextInput
+                placeholderTextColor={Colors.grey}
+                placeholder="Your Bio"
+                onChangeText={setBio}
+                multiline
+                maxLength={50}
+                value={Bio ? Bio : specificuserdata?.Biodata}
+                style={[
+                  styles.textInput,
+                  {
+                    color: Colors.black,
+                    fontWeight: "bold",
+                  },
+                ]}
+              />
+              <Text style={{ fontSize: 10, color: Colors.grey }}>
+                {Bio?.length}/50
+              </Text>
+            </View>
+          </>
+
+          {/* <View>
             <TextInput
               style={{
                 marginLeft: 10,
@@ -128,16 +239,17 @@ export default function App({ navigation }) {
               }}
               placeholder="Your Bio..."
               onChangeText={setBio}
-              maxLength={20}
-              value={Bio ? Bio : currentUserData?.Biodata}
+              maxLength={50}
+              value={Bio ? Bio : specificuserdata?.Biodata}
             />
             <Text
               style={[styles.text, { textAlign: "right", color: Colors.grey }]}
             >
-              {Bio?.length}/20
+              {Bio?.length}/50
             </Text>
-          </View>
-          <View>
+          </View> */}
+
+          {/* <View>
             <TextInput
               style={{
                 marginLeft: 10,
@@ -145,18 +257,18 @@ export default function App({ navigation }) {
                 fontSize: 25,
                 fontWeight: "bold",
               }}
-              placeholder="Your Work.."
+              placeholder="Your Skills.."
               onChangeText={setWork}
-              value={Work ? Work : currentUserData?.Work}
-              maxLength={15}
+              value={Work ? Work : specificuserdata?.Work}
+              maxLength={60}
             />
             <Text
               style={[styles.text, { textAlign: "right", color: Colors.grey }]}
             >
-              {Work?.length}/15
+              {Work?.length}/60
             </Text>
-          </View>
-        </View>
+          </View> */}
+        </>
       </View>
       <View style={{ position: "absolute", right: 20, bottom: 20 }}>
         <SuperButton

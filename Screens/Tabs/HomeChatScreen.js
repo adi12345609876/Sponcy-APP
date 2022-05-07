@@ -1,17 +1,12 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Dimensions, Text } from "react-native";
+import { View } from "react-native";
 //expo
 //components
-import AnimatedScroolView from "../../components/Animation/AnimatedScroolTab";
 import HomeItem from "../../FlatlistItem/HomeItem";
 import renderSeparator from "../../components/SuperComp/Separator";
 //assets
-
 import { ChatRooms, OneOneMess } from "../../BACKEND/firebase";
 import { useauth } from "../../BACKEND/Auth";
-import { styles } from "../../Features/Styles";
-import { color } from "react-native-elements/dist/helpers";
-import { Colors } from "../../Features/Colors";
 import AnimatedFlatList from "../../components/Animation/AnimatedFlatList";
 //features
 
@@ -27,16 +22,12 @@ export default function AssetExample({ route }) {
       <>
         <HomeItem
           name={item.RoomName}
-          // pinned={item.pinned}
           icon={item.icon}
           previousmessage={item.LastMessage}
           id={item.id}
           participants={item.Participants}
           UnreadUsers={item.UnreadUsers}
           Mess={message}
-          Forwarded={Forwarded}
-          Invite={Invite}
-          InvitationData={InvitationData}
           owner={item.owner}
           Leaders={item.Leaders}
         />
@@ -49,7 +40,6 @@ export default function AssetExample({ route }) {
       <>
         <HomeItem
           name={item.RoomName}
-          // pinned={item.pinned}
           icon={item.icon}
           previousmessage={item.LastMessage}
           id={item.id}
@@ -59,8 +49,6 @@ export default function AssetExample({ route }) {
           Forwarded={Forwarded}
           Invite={Invite}
           InvitationData={InvitationData}
-          // participants={item.Participants}
-          // UnreadUsers={item.UnreadUsers}
         />
       </>
     );
@@ -78,6 +66,7 @@ export default function AssetExample({ route }) {
           renderItem={RoomsrenderItem}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={renderSeparator}
+          listEmptyComponent={() => {}}
         />
 
         <AnimatedFlatList

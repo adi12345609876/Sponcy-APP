@@ -75,14 +75,17 @@ export async function updateUser(
   Bio,
   work,
   currentuser,
-  IsDocsExist
+  IsDocsExist,
+  expoToken
 ) {
   const doclocation = doc(db, "Users", currentuser?.uid);
   const fileRef = ref(storage, "ProfilePIC/" + currentuser?.uid + ".png");
-
+  console.log("Photo", currentuser);
   //upload image
-  const snapshot = await uploadBytes(fileRef, Photo);
-  const PhotoURL = await getDownloadURL(fileRef);
+  const snapshot =
+    Photo != undefined ? await uploadBytes(fileRef, Photo) : null;
+  const PhotoURL =
+    Photo != undefined ? await getDownloadURL(fileRef) : currentuser?.photoURL;
   const Biodata = Bio ? Bio : null;
   const Work = work ? work : null;
 
@@ -100,6 +103,7 @@ export async function updateUser(
     });
   } else {
     await setDoc(doclocation, {
+      expoToken,
       UserName,
       PhotoURL,
       Biodata,

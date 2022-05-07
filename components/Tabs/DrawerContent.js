@@ -35,23 +35,31 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { logout, useauth } from "../../BACKEND/Auth";
-import { HandleShare } from "../../Features/Utils";
+import {
+  Feedbacksender,
+  GotoTwitter,
+  GoToYoutube,
+  HandleShare,
+  handletoTwitter,
+} from "../../Features/Utils";
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../../Features/Colors";
+import { Colors, SocilaColors } from "../../Features/Colors";
+import SocialIcon, { SuperIcons } from "../SuperComp/SuperComp";
 
 const CustomDrawer = (props) => {
   const currentuser = useauth();
   const navigation = useNavigation();
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: "#8200d6" }}
+        // contentContainerStyle={{ backgroundColor: "#8200d6" }}
       >
-        <ImageBackground
-          source={require("../../assets/Photos/Drawer-bg.jpeg")}
+        <View
+          // source={require("../../assets/Photos/Drawer-bg.jpeg")}
           style={{
             padding: 20,
             justifyContent: "center",
@@ -65,34 +73,25 @@ const CustomDrawer = (props) => {
               })
             }
           >
-            <View
+            <Image
+              source={{
+                uri: currentuser?.photoURL ? currentuser?.photoURL : null,
+              }}
               style={{
-                height: 80,
-                width: 80,
+                height: 100,
+                width: 100,
                 borderRadius: 20,
                 marginBottom: 10,
-                borderWidth: 1,
                 borderColor: Colors.black,
+                backgroundColor: Colors.grey,
+                elevation: 20,
+                borderWidth: 2,
               }}
-            >
-              <Image
-                source={{
-                  uri: currentuser?.photoURL ? currentuser?.photoURL : null,
-                }}
-                style={{
-                  height: 80,
-                  width: 80,
-                  borderRadius: 20,
-                  marginBottom: 10,
+            />
 
-                  borderColor: Colors.black,
-                  backgroundColor: Colors.grey,
-                }}
-              />
-            </View>
             <Text
               style={{
-                color: "#fff",
+                color: Colors.black,
                 fontSize: 18,
                 fontFamily: "Roboto",
                 marginBottom: 5,
@@ -114,7 +113,7 @@ const CustomDrawer = (props) => {
             </Text>
             <FontAwesome5 name="coins" size={14} color="#fff" />
           </View> */}
-        </ImageBackground>
+        </View>
 
         <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
           <DrawerItemList {...props} />
@@ -126,7 +125,7 @@ const CustomDrawer = (props) => {
           style={{ paddingVertical: 15 }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons name="share-social-outline" size={22} />
+            <SuperIcons name={"Share"} size={30} />
             <Text
               style={{
                 fontSize: 15,
@@ -139,11 +138,28 @@ const CustomDrawer = (props) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => Feedbacksender()}
+          style={{ paddingVertical: 15 }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <SuperIcons name={"Edit"} size={30} />
+            <Text
+              style={{
+                fontSize: 15,
+                fontFamily: "Roboto",
+                marginLeft: 5,
+              }}
+            >
+              FeedBack
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => logout()}
           style={{ paddingVertical: 15 }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons name="exit-outline" size={22} />
+            <SuperIcons name={"Logout"} size={30} />
             <Text
               style={{
                 fontSize: 15,
@@ -155,6 +171,42 @@ const CustomDrawer = (props) => {
             </Text>
           </View>
         </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginTop: 20,
+          }}
+        >
+          <SocialIcon
+            name="twitter"
+            onPress={() => GotoTwitter()}
+            color={Colors.white}
+            size={30}
+            aroundstyles={{
+              backgroundColor: SocilaColors.twitter,
+              width: 40,
+              borderRadius: 10,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+          <SocialIcon
+            name="youtube"
+            onPress={() => GoToYoutube()}
+            color={Colors.white}
+            size={30}
+            aroundstyles={{
+              backgroundColor: SocilaColors.youtube,
+              width: 40,
+              borderRadius: 10,
+              height: 40,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+        </View>
       </View>
     </View>
   );

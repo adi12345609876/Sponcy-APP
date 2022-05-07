@@ -27,7 +27,13 @@ if (getApps().length < 1) {
 }
 
 const firebaseApp = getApp();
+//production
 export const storage = getStorage(firebaseApp, "gs://sponcy-7003f.appspot.com");
+//Testing
+// export const storage = getStorage(
+//   firebaseApp,
+//   "gs://sacred-bonus-324109.appspot.com"
+// );
 export const db = getFirestore();
 
 //GET
@@ -231,40 +237,24 @@ export async function PostAnnounce(
   message,
   currentuser,
   UserName,
-  UserPhoto
+  userPhoto
 ) {
-  const doclocation = collection(
-    db,
-    "Announce",
-    "LltxTedBAbKMuN07tX6j",
-    "Message"
-  );
+  const doclocation = collection(db, "Announce");
   const fileRef = ref(storage, "AnnouncePIC/" + uuid.v4() + ".png");
   //upload image
   Photo ? await uploadBytes(fileRef, Photo) : null;
   const PhotoURL = Photo ? await getDownloadURL(fileRef) : null;
+  const UserPhoto = userPhoto ? userPhoto : null;
+  const newvalue = {
+    PhotoURL,
+    message,
+    currentuser,
+    LikedUser: [],
+    UserName,
+    UserPhoto,
+    time: serverTimestamp(),
+  };
 
-  const newvalue = UserPhoto
-    ? {
-        PhotoURL,
-        message,
-        currentuser,
-        Like: 0,
-        LikedUser: [],
-        UserName,
-        UserPhoto,
-        time: serverTimestamp(),
-      }
-    : {
-        PhotoURL,
-        message,
-        currentuser,
-        Like: 0,
-        LikedUser: [],
-        UserName,
-        UserPhoto: null,
-        time: serverTimestamp(),
-      };
   //upload name
 
   await addDoc(doclocation, newvalue);
@@ -372,13 +362,7 @@ export async function PostPrivateChats(
   From,
   text,
   participants,
-  name,
-  icon,
-  Forwarded,
-  Invite,
-  InvitationData,
-  Photo,
-  PhotoDetails
+  Photo
 ) {
   const Collocation = collection(db, "Private-Chat", roomid, "Messages");
   const docrom = doc(db, "Private-Chat", roomid);
@@ -388,76 +372,21 @@ export async function PostPrivateChats(
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const PhotoURL = await (Photo ? getDownloadURL(fileRef) : null);
-  const invite = Invite ? Invite : null;
-  const forwarded = Forwarded ? Forwarded : null;
-  const newvalue = Invite
-    ? {
-        From,
-        text,
-        time: serverTimestamp(),
-        Forwarded: Forwarded,
-        Invite: Invite,
-        Invitationid: InvitationData?.id,
-      }
-    : Forwarded && PhotoURL
-    ? {
-        From,
-        text,
-        PhotoURL,
-        Type: PhotoDetails.mimeType,
-        Size: PhotoDetails.size,
-        Name: PhotoDetails.name,
-        Forwarded: Forwarded,
 
-        time: serverTimestamp(),
-      }
-    : Forwarded && !PhotoURL
-    ? {
-        From,
-        text,
-        Forwarded: Forwarded,
-        time: serverTimestamp(),
-      }
-    : PhotoURL
-    ? {
-        From,
-        PhotoURL,
-        Type: PhotoDetails.mimeType,
-        Size: PhotoDetails.size,
-        Name: PhotoDetails.name,
-        text,
-        time: serverTimestamp(),
-      }
-    : { text, time: serverTimestamp(), From };
-  // const newvalue2 = {
-  //   LastMessage: "",
-  //   Participants: participants,
-  //   RoomName: name,
-  //   icon: icon,
-
-  //   // time: serverTimestamp(),
-  // };
-  // onSnapshot(Collocation, (snapshot) => {
-  //   if (snapshot.empty) {
-  //     setDoc(docrom, newvalue2);
-  //   }
-  // });
-
+  const newvalue = {
+    From,
+    text,
+    time: serverTimestamp(),
+    PhotoURL,
+  };
   //unreadusers
   await updateDoc(docrom, {
     UnreadUsers: participants,
-  });
-  //remove posted user from unread user
-  await updateDoc(docrom, {
-    UnreadUsers: arrayRemove(From),
-  });
-  await updateDoc(docrom, {
     LastMessage: text,
   });
-  //postmessage
   await addDoc(Collocation, newvalue);
-  //last message
 }
+
 //Add Rooms
 export async function AddRooms(Photo, RoomName, Participants, useruid) {
   const doclocation = collection(db, "Private-Chat");
@@ -466,8 +395,8 @@ export async function AddRooms(Photo, RoomName, Participants, useruid) {
     LastMessage: "",
     Participants: Participants,
     RoomName,
-    icon: "",
     owner: useruid,
+    icon: "",
     // time: serverTimestamp(),
   };
   //upload name
@@ -482,10 +411,10 @@ export async function Addroomphoto(Photo, docid) {
   //upload image
   const snapshot = await uploadBytes(fileRef, Photo);
   const icon = await (Photo ? getDownloadURL(fileRef) : null);
-  const newvalue = {
+
+  await updateDoc(doclocation, {
     icon,
-  };
-  await updateDoc(doclocation, newvalue);
+  });
 }
 
 //Add UnreadUsers
@@ -495,6 +424,7 @@ export async function AddUnreadUser(roomid, participants) {
 
   updateDoc(doclocation, {
     UnreadUsers: arrayUnion(...participants),
+    LastMessage: text,
   });
 }
 //DELETE
@@ -517,22 +447,13 @@ export async function CreatePosting(docid, useruid, Post) {
     });
   }
 }
-export async function DeleteUnreadUser(roomid, currentuser, Type) {
-  // const currentuser = useauth();
-  if (Type == "OneToOne") {
-    const Doclocation2 = doc(db, "Users", currentuser, "OneOneChat", roomid);
-
-    updateDoc(Doclocation2, {
-      Seen: true,
-    });
-  } else {
-    const doclocation = doc(db, "Private-Chat", roomid);
-    updateDoc(doclocation, {
-      UnreadUsers: arrayRemove(currentuser),
-    });
-  }
+export async function DeleteUnreadUser(roomid, currentuser) {
+  const doclocation = doc(db, "Private-Chat", roomid);
+  updateDoc(doclocation, {
+    UnreadUsers: arrayRemove(currentuser),
+  });
 }
-export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
+export async function DeleteUnreadUserOnMess(roomid, currentuser) {
   // const currentuser = useauth();
   const doclocation = doc(db, "Private-Chat", roomid);
   const Collocation = collection(db, "Private-Chat", roomid, "Messages");
@@ -542,11 +463,6 @@ export async function DeleteUnreadUserOnMess(roomid, currentuser, Type) {
       updateDoc(doclocation, {
         UnreadUsers: arrayRemove(currentuser),
       });
-      if (Type == "OneToOne") {
-        updateDoc(doc(db, "Users", currentuser, "OneOneChat", roomid), {
-          Seen: true,
-        });
-      }
     }
   });
 }
